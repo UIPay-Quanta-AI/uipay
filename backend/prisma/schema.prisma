@@ -20,6 +20,13 @@ model User {
   updatedAt    DateTime  @updatedAt() @map("updated_at")
   sessions     Session[]
 
+  wallets              Wallet[]
+  beneficiaries        Beneficiary[]
+  sentTransactions     Transaction[]  @relation("TransactionSender")
+  receivedTransactions Transaction[]  @relation("TransactionRecipient")
+  merchants            Merchant[]
+  voiceProfile         VoiceProfile?
+
   @@map("users")
 }
 
@@ -36,4 +43,104 @@ model Session {
 
   @@index([userId])
   @@map("session")
+}
+
+// user's spendable balance, one wallet per currency down the line but just one for now
+model Wallet {
+  id       String  @id @default(uuid())
+  userId   String  @map("user_id")
+  balance  Decimal @default(0) @db.Decimal(18, 2)
+  currency String  @default("NGN")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("wallets")
+}
+
+// saved transfer recipients so users don't have to retype account details every time
+model Beneficiary {
+  id            String @id @default(uuid())
+  userId        String @map("user_id")
+  nickname      String
+  accountNumber String @map("account_number")
+  bankName      String @map("bank_name")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("beneficiaries")
+}
+
+model Transaction {
+  id          String  @id @default(uuid())
+  senderId    String  @map("sender_id")
+  recipientId String  @map("recipient_id")
+  amount      Decimal @db.Decimal(18, 2)
+  method      String
+  reference   String  @unique
+  status      String  @default("pending")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  sender    User @relation("TransactionSender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient User @relation("TransactionRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@map("transactions")
+}
+
+model Merchant {
+  id           String  @id @default(uuid())
+  userId       String  @map("user_id")
+  businessName String  @map("business_name")
+  qrCodeUrl    String  @map("qr_code_url")
+  category     String
+  approved     Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nfcTags NfcTag[]
+
+  @@index([userId])
+  @@map("merchants")
+}
+
+// id here is the physical tag's own ID, not a generated one, since that's what the reader scans
+model NfcTag {
+  id         String  @id
+  merchantId String  @map("merchant_id")
+  active     Boolean @default(true)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  merchant Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+
+  @@index([merchantId])
+  @@map("nfc_tags")
+}
+
+// one profile per user for now, encryptedBlob holds the encrypted voiceprint used for voice auth
+model VoiceProfile {
+  id            String @id @default(uuid())
+  userId        String @unique @map("user_id")
+  encryptedBlob Bytes  @map("encrypted_blob")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("voice_profiles")
 }
