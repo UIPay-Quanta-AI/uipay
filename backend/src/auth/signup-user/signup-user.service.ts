@@ -15,6 +15,7 @@ import { OtpService } from '../otp/otp.service';
 import { cryptoHash, verifyHash } from '../../common/crypto/crypto';
 import { SessionService } from '../session/session.service';
 import { AppJwtService } from '../jwt/app-jwt.service';
+import { WalletService } from '../../wallet/wallet.service';
 
 export interface PendingRegistration {
   email: string;
@@ -36,6 +37,7 @@ export class SignupUserService {
     private readonly emailQueueService: EmailQueueService,
     private readonly appJwtService: AppJwtService,
     private readonly sessionService: SessionService,
+    private readonly walletService: WalletService,
   ) {}
 
   private findByEmail(email: string) {
@@ -127,6 +129,9 @@ export class SignupUserService {
         passwordHash: pendingRegistration.passwordHash,
       },
     });
+
+    // fresh wallet with a fake starting balance so the user has something to see immediately
+    await this.walletService.createWallet(user.id);
 
     const { accessToken, refreshToken } =
       await this.appJwtService.generateTokens({

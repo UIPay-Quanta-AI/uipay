@@ -10,6 +10,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { EmailQueueModule } from './queue/email/email.module';
 import { AppJwtModule } from './auth/jwt/app-jwt.module';
 import { SessionModule } from './auth/session/session.module';
+import { WalletModule } from './wallet/wallet.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { SessionModule } from './auth/session/session.module';
     EmailQueueModule,
     AppJwtModule,
     SessionModule,
+    WalletModule,
   ],
   providers: [AuthService, RedisService],
 })
