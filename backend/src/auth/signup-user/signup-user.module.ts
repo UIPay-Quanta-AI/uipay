@@ -7,6 +7,7 @@ import { EmailQueueModule } from '../../queue/email/email.module';
 import { OtpModule } from '../otp/otp.module';
 import { SessionModule } from '../session/session.module';
 import { AppJwtModule } from '../jwt/app-jwt.module';
+import { WalletModule } from '../../wallet/wallet.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AppJwtModule } from '../jwt/app-jwt.module';
     OtpModule,
     SessionModule,
     AppJwtModule,
+    WalletModule,
   ],
   controllers: [SignupUserController],
   providers: [SignupUserService],
