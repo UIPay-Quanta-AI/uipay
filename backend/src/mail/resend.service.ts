@@ -42,4 +42,31 @@ export class ResendService {
 
     return data;
   }
+
+  async sendPasswordResetOtpEmail(to: string, otp: string) {
+    const from = this.configService.getOrThrow<string>('EMAIL_FROM');
+
+    const { data, error } = await this.resend.emails.send({
+      from,
+      to,
+      subject: 'Reset your uipay password',
+      html: `
+  <h2>Reset your password</h2>
+  <p>We got a request to reset your uipay password.</p>
+ <p>Your reset code is:</p>
+<h1>${otp}</h1>
+<p>This code expires in 5 minutes.</p>
+<p>If you didn't request this, you can ignore this email, your password stays the same.</p>
+    `,
+    });
+
+    if (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        'Failed to send password reset email',
+      );
+    }
+
+    return data;
+  }
 }

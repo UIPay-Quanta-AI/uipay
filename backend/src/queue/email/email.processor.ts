@@ -21,6 +21,13 @@ export class EmailProcessor extends WorkerHost {
         break;
       }
 
+      case 'send-password-reset-email': {
+        const { email, otp } = job.data;
+
+        await this.resendService.sendPasswordResetOtpEmail(email, otp);
+        break;
+      }
+
       default:
         this.logger.warn(`Unknown job: ${job.name}`);
     }
