@@ -22,7 +22,7 @@ export class RefreshService {
     }
 
     if (session.expiresAt < new Date()) {
-      // session don expire already, no reason to keep the row around
+      // session don expire, no need to still dey keep the row
       await this.sessionService.deleteByRefreshTokenHash(refreshTokenHash);
       throw new UnauthorizedException(
         'Refresh token expired, please sign in again',
