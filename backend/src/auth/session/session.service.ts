@@ -11,4 +11,22 @@ export class SessionService {
       data,
     });
   }
+
+  async findByRefreshTokenHash(refreshTokenHash: string) {
+    return this.prisma.session.findFirst({
+      where: { refreshTokenHash },
+    });
+  }
+
+  async deleteByRefreshTokenHash(refreshTokenHash: string) {
+    await this.prisma.session.deleteMany({
+      where: { refreshTokenHash },
+    });
+  }
+
+  async deleteAllForUser(userId: string) {
+    await this.prisma.session.deleteMany({
+      where: { userId },
+    });
+  }
 }
