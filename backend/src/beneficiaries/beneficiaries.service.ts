@@ -20,8 +20,8 @@ export class BeneficiariesService {
   }
 
   async remove(userId: string, id: string) {
-    // we dey check userId too, so nobody fit delete another person beneficiary
-    // just by guessing the id
+    // also filter by userId, so nobody can delete another person's
+    // beneficiary just by guessing the id
     const beneficiary = await this.prisma.beneficiary.findFirst({
       where: { id, userId },
     });
