@@ -72,7 +72,7 @@ export class ForgotPasswordService {
       data: { passwordHash },
     });
 
-    // password don change, so log everybody out, make dem login fresh
+    // password just changed, so log every device out and make them sign in again
     await this.sessionService.deleteAllForUser(user.id);
 
     await this.redis.client.del(this.redisKey(email));
