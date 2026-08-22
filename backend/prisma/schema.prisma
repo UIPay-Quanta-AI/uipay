@@ -45,7 +45,7 @@ model Session {
   @@map("session")
 }
 
-// user's spendable balance, one wallet per currency down the line but just one for now
+// this na where person money dey sit. maybe one wallet per currency later, just one for now
 model Wallet {
   id       String  @id @default(uuid())
   userId   String  @map("user_id")
@@ -61,7 +61,7 @@ model Wallet {
   @@map("wallets")
 }
 
-// saved transfer recipients so users don't have to retype account details every time
+// people wey you don send money before, so you no go dey type their acct number every time
 model Beneficiary {
   id            String @id @default(uuid())
   userId        String @map("user_id")
@@ -116,7 +116,7 @@ model Merchant {
   @@map("merchants")
 }
 
-// id here is the physical tag's own ID, not a generated one, since that's what the reader scans
+// id no be random uuid, na the real serial number wey dey on the physical tag
 model NfcTag {
   id         String  @id
   merchantId String  @map("merchant_id")
@@ -131,7 +131,7 @@ model NfcTag {
   @@map("nfc_tags")
 }
 
-// one profile per user for now, encryptedBlob holds the encrypted voiceprint used for voice auth
+// just one voice profile per user for now, encryptedBlob na the encrypted voiceprint
 model VoiceProfile {
   id            String @id @default(uuid())
   userId        String @unique @map("user_id")

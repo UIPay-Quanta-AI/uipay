@@ -64,9 +64,8 @@ export class WalletService {
         throw new NotFoundException('Recipient wallet not found');
       }
 
-      // this is the spot a real BaaS call (Anchor, Paystack etc) would sit once we
-      // hook one up. for now we just debit one row and credit the other in the same
-      // db transaction, no money dey enter or leave the system for real
+      // this na where the real BaaS call go enter later (Anchor, Paystack, whoever).
+      // for now na just debit one row, credit another, no real money dey move
       await tx.wallet.update({
         where: { id: senderWallet.id },
         data: { balance: { decrement: dto.amount } },
@@ -99,7 +98,7 @@ export class WalletService {
   }
 
   private fakeAccountNumber(walletId: string): string {
-    // not a real NUBAN, just something stable-looking until BaaS gives us a real one
+    // this no be real NUBAN o, just something wey resemble am until BaaS give us real one
     const hash = createHash('sha256').update(walletId).digest('hex');
     return BigInt(`0x${hash.slice(0, 12)}`)
       .toString()
