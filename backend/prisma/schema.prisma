@@ -99,12 +99,15 @@ model Transaction {
 }
 
 model Merchant {
-  id           String  @id @default(uuid())
-  userId       String  @map("user_id")
-  businessName String  @map("business_name")
-  qrCodeUrl    String  @map("qr_code_url")
-  category     String
-  approved     Boolean @default(false)
+  id            String  @id @default(uuid())
+  userId        String  @map("user_id")
+  // individual or organisation, decides what KYC docs we'll ask for later
+  applicantType String  @default("individual") @map("applicant_type")
+  businessName  String  @map("business_name")
+  // null until the QR/NFC module actually generates one for this merchant
+  qrCodeUrl     String? @map("qr_code_url")
+  category      String
+  approved      Boolean @default(false)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
