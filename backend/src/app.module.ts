@@ -11,6 +11,7 @@ import { EmailQueueModule } from './queue/email/email.module';
 import { AppJwtModule } from './auth/jwt/app-jwt.module';
 import { SessionModule } from './auth/session/session.module';
 import { WalletModule } from './wallet/wallet.module';
+import { MerchantModule } from './merchant/merchant.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { WalletModule } from './wallet/wallet.module';
     AppJwtModule,
     SessionModule,
     WalletModule,
+    MerchantModule,
   ],
   providers: [AuthService, RedisService],
 })
