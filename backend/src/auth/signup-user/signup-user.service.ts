@@ -130,7 +130,7 @@ export class SignupUserService {
       },
     });
 
-    // give the new user wallet with fake money inside, so dem get something to see
+    // fresh wallet with a fake starting balance so the user has something to see
     await this.walletService.createWallet(user.id);
 
     const { accessToken, refreshToken } =

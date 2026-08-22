@@ -45,7 +45,7 @@ model Session {
   @@map("session")
 }
 
-// this na where person money dey sit. maybe one wallet per currency later, just one for now
+// holds a user's spendable balance. one wallet per user for now, may support multiple currencies later
 model Wallet {
   id       String  @id @default(uuid())
   userId   String  @map("user_id")
@@ -61,7 +61,7 @@ model Wallet {
   @@map("wallets")
 }
 
-// people wey you don send money before, so you no go dey type their acct number every time
+// saved transfer recipients, so users don't have to retype account details every time
 model Beneficiary {
   id            String @id @default(uuid())
   userId        String @map("user_id")
@@ -101,10 +101,10 @@ model Transaction {
 model Merchant {
   id            String  @id @default(uuid())
   userId        String  @map("user_id")
-  // na individual or organisation, e go decide wetin KYC papers we go ask for later
+  // individual or organisation, decides what KYC documents get requested later
   applicantType String  @default("individual") @map("applicant_type")
   businessName  String  @map("business_name")
-  // no value here until the QR/NFC module fit generate one for this merchant
+  // empty until the QR/NFC module generates one for this merchant
   qrCodeUrl     String? @map("qr_code_url")
   category      String
   approved      Boolean @default(false)
@@ -119,7 +119,7 @@ model Merchant {
   @@map("merchants")
 }
 
-// id no be random uuid, na the real serial number wey dey on the physical tag
+// id is not a generated uuid, it's the physical tag's own serial number
 model NfcTag {
   id         String  @id
   merchantId String  @map("merchant_id")
@@ -134,7 +134,7 @@ model NfcTag {
   @@map("nfc_tags")
 }
 
-// just one voice profile per user for now, encryptedBlob na the encrypted voiceprint
+// one voice profile per user for now. encryptedBlob stores the encrypted voiceprint
 model VoiceProfile {
   id            String @id @default(uuid())
   userId        String @unique @map("user_id")
