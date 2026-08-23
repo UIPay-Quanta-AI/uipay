@@ -22,7 +22,7 @@ export class MerchantService {
       throw new ConflictException('Merchant application already exists');
     }
 
-    // qrCodeUrl no dey set here, na the QR/NFC module go fill am in later
+    // qrCodeUrl is not set here, the QR/NFC module fills that in later
     return this.prisma.merchant.create({
       data: {
         userId,
