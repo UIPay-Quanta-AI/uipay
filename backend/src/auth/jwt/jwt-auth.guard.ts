@@ -9,8 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthenticatedRequest } from './authenticated-request.interface';
 import { JwtPayload } from './jwt-payload.interface';
 
-// no passport here, just verifying the access token ourselves since that's
-// the only thing we need it for right now
+// no passport package here, we just verify the token ourselves, it's simple enough
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(

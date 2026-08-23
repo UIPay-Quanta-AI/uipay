@@ -12,6 +12,7 @@ import { AppJwtModule } from './auth/jwt/app-jwt.module';
 import { SessionModule } from './auth/session/session.module';
 import { WalletModule } from './wallet/wallet.module';
 import { BeneficiariesModule } from './beneficiaries/beneficiaries.module';
+import { MerchantModule } from './merchant/merchant.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { BeneficiariesModule } from './beneficiaries/beneficiaries.module';
     SessionModule,
     WalletModule,
     BeneficiariesModule,
+    MerchantModule,
   ],
   providers: [AuthService, RedisService],
 })

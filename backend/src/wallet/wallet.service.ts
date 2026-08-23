@@ -7,7 +7,7 @@ import { createHash, randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { TransferDto } from './wallet.dto';
 
-// every new wallet enters with this fake alert, no real naira dey move here o
+// every new wallet starts with this fake balance, no real money is involved
 const STARTING_BALANCE = 50_000;
 const TRANSFER_METHOD = 'wallet_transfer';
 
@@ -64,9 +64,9 @@ export class WalletService {
         throw new NotFoundException('Recipient wallet not found');
       }
 
-      // this is the spot a real BaaS call (Anchor, Paystack etc) would sit once we
-      // hook one up. for now we just debit one row and credit the other in the same
-      // db transaction, no money dey enter or leave the system for real
+      // this is where a real BaaS call (Anchor, Paystack, etc) will go once we
+      // integrate one. for now we just debit one row and credit the other,
+      // no real money moves
       await tx.wallet.update({
         where: { id: senderWallet.id },
         data: { balance: { decrement: dto.amount } },

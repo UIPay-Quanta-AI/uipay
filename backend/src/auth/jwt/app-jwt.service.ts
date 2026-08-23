@@ -10,7 +10,7 @@ export class AppJwtService {
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
   ) {}
-  private async generateAccessToken(payload: JwtPayload) {
+  async generateAccessToken(payload: JwtPayload) {
     return this.jwt.signAsync(payload, {
       secret: this.config.getOrThrow<string>('JWT_ACCESS_SECRET'),
       expiresIn: this.config.getOrThrow<StringValue>('JWT_ACCESS_EXPIRY'),

@@ -45,7 +45,7 @@ model Session {
   @@map("session")
 }
 
-// user's spendable balance, one wallet per currency down the line but just one for now
+// holds a user's spendable balance. one wallet per user for now, may support multiple currencies later
 model Wallet {
   id       String  @id @default(uuid())
   userId   String  @map("user_id")
@@ -61,7 +61,7 @@ model Wallet {
   @@map("wallets")
 }
 
-// saved transfer recipients so users don't have to retype account details every time
+// saved transfer recipients, so users don't have to retype account details every time
 model Beneficiary {
   id            String @id @default(uuid())
   userId        String @map("user_id")
@@ -99,12 +99,15 @@ model Transaction {
 }
 
 model Merchant {
-  id           String  @id @default(uuid())
-  userId       String  @map("user_id")
-  businessName String  @map("business_name")
-  qrCodeUrl    String  @map("qr_code_url")
-  category     String
-  approved     Boolean @default(false)
+  id            String  @id @default(uuid())
+  userId        String  @map("user_id")
+  // individual or organisation, decides what KYC documents get requested later
+  applicantType String  @default("individual") @map("applicant_type")
+  businessName  String  @map("business_name")
+  // empty until the QR/NFC module generates one for this merchant
+  qrCodeUrl     String? @map("qr_code_url")
+  category      String
+  approved      Boolean @default(false)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -116,7 +119,7 @@ model Merchant {
   @@map("merchants")
 }
 
-// id here is the physical tag's own ID, not a generated one, since that's what the reader scans
+// id is not a generated uuid, it's the physical tag's own serial number
 model NfcTag {
   id         String  @id
   merchantId String  @map("merchant_id")
@@ -131,7 +134,7 @@ model NfcTag {
   @@map("nfc_tags")
 }
 
-// one profile per user for now, encryptedBlob holds the encrypted voiceprint used for voice auth
+// one voice profile per user for now. encryptedBlob stores the encrypted voiceprint
 model VoiceProfile {
   id            String @id @default(uuid())
   userId        String @unique @map("user_id")
