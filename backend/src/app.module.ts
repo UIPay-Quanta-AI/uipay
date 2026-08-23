@@ -13,6 +13,7 @@ import { SessionModule } from './auth/session/session.module';
 import { WalletModule } from './wallet/wallet.module';
 import { BeneficiariesModule } from './beneficiaries/beneficiaries.module';
 import { MerchantModule } from './merchant/merchant.module';
+import { NfcModule } from './nfc/nfc.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { MerchantModule } from './merchant/merchant.module';
     WalletModule,
     BeneficiariesModule,
     MerchantModule,
+    NfcModule,
   ],
   providers: [AuthService, RedisService],
 })
