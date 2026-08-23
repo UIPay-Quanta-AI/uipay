@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -17,9 +18,9 @@ export class NfcService {
   ) {}
 
   async register(userId: string, dto: RegisterTagDto) {
-    // there's no admin approval flow yet, so any merchant application (approved
-    // or not) can register a tag for now
-    const merchant = await this.findMerchantOrThrow(userId);
+    // only an approved merchant can register a tag, otherwise anyone could
+    // apply and start accepting payments before an admin reviews them
+    const merchant = await this.findApprovedMerchantOrThrow(userId);
 
     const existingTag = await this.prisma.nfcTag.findUnique({
       where: { id: dto.tagId },
@@ -55,12 +56,15 @@ export class NfcService {
     );
   }
 
-  private async findMerchantOrThrow(userId: string) {
+  private async findApprovedMerchantOrThrow(userId: string) {
     const merchant = await this.prisma.merchant.findFirst({
       where: { userId },
     });
     if (!merchant) {
       throw new NotFoundException('No merchant application found');
+    }
+    if (merchant.status !== 'approved') {
+      throw new ForbiddenException('Merchant application is not approved yet');
     }
     return merchant;
   }

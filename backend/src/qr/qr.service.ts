@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -28,7 +29,9 @@ export class QrService {
   ) {}
 
   async generate(userId: string, dto: GenerateQrDto) {
-    const merchant = await this.findMerchantOrThrow(userId);
+    // only an approved merchant can generate a code, otherwise anyone could
+    // apply and start accepting payments before an admin reviews them
+    const merchant = await this.findApprovedMerchantOrThrow(userId);
 
     if (dto.type === QrCodeType.DYNAMIC) {
       return this.generateDynamicCode(merchant.id, dto.amount!);
@@ -139,12 +142,15 @@ export class QrService {
     return { merchant, type: QrCodeType.STATIC, amount: undefined };
   }
 
-  private async findMerchantOrThrow(userId: string) {
+  private async findApprovedMerchantOrThrow(userId: string) {
     const merchant = await this.prisma.merchant.findFirst({
       where: { userId },
     });
     if (!merchant) {
       throw new NotFoundException('No merchant application found');
+    }
+    if (merchant.status !== 'approved') {
+      throw new ForbiddenException('Merchant application is not approved yet');
     }
     return merchant;
   }
