@@ -15,6 +15,7 @@ import { BeneficiariesModule } from './beneficiaries/beneficiaries.module';
 import { MerchantModule } from './merchant/merchant.module';
 import { NfcModule } from './nfc/nfc.module';
 import { QrModule } from './qr/qr.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { QrModule } from './qr/qr.module';
     MerchantModule,
     NfcModule,
     QrModule,
+    AdminModule,
   ],
   providers: [AuthService, RedisService],
 })

@@ -16,6 +16,8 @@ model User {
   dob          String    @map("date_of_birth")
   phoneNumber  String    @map("phone_number")
   passwordHash String    @map("password_hash")
+  // "user" or "admin", only admins can access the admin endpoints
+  role         String    @default("user")
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt() @map("updated_at")
   sessions     Session[]
@@ -107,7 +109,8 @@ model Merchant {
   // empty until the QR/NFC module generates one for this merchant
   qrCodeUrl     String? @map("qr_code_url")
   category      String
-  approved      Boolean @default(false)
+  // "pending", "approved", or "rejected", set by an admin reviewing the application
+  status        String  @default("pending")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
