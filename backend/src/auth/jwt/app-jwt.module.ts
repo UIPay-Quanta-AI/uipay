@@ -15,6 +15,8 @@ import { JwtAuthGuard } from './jwt-auth.guard';
     }),
   ],
   providers: [AppJwtService, JwtAuthGuard],
-  exports: [AppJwtService, JwtAuthGuard],
+  // JwtModule has to be re-exported too, otherwise JwtService isn't visible
+  // to modules that import AppJwtModule just to use JwtAuthGuard
+  exports: [AppJwtService, JwtAuthGuard, JwtModule],
 })
 export class AppJwtModule {}
