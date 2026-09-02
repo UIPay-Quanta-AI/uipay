@@ -10,6 +10,11 @@ export class RedisService implements OnModuleDestroy {
     this.redis = new Redis({
       host: this.configService.getOrThrow<string>('REDIS_HOST'),
       port: Number(this.configService.getOrThrow('REDIS_PORT')),
+      password: this.configService.getOrThrow<string>('REDIS_PASSWORD'),
+      tls: {},
+      maxRetriesPerRequest: 3,
+      enableReadyCheck: false,
+      lazyConnect: false,
     });
 
     this.redis.on('connect', () => {
