@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# env files (all of them, in any folder)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# build output
+/backend/dist
+/backend/generated
+/frontend/.next
+/frontend/out
+
+# logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+
+# editors
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
