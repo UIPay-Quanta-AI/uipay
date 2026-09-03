@@ -27,6 +27,7 @@ interface SignInResponse {
 export default function SignInPage() {
   const router = useRouter();
   const setSession = useAuthStore((state) => state.setSession);
+  const [method, setMethod] = useState<'email' | 'phone'>('email');
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -50,23 +51,74 @@ export default function SignInPage() {
   };
 
   return (
-    <GlowBackground className="flex min-h-screen items-center justify-center px-8">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <h1 className="text-center text-3xl font-extrabold text-[var(--color-light)]">
-          Welcome Back
-        </h1>
+    <GlowBackground className="flex justify-center px-8 py-12">
+      <div className="flex w-full max-w-sm flex-col items-center gap-6">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/signin.svg" alt="uipay" className="h-40 w-40" />
+
+        <div className="flex flex-col items-center gap-1 text-center">
+          <h1 className="text-3xl font-extrabold text-[var(--color-light)]">
+            Login
+          </h1>
+          <p className="text-[var(--color-primary)]">
+            Let&apos;s get you started in a few steps
+          </p>
+        </div>
+
+        <div className="flex w-full border-b border-white/20">
+          <button
+            type="button"
+            onClick={() => setMethod('email')}
+            className={`flex-1 pb-2 text-left font-semibold ${
+              method === 'email'
+                ? 'border-b-2 border-[var(--color-primary)] text-[var(--color-primary)]'
+                : 'text-[var(--color-light)]'
+            }`}
+          >
+            Email
+          </button>
+          <button
+            type="button"
+            onClick={() => setMethod('phone')}
+            className={`flex-1 pb-2 text-right font-semibold ${
+              method === 'phone'
+                ? 'border-b-2 border-[var(--color-primary)] text-[var(--color-primary)]'
+                : 'text-[var(--color-light)]'
+            }`}
+          >
+            Phone number
+          </button>
+        </div>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
+          className="flex w-full flex-col gap-4"
         >
-          <TextInput
-            label="Email"
-            type="email"
-            placeholder="example@gmail.com"
-            {...register('email')}
-            error={errors.email?.message}
-          />
+          {method === 'email' ? (
+            <TextInput
+              type="email"
+              placeholder="example@gmail.com"
+              {...register('email')}
+              error={errors.email?.message}
+            />
+          ) : (
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-3 rounded-xl border border-white/20 px-4 py-3 focus-within:border-[var(--color-primary)]">
+                <span className="text-[var(--color-light)]">+234</span>
+                <span className="h-5 w-px bg-white/20" />
+                <input
+                  placeholder="0000000000"
+                  inputMode="numeric"
+                  className="w-full bg-transparent text-[var(--color-light)] placeholder:text-white/30 focus:outline-none"
+                />
+              </div>
+              <p className="text-sm text-white/50">
+                Sign in with a phone number isn&apos;t available yet, use
+                email for now.
+              </p>
+            </div>
+          )}
+
           <TextInput
             label="Password"
             type="password"
@@ -75,16 +127,23 @@ export default function SignInPage() {
             error={errors.password?.message}
           />
 
+          <Link
+            href="/forgot-password"
+            className="text-right text-sm text-[var(--color-primary)]"
+          >
+            Forgot Password?
+          </Link>
+
           {submitError && (
             <p className="text-sm text-red-400">{submitError}</p>
           )}
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || method !== 'email'}
             className="mt-2 rounded-full bg-[var(--color-primary)] py-4 font-semibold uppercase text-[var(--color-dark)] disabled:opacity-60"
           >
-            {isSubmitting ? 'Signing in...' : 'Sign In'}
+            {isSubmitting ? 'Logging in...' : 'Login'}
           </button>
 
           <p className="text-center text-sm text-[var(--color-light)]">
