@@ -8,19 +8,23 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  firstName    String    @map("first_name")
-  lastName     String    @map("last_name")
-  middleName   String?   @map("middle_name")
-  dob          String    @map("date_of_birth")
-  phoneNumber  String    @map("phone_number")
-  passwordHash String    @map("password_hash")
+  id                 String    @id @default(uuid())
+  email              String    @unique
+  firstName          String    @map("first_name")
+  lastName           String    @map("last_name")
+  middleName         String?   @map("middle_name")
+  dob                String    @map("date_of_birth")
+  phoneNumber        String    @map("phone_number")
+  passwordHash       String    @map("password_hash")
   // "user" or "admin", only admins can access the admin endpoints
-  role         String    @default("user")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt() @map("updated_at")
-  sessions     Session[]
+  role               String    @default("user")
+  // "nin" or "bvn", set once the user verifies an ID during profile setup
+  idType             String?   @map("id_type")
+  idNumber           String?   @map("id_number")
+  identityVerifiedAt DateTime? @map("identity_verified_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt() @map("updated_at")
+  sessions           Session[]
 
   wallets              Wallet[]
   beneficiaries        Beneficiary[]
