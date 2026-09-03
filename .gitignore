@@ -13,6 +13,8 @@ node_modules/
 /backend/generated
 /frontend/.next
 /frontend/out
+/frontend/next-env.d.ts
+*.tsbuildinfo
 
 # logs
 *.log
