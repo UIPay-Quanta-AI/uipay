@@ -112,9 +112,7 @@ export class QrService {
   }
 
   private async resolveQrCode(qrCode: string) {
-    const dynamicPayload = await this.redis.client.get(
-      `qr:dynamic:${qrCode}`,
-    );
+    const dynamicPayload = await this.redis.client.get(`qr:dynamic:${qrCode}`);
 
     if (dynamicPayload) {
       const { merchantId, amount }: DynamicQrPayload =
@@ -124,9 +122,7 @@ export class QrService {
         where: { id: merchantId },
       });
       if (!merchant) {
-        throw new NotFoundException(
-          'Merchant for this QR code was not found',
-        );
+        throw new NotFoundException('Merchant for this QR code was not found');
       }
 
       return { merchant, type: QrCodeType.DYNAMIC, amount };

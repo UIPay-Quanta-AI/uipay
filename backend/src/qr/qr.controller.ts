@@ -12,10 +12,7 @@ export class QrController {
   constructor(private readonly service: QrService) {}
 
   @Post('generate')
-  async generate(
-    @CurrentUser() user: JwtPayload,
-    @Body() body: GenerateQrDto,
-  ) {
+  async generate(@CurrentUser() user: JwtPayload, @Body() body: GenerateQrDto) {
     const qrCode = await this.service.generate(user.sub, body);
 
     return successResponse('QR code generated successfully', qrCode);

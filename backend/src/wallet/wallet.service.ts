@@ -40,11 +40,7 @@ export class WalletService {
     });
   }
 
-  async transfer(
-    senderId: string,
-    dto: TransferDto,
-    method = TRANSFER_METHOD,
-  ) {
+  async transfer(senderId: string, dto: TransferDto, method = TRANSFER_METHOD) {
     if (senderId === dto.recipientId) {
       throw new BadRequestException('you cannot send money to yourself');
     }
