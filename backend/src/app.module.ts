@@ -29,7 +29,10 @@ import { AdminModule } from './admin/admin.module';
       useFactory: (config: ConfigService) => ({
         connection: {
           host: config.getOrThrow('REDIS_HOST'),
-          port: config.getOrThrow('REDIS_PORT'),
+          port: Number(config.getOrThrow('REDIS_PORT')),
+          password: config.getOrThrow<string>('REDIS_PASSWORD'),
+          // Upstash serves redis over TLS, same as the RedisService client
+          tls: {},
         },
       }),
     }),
