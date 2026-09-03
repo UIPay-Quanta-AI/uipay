@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../auth/jwt/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { JwtPayload } from '../auth/jwt/jwt-payload.interface';

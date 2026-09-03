@@ -57,10 +57,7 @@ export class AdminController {
   async getTransactions(@Query() query: TransactionsQueryDto) {
     const transactions = await this.service.getTransactions(query.period);
 
-    return successResponse(
-      'Transactions retrieved successfully',
-      transactions,
-    );
+    return successResponse('Transactions retrieved successfully', transactions);
   }
 
   @Get('nfc-qr-count')

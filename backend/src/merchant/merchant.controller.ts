@@ -12,10 +12,7 @@ export class MerchantController {
   constructor(private readonly service: MerchantService) {}
 
   @Post('apply')
-  async apply(
-    @CurrentUser() user: JwtPayload,
-    @Body() body: ApplyMerchantDto,
-  ) {
+  async apply(@CurrentUser() user: JwtPayload, @Body() body: ApplyMerchantDto) {
     const merchant = await this.service.apply(user.sub, body);
 
     return successResponse(
