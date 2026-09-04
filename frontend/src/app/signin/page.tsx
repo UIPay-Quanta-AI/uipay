@@ -65,13 +65,13 @@ export default function SignInPage() {
           </p>
         </div>
 
-        <div className="flex w-full border-b border-white/20">
+        <div className="relative flex w-full border-b border-white/20">
           <button
             type="button"
             onClick={() => setMethod('email')}
-            className={`flex-1 pb-2 text-left font-semibold ${
+            className={`flex-1 pb-2 text-left font-semibold transition-colors duration-300 ${
               method === 'email'
-                ? 'border-b-2 border-[var(--color-primary)] text-[var(--color-primary)]'
+                ? 'text-[var(--color-primary)]'
                 : 'text-[var(--color-light)]'
             }`}
           >
@@ -80,44 +80,53 @@ export default function SignInPage() {
           <button
             type="button"
             onClick={() => setMethod('phone')}
-            className={`flex-1 pb-2 text-right font-semibold ${
+            className={`flex-1 pb-2 text-right font-semibold transition-colors duration-300 ${
               method === 'phone'
-                ? 'border-b-2 border-[var(--color-primary)] text-[var(--color-primary)]'
+                ? 'text-[var(--color-primary)]'
                 : 'text-[var(--color-light)]'
             }`}
           >
             Phone number
           </button>
+          <span
+            className="absolute bottom-0 h-0.5 w-1/2 bg-[var(--color-primary)] transition-transform duration-300 ease-out"
+            style={{
+              transform:
+                method === 'phone' ? 'translateX(100%)' : 'translateX(0%)',
+            }}
+          />
         </div>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col gap-4"
         >
-          {method === 'email' ? (
-            <TextInput
-              type="email"
-              placeholder="example@gmail.com"
-              {...register('email')}
-              error={errors.email?.message}
-            />
-          ) : (
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-3 rounded-xl border border-white/20 px-4 py-3 focus-within:border-[var(--color-primary)]">
-                <span className="text-[var(--color-light)]">+234</span>
-                <span className="h-5 w-px bg-white/20" />
-                <input
-                  placeholder="0000000000"
-                  inputMode="numeric"
-                  className="w-full bg-transparent text-[var(--color-light)] placeholder:text-white/30 focus:outline-none"
-                />
+          <div key={method} className="animate-fade-slide-in">
+            {method === 'email' ? (
+              <TextInput
+                type="email"
+                placeholder="example@gmail.com"
+                {...register('email')}
+                error={errors.email?.message}
+              />
+            ) : (
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3 rounded-xl border border-white/20 px-4 py-3 focus-within:border-[var(--color-primary)]">
+                  <span className="text-[var(--color-light)]">+234</span>
+                  <span className="h-5 w-px bg-white/20" />
+                  <input
+                    placeholder="0000000000"
+                    inputMode="numeric"
+                    className="w-full bg-transparent text-[var(--color-light)] placeholder:text-white/30 focus:outline-none"
+                  />
+                </div>
+                <p className="text-sm text-white/50">
+                  Sign in with a phone number isn&apos;t available yet, use
+                  email for now.
+                </p>
               </div>
-              <p className="text-sm text-white/50">
-                Sign in with a phone number isn&apos;t available yet, use
-                email for now.
-              </p>
-            </div>
-          )}
+            )}
+          </div>
 
           <TextInput
             label="Password"

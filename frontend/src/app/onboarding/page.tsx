@@ -88,7 +88,7 @@ export default function OnboardingPage() {
       <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[var(--color-primary)] opacity-30 blur-3xl" />
 
       <div
-        className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-8"
+        className="relative flex flex-1 flex-col items-center justify-center overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -99,7 +99,7 @@ export default function OnboardingPage() {
           {SLIDES.map((slide) => (
             <div
               key={slide.icon}
-              className="flex w-full shrink-0 flex-col items-center gap-8 px-4 text-center"
+              className="flex w-full min-w-0 shrink-0 flex-col items-center gap-8 overflow-hidden px-12 text-center"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -107,14 +107,14 @@ export default function OnboardingPage() {
                 alt={slide.iconAlt}
                 width={slide.width}
                 height={slide.height}
-                className="h-64 w-64 object-contain"
+                className="h-auto w-full max-w-64 object-contain"
               />
 
-              <div className="flex flex-col gap-3">
-                <h1 className="text-3xl font-extrabold text-[var(--color-light)]">
+              <div className="flex w-full min-w-0 flex-col gap-3">
+                <h1 className="break-words text-3xl font-extrabold text-[var(--color-light)]">
                   {slide.title}
                 </h1>
-                <p className="mx-auto max-w-xs text-[var(--color-primary)]">
+                <p className="mx-auto max-w-xs break-words text-[var(--color-primary)]">
                   {slide.subtitle}
                 </p>
               </div>
