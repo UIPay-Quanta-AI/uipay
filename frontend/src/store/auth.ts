@@ -32,9 +32,22 @@ function decodeAccessToken(
   }
 }
 
+// localStorage isn't available during server rendering, and doesn't carry
+// the name/extra fields, so on reload the store only recovers id/email
+function getStoredSession(): { accessToken: string | null; user: User | null } {
+  if (typeof window === 'undefined') return { accessToken: null, user: null };
+
+  const accessToken = localStorage.getItem('access_token');
+  if (!accessToken) return { accessToken: null, user: null };
+
+  const claims = decodeAccessToken(accessToken);
+  if (!claims) return { accessToken: null, user: null };
+
+  return { accessToken, user: { id: claims.sub, email: claims.email } };
+}
+
 export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  accessToken: null,
+  ...getStoredSession(),
   setSession: (accessToken, refreshToken, extra) => {
     const claims = decodeAccessToken(accessToken);
     if (!claims) return;
