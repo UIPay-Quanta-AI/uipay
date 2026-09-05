@@ -32,14 +32,14 @@ export default function VerifyIdPage() {
       <div className="mt-8 flex flex-col gap-4">
         <Link
           href="/profile-setup/verify-id/nin"
-          className="flex items-center justify-between rounded-xl bg-[var(--color-primary)]/10 px-5 py-4 text-[var(--color-light)]"
+          className="flex items-center justify-between rounded-xl bg-[rgba(var(--color-primary-rgb),0.1)] px-5 py-4 text-[var(--color-light)]"
         >
           NIN
           <ChevronRight className="h-5 w-5" />
         </Link>
         <Link
           href="/profile-setup/verify-id/bvn"
-          className="flex items-center justify-between rounded-xl bg-[var(--color-primary)]/10 px-5 py-4 text-[var(--color-light)]"
+          className="flex items-center justify-between rounded-xl bg-[rgba(var(--color-primary-rgb),0.1)] px-5 py-4 text-[var(--color-light)]"
         >
           BVN
           <ChevronRight className="h-5 w-5" />
