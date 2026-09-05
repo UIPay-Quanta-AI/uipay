@@ -7,6 +7,13 @@
   --color-dark: #081020;
   --color-light: #f2f4f7;
   --color-accent: #f58942;
+
+  /* same value as --color-primary, as an R,G,B triple - Tailwind's bg-[..]/NN
+     opacity modifier can't decompose an opaque var() at build time (it
+     silently drops the utility, leaving the browser's default white input
+     background), so anywhere that needs a translucent primary uses this via
+     bg-[rgba(var(--color-primary-rgb),0.15)] instead */
+  --color-primary-rgb: 0, 194, 110;
 }
 
 body {

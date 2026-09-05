@@ -19,5 +19,9 @@ export class ResetPasswordDto {
   otp!: string;
 
   @IsString()
+  @Matches(/^(?=.*[A-Z])(?=.*[a-z])[^"'!.\-/\\|]{12,}$/, {
+    message:
+      'Password must be at least 12 characters, include an uppercase and a lowercase letter, and not contain " \' ! . - / \\ |',
+  })
   newPassword!: string;
 }
