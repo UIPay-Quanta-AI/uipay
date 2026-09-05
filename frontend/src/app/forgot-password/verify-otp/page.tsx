@@ -4,38 +4,29 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthScreenLayout } from '@/components/AuthScreenLayout';
 import api, { getApiErrorMessage } from '@/services/api';
-import { useAuthStore } from '@/store/auth';
-import { useSignupStore } from '@/store/signup';
+import { useForgotPasswordStore } from '@/store/forgotPassword';
 
 const OTP_LENGTH = 6;
 const OTP_SECONDS = 600;
 
-interface VerifyResponse {
-  status: string;
-  message: string;
-  data: { accessToken: string; refreshToken: string };
-}
-
-export default function VerifyOtpPage() {
+export default function ForgotPasswordVerifyOtpPage() {
   const router = useRouter();
-  const pending = useSignupStore((state) => state.pending);
-  const clearPending = useSignupStore((state) => state.clear);
-  const setSession = useAuthStore((state) => state.setSession);
+  const email = useForgotPasswordStore((state) => state.email);
+  const setOtp = useForgotPasswordStore((state) => state.setOtp);
 
   const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(''));
   const [secondsLeft, setSecondsLeft] = useState(OTP_SECONDS);
   const [error, setError] = useState<string | null>(null);
-  const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // no pending signup means this screen was opened directly (or after a
-  // refresh, since the signup store isn't persisted) - nothing to verify
+  // no pending email means this screen was opened directly (or after a
+  // refresh, since the store isn't persisted) - nothing to verify
   useEffect(() => {
-    if (!pending) {
-      router.replace('/profile-setup');
+    if (!email) {
+      router.replace('/forgot-password');
     }
-  }, [pending, router]);
+  }, [email, router]);
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -68,9 +59,10 @@ export default function VerifyOtpPage() {
     }
   };
 
-  const handleVerify = async () => {
-    if (!pending) return;
-
+  // there's no separate "verify" endpoint for password reset - the OTP is
+  // only actually checked once it's submitted together with the new
+  // password, so this step just collects it and moves on
+  const handleContinue = () => {
     const otp = digits.join('');
     if (otp.length !== OTP_LENGTH) {
       setError('Enter the full 6 digit code');
@@ -78,32 +70,17 @@ export default function VerifyOtpPage() {
     }
 
     setError(null);
-    setIsVerifying(true);
-    try {
-      const response = await api.post<VerifyResponse>('/auth/verify-email', {
-        emailAddress: pending.emailAddress,
-        otp,
-      });
-      setSession(response.data.data.accessToken, response.data.data.refreshToken, {
-        firstName: pending.firstName,
-        lastName: pending.lastName,
-      });
-      clearPending();
-      router.push('/profile-setup/verify-id');
-    } catch (err) {
-      setError(getApiErrorMessage(err));
-    } finally {
-      setIsVerifying(false);
-    }
+    setOtp(otp);
+    router.push('/forgot-password/reset');
   };
 
   const handleResend = async () => {
-    if (!pending) return;
+    if (!email) return;
 
     setError(null);
     setIsResending(true);
     try {
-      await api.post('/auth/register', pending);
+      await api.post('/auth/forgot-password', { email });
       setSecondsLeft(OTP_SECONDS);
       setDigits(Array(OTP_LENGTH).fill(''));
       inputRefs.current[0]?.focus();
@@ -114,12 +91,12 @@ export default function VerifyOtpPage() {
     }
   };
 
-  if (!pending) return null;
+  if (!email) return null;
 
   return (
-    <AuthScreenLayout topLabel="VERIFICATION">
+    <AuthScreenLayout>
       <h1 className="text-3xl font-extrabold text-[var(--color-light)]">
-        We Sent You a Code
+        Confirm Passcode
       </h1>
       <p className="mt-4 text-[var(--color-light)]">
         A one-time code has been sent to your email. Please check your inbox
@@ -151,11 +128,10 @@ export default function VerifyOtpPage() {
       <div className="mt-auto flex flex-col gap-4 pb-6">
         <button
           type="button"
-          onClick={handleVerify}
-          disabled={isVerifying}
-          className="rounded-full bg-[var(--color-primary)] py-4 font-semibold uppercase text-[var(--color-dark)] disabled:opacity-60"
+          onClick={handleContinue}
+          className="rounded-full bg-[var(--color-primary)] py-4 font-semibold uppercase text-[var(--color-dark)]"
         >
-          {isVerifying ? 'Verifying...' : 'Verify'}
+          Verify
         </button>
         <button
           type="button"
