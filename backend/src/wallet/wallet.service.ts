@@ -2,10 +2,11 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { createHash, randomUUID } from 'crypto';
+import { randomInt, randomUUID } from 'crypto';
+import { comparePassword } from '../common/crypto/password';
 import { PrismaService } from '../prisma/prisma.service';
-import { TransferDto } from './wallet.dto';
 
 // every new wallet starts with this fake balance, no real money is involved
 const STARTING_BALANCE = 50_000;
@@ -16,8 +17,10 @@ export class WalletService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createWallet(userId: string) {
+    const accountNumber = await this.generateUniqueAccountNumber();
+
     return this.prisma.wallet.create({
-      data: { userId, balance: STARTING_BALANCE },
+      data: { userId, balance: STARTING_BALANCE, accountNumber },
     });
   }
 
@@ -30,7 +33,58 @@ export class WalletService {
   async getAccountNumber(userId: string) {
     const wallet = await this.findWalletOrThrow(userId);
 
-    return { accountNumber: this.fakeAccountNumber(wallet.id) };
+    return { accountNumber: wallet.accountNumber };
+  }
+
+  // lets a sender see who they're paying (name) before confirming, without
+  // exposing anything beyond that name + the account number they already typed
+  async resolveAccountNumber(accountNumber: string, currentUserId: string) {
+    const wallet = await this.prisma.wallet.findUnique({
+      where: { accountNumber },
+      include: {
+        user: { select: { id: true, firstName: true, lastName: true } },
+      },
+    });
+
+    if (!wallet) {
+      throw new NotFoundException('No UIPay account found with that number');
+    }
+
+    if (wallet.user.id === currentUserId) {
+      throw new BadRequestException('you cannot send money to yourself');
+    }
+
+    return {
+      userId: wallet.user.id,
+      accountName: `${wallet.user.firstName} ${wallet.user.lastName}`,
+    };
+  }
+
+  // distinct people this user has actually sent money to before - different
+  // from the saved Beneficiary list, which is added explicitly
+  async getRecentRecipients(userId: string) {
+    const transactions = await this.prisma.transaction.findMany({
+      where: { senderId: userId },
+      distinct: ['recipientId'],
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+      include: {
+        recipient: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            wallets: { select: { accountNumber: true }, take: 1 },
+          },
+        },
+      },
+    });
+
+    return transactions.map((tx) => ({
+      userId: tx.recipient.id,
+      accountName: `${tx.recipient.firstName} ${tx.recipient.lastName}`,
+      accountNumber: tx.recipient.wallets[0]?.accountNumber ?? null,
+    }));
   }
 
   async getHistory(userId: string) {
@@ -40,7 +94,35 @@ export class WalletService {
     });
   }
 
-  async transfer(senderId: string, dto: TransferDto, method = TRANSFER_METHOD) {
+  // NFC/QR merchant payments call transfer() directly with their own DTOs
+  // that have no PIN concept, so PIN verification lives here as its own
+  // step instead of inside transfer() - only the user-facing wallet
+  // transfer endpoint calls it first.
+  async verifyTransactionPin(userId: string, pin: string) {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { transactionPinHash: true },
+    });
+
+    if (!user.transactionPinHash) {
+      throw new UnauthorizedException(
+        'Set a transaction PIN before sending money',
+      );
+    }
+
+    const isValidPin = await comparePassword(pin, user.transactionPinHash);
+    if (!isValidPin) {
+      throw new UnauthorizedException('Incorrect PIN');
+    }
+  }
+
+  // takes just the fields movement actually needs - NFC/QR pass their own
+  // pin-less objects here, so this can't require TransferDto's pin field
+  async transfer(
+    senderId: string,
+    dto: { recipientId: string; amount: number },
+    method = TRANSFER_METHOD,
+  ) {
     if (senderId === dto.recipientId) {
       throw new BadRequestException('you cannot send money to yourself');
     }
@@ -98,12 +180,15 @@ export class WalletService {
     return wallet;
   }
 
-  private fakeAccountNumber(walletId: string): string {
-    // not a real NUBAN, just something stable-looking until BaaS gives us a real one
-    const hash = createHash('sha256').update(walletId).digest('hex');
-    return BigInt(`0x${hash.slice(0, 12)}`)
-      .toString()
-      .slice(0, 10)
-      .padStart(10, '0');
+  private async generateUniqueAccountNumber(): Promise<string> {
+    // not a real NUBAN, just a stable, unique-looking number until a real
+    // BaaS assigns one
+    for (;;) {
+      const candidate = randomInt(1_000_000_000, 10_000_000_000).toString();
+      const existing = await this.prisma.wallet.findUnique({
+        where: { accountNumber: candidate },
+      });
+      if (!existing) return candidate;
+    }
   }
 }

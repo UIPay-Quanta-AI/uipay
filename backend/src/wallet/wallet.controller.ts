@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '../auth/jwt/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { JwtPayload } from '../auth/jwt/jwt-payload.interface';
@@ -28,11 +28,35 @@ export class WalletController {
     );
   }
 
+  @Get('resolve/:accountNumber')
+  async resolveAccountNumber(
+    @CurrentUser() user: JwtPayload,
+    @Param('accountNumber') accountNumber: string,
+  ) {
+    const resolved = await this.service.resolveAccountNumber(
+      accountNumber,
+      user.sub,
+    );
+
+    return successResponse('Account resolved successfully', resolved);
+  }
+
   @Post('transfer')
   async transfer(@CurrentUser() user: JwtPayload, @Body() body: TransferDto) {
+    await this.service.verifyTransactionPin(user.sub, body.pin);
     const transaction = await this.service.transfer(user.sub, body);
 
     return successResponse('Transfer successful', transaction);
+  }
+
+  @Get('recent-recipients')
+  async getRecentRecipients(@CurrentUser() user: JwtPayload) {
+    const recipients = await this.service.getRecentRecipients(user.sub);
+
+    return successResponse(
+      'Recent recipients retrieved successfully',
+      recipients,
+    );
   }
 
   @Get('history')

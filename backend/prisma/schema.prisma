@@ -22,6 +22,8 @@ model User {
   idType             String?   @map("id_type")
   idNumber           String?   @map("id_number")
   identityVerifiedAt DateTime? @map("identity_verified_at")
+  // hashed 4-digit PIN required to authorize a transfer, separate from the login password
+  transactionPinHash String?   @map("transaction_pin_hash")
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt          DateTime  @updatedAt() @map("updated_at")
   sessions           Session[]
@@ -53,10 +55,13 @@ model Session {
 
 // holds a user's spendable balance. one wallet per user for now, may support multiple currencies later
 model Wallet {
-  id       String  @id @default(uuid())
-  userId   String  @map("user_id")
-  balance  Decimal @default(0) @db.Decimal(18, 2)
-  currency String  @default("NGN")
+  id            String  @id @default(uuid())
+  userId        String  @map("user_id")
+  balance       Decimal @default(0) @db.Decimal(18, 2)
+  currency      String  @default("NGN")
+  // stable, looked-up-by number - not derived on the fly, so a sender can
+  // resolve a recipient's name from it before paying
+  accountNumber String  @unique @map("account_number")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
