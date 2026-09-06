@@ -5,20 +5,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { AuthScreenLayout } from '@/components/AuthScreenLayout';
-import { useAuthStore } from '@/store/auth';
+import { useAuthHydration, useAuthStore } from '@/store/auth';
 
 export default function VerifyIdPage() {
   const router = useRouter();
+  const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
 
   // this screen only makes sense once the account is created and verified
   useEffect(() => {
-    if (!accessToken) {
+    if (hasHydrated && !accessToken) {
       router.replace('/profile-setup');
     }
-  }, [accessToken, router]);
+  }, [hasHydrated, accessToken, router]);
 
-  if (!accessToken) return null;
+  if (!hasHydrated || !accessToken) return null;
 
   return (
     <AuthScreenLayout>

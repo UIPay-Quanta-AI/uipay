@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { AuthScreenLayout } from './AuthScreenLayout';
 import { TextInput } from './TextInput';
 import api, { getApiErrorMessage } from '@/services/api';
-import { useAuthStore } from '@/store/auth';
+import { useAuthHydration, useAuthStore } from '@/store/auth';
 
 const COPY = {
   bvn: {
@@ -22,6 +22,7 @@ const COPY = {
 
 export function VerifyIdForm({ idType }: { idType: 'bvn' | 'nin' }) {
   const router = useRouter();
+  const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -29,10 +30,10 @@ export function VerifyIdForm({ idType }: { idType: 'bvn' | 'nin' }) {
   const { title, subtitle, placeholder } = COPY[idType];
 
   useEffect(() => {
-    if (!accessToken) {
+    if (hasHydrated && !accessToken) {
       router.replace('/profile-setup');
     }
-  }, [accessToken, router]);
+  }, [hasHydrated, accessToken, router]);
 
   const handleVerify = async () => {
     if (!/^\d{11}$/.test(value)) {
@@ -52,7 +53,7 @@ export function VerifyIdForm({ idType }: { idType: 'bvn' | 'nin' }) {
     }
   };
 
-  if (!accessToken) return null;
+  if (!hasHydrated || !accessToken) return null;
 
   return (
     <AuthScreenLayout>
