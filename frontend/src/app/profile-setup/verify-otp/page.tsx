@@ -19,7 +19,6 @@ interface VerifyResponse {
 export default function VerifyOtpPage() {
   const router = useRouter();
   const pending = useSignupStore((state) => state.pending);
-  const clearPending = useSignupStore((state) => state.clear);
   const setSession = useAuthStore((state) => state.setSession);
 
   const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(''));
@@ -88,7 +87,12 @@ export default function VerifyOtpPage() {
         firstName: pending.firstName,
         lastName: pending.lastName,
       });
-      clearPending();
+      // not calling clearPending() here - this page's own guard effect
+      // depends on `pending`, and clearing it while still mounted (push
+      // doesn't unmount synchronously) fires that guard's redirect back to
+      // /profile-setup, racing this navigation to verify-id. Same bug
+      // class as the one found in the forgot-password flow; pending gets a
+      // fresh value on the next signup attempt regardless.
       router.push('/profile-setup/verify-id');
     } catch (err) {
       setError(getApiErrorMessage(err));
