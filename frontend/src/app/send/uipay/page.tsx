@@ -1,5 +1,6 @@
 'use client';
 
+import { UserPlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BackButton } from '@/components/BackButton';
@@ -105,11 +106,11 @@ export default function SendToUipayAccountPage() {
     <GlowBackground className="flex flex-col px-6 py-10">
       <BackButton />
 
-      <h1 className="mt-6 text-2xl font-bold text-[var(--color-light)]">
+      <h1 className="animate-rise-in mt-6 text-2xl font-bold text-[var(--color-light)]">
         UIPay Account Number
       </h1>
 
-      <div className="mt-4">
+      <div className="animate-rise-in mt-4" style={{ animationDelay: '0.05s' }}>
         <TextInput
           variant="filled"
           value={accountNumber}
@@ -118,45 +119,63 @@ export default function SendToUipayAccountPage() {
           }
           placeholder="Enter 10 digit account number"
           inputMode="numeric"
+          className={
+            resolveError ? 'ring-2 ring-red-400' : resolved ? 'ring-2 ring-[var(--color-primary)]' : ''
+          }
         />
       </div>
 
-      {isResolving && (
-        <p className="mt-2 text-sm text-white/40">Looking up account...</p>
-      )}
-      {resolveError && (
-        <p className="mt-2 text-sm text-red-400">{resolveError}</p>
-      )}
-      {resolved && (
-        <div className="mt-2 rounded-xl bg-[rgba(var(--color-primary-rgb),0.15)] px-4 py-3 text-[var(--color-light)]">
-          {resolved.accountName}
-        </div>
-      )}
+      <div className="min-h-[52px]">
+        {isResolving && (
+          <p className="animate-fade-slide-in mt-2 text-sm text-white/40">
+            Looking up account...
+          </p>
+        )}
+        {resolveError && (
+          <p className="animate-shake mt-2 text-sm text-red-400">
+            {resolveError}
+          </p>
+        )}
+        {resolved && (
+          <div className="animate-pop-in mt-2 flex items-center gap-3 rounded-xl bg-[rgba(var(--color-primary-rgb),0.15)] px-4 py-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)] text-sm font-bold text-[var(--color-dark)]">
+              {resolved.accountName.charAt(0).toUpperCase()}
+            </span>
+            <span className="font-semibold text-[var(--color-light)]">
+              {resolved.accountName}
+            </span>
+          </div>
+        )}
+      </div>
 
-      <div className="mt-8 flex items-center gap-3">
+      <div className="mt-6 flex items-center gap-3">
         <h2 className="font-bold text-[var(--color-light)]">Beneficiaries</h2>
-        <button
-          type="button"
-          onClick={() => setTab('recent')}
-          className={`rounded-full px-3 py-1 text-sm font-semibold ${
-            tab === 'recent'
-              ? 'bg-[var(--color-primary)] text-[var(--color-dark)]'
-              : 'text-[var(--color-primary)]'
-          }`}
-        >
-          Recent
-        </button>
-        <button
-          type="button"
-          onClick={() => setTab('saved')}
-          className={`rounded-full px-3 py-1 text-sm font-semibold ${
-            tab === 'saved'
-              ? 'bg-[var(--color-primary)] text-[var(--color-dark)]'
-              : 'text-[var(--color-primary)]'
-          }`}
-        >
-          Saved
-        </button>
+        <div className="relative flex rounded-full bg-[#0d1929] p-1">
+          <button
+            type="button"
+            onClick={() => setTab('recent')}
+            className={`relative z-10 rounded-full px-3 py-1 text-sm font-semibold transition-colors ${
+              tab === 'recent' ? 'text-[var(--color-dark)]' : 'text-[var(--color-primary)]'
+            }`}
+          >
+            Recent
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab('saved')}
+            className={`relative z-10 rounded-full px-3 py-1 text-sm font-semibold transition-colors ${
+              tab === 'saved' ? 'text-[var(--color-dark)]' : 'text-[var(--color-primary)]'
+            }`}
+          >
+            Saved
+          </button>
+          <span
+            className="absolute inset-y-1 w-[calc(50%-4px)] rounded-full bg-[var(--color-primary)] transition-transform duration-300 ease-out"
+            style={{
+              transform: tab === 'saved' ? 'translateX(calc(100% + 4px))' : 'translateX(2px)',
+            }}
+          />
+        </div>
         <button
           type="button"
           onClick={() => router.push('/send/uipay/beneficiaries')}
@@ -166,7 +185,7 @@ export default function SendToUipayAccountPage() {
         </button>
       </div>
 
-      <div className="mt-3 flex flex-col gap-3 overflow-y-auto">
+      <div key={tab} className="animate-fade-slide-in mt-3 flex flex-col gap-3 overflow-y-auto">
         {tab === 'recent' &&
           (recent.length === 0 ? (
             <p className="text-sm text-white/40">No recent recipients yet.</p>
@@ -179,8 +198,11 @@ export default function SendToUipayAccountPage() {
                 onClick={() =>
                   entry.accountNumber && setAccountNumber(entry.accountNumber)
                 }
-                className="flex items-center justify-between rounded-xl bg-[rgba(var(--color-primary-rgb),0.1)] px-5 py-4 text-left text-[var(--color-light)] disabled:opacity-40"
+                className="flex items-center gap-3 rounded-xl bg-[rgba(var(--color-primary-rgb),0.1)] px-5 py-4 text-left text-[var(--color-light)] transition-transform active:scale-[0.98] disabled:opacity-40"
               >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.2)] text-sm font-bold text-[var(--color-primary)]">
+                  {entry.accountName.charAt(0).toUpperCase()}
+                </span>
                 {entry.accountName}
               </button>
             ))
@@ -195,12 +217,15 @@ export default function SendToUipayAccountPage() {
                 key={entry.id}
                 type="button"
                 onClick={() => setAccountNumber(entry.accountNumber)}
-                className="flex items-center justify-between rounded-xl bg-[rgba(var(--color-primary-rgb),0.1)] px-5 py-4 text-left text-[var(--color-light)]"
+                className="flex items-center justify-between rounded-xl bg-[rgba(var(--color-primary-rgb),0.1)] px-5 py-4 text-left text-[var(--color-light)] transition-transform active:scale-[0.98]"
               >
-                <span>{entry.nickname}</span>
-                <span className="text-sm text-white/40">
-                  {entry.bankName}
+                <span className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.2)] text-sm font-bold text-[var(--color-primary)]">
+                    {entry.nickname.charAt(0).toUpperCase()}
+                  </span>
+                  {entry.nickname}
                 </span>
+                <span className="text-sm text-white/40">{entry.bankName}</span>
               </button>
             ))
           ))}
@@ -209,8 +234,9 @@ export default function SendToUipayAccountPage() {
       <button
         type="button"
         onClick={() => router.push('/send/uipay/beneficiaries/add')}
-        className="mt-3 text-center text-sm text-[var(--color-primary)] underline"
+        className="mt-3 flex items-center justify-center gap-2 text-center text-sm text-[var(--color-primary)]"
       >
+        <UserPlus className="h-4 w-4" />
         Add a new beneficiary
       </button>
 
@@ -218,7 +244,7 @@ export default function SendToUipayAccountPage() {
         type="button"
         onClick={handleProceed}
         disabled={!resolved}
-        className="mt-auto mb-6 rounded-full bg-[var(--color-primary)] py-4 font-semibold uppercase text-[var(--color-dark)] disabled:opacity-40"
+        className="mt-auto mb-6 rounded-full bg-[var(--color-primary)] py-4 font-semibold uppercase text-[var(--color-dark)] transition-transform active:scale-95 disabled:opacity-40"
       >
         Proceed
       </button>

@@ -41,30 +41,46 @@ export default function SendSuccessPage() {
 
   return (
     <GlowBackground className="flex flex-col items-center px-6 py-16">
-      <span className="flex h-32 w-32 items-center justify-center rounded-full bg-[var(--color-primary)]">
-        <Check className="h-16 w-16 text-[var(--color-dark)]" />
-      </span>
+      <div className="relative flex h-32 w-32 items-center justify-center">
+        <span className="animate-pulse-ring absolute h-32 w-32 rounded-full bg-[var(--color-primary)]" />
+        <span
+          className="animate-pulse-ring absolute h-32 w-32 rounded-full bg-[var(--color-primary)]"
+          style={{ animationDelay: '0.5s' }}
+        />
+        <span className="animate-pop-in relative flex h-28 w-28 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_0_40px_rgba(var(--color-primary-rgb),0.5)]">
+          <Check className="h-14 w-14 text-[var(--color-dark)]" strokeWidth={3} />
+        </span>
+      </div>
 
-      <h1 className="mt-8 text-2xl font-bold text-[var(--color-light)]">
+      <h1 className="animate-rise-in mt-8 text-2xl font-bold text-[var(--color-light)]">
         Payment Successful
       </h1>
 
-      <p className="mt-6 text-4xl font-extrabold text-[var(--color-light)]">
+      <p
+        className="animate-rise-in mt-4 text-4xl font-extrabold text-[var(--color-light)]"
+        style={{ animationDelay: '0.1s' }}
+      >
         {formatNaira(lastTransaction.amount)}
       </p>
 
-      <p className="mt-6 text-white/60">Paid To:</p>
-      <p className="text-lg font-semibold text-[var(--color-light)]">
-        {lastTransaction.accountName}
-      </p>
-      <p className="text-sm text-white/40">
-        REF: {lastTransaction.reference}
-      </p>
+      <div
+        className="animate-rise-in mt-8 flex w-full flex-col items-center gap-1 rounded-2xl bg-[#0d1929] px-6 py-5"
+        style={{ animationDelay: '0.2s' }}
+      >
+        <span className="text-sm text-white/50">Paid To</span>
+        <span className="text-lg font-semibold text-[var(--color-light)]">
+          {lastTransaction.accountName}
+        </span>
+        <span className="mt-2 text-xs text-white/30">
+          REF: {lastTransaction.reference}
+        </span>
+      </div>
 
       <button
         type="button"
         onClick={handleShare}
-        className="mt-10 flex items-center gap-2 text-[var(--color-primary)]"
+        className="animate-rise-in mt-6 flex items-center gap-2 text-[var(--color-primary)]"
+        style={{ animationDelay: '0.3s' }}
       >
         <Share2 className="h-5 w-5" />
         Share Receipt
@@ -77,7 +93,7 @@ export default function SendSuccessPage() {
             clear();
             router.push('/send/uipay');
           }}
-          className="rounded-full bg-[#0d1929] py-4 font-semibold text-[var(--color-primary)]"
+          className="rounded-full bg-[#0d1929] py-4 font-semibold text-[var(--color-primary)] transition-transform active:scale-95"
         >
           Send Again
         </button>
@@ -87,7 +103,7 @@ export default function SendSuccessPage() {
             clear();
             router.push('/dashboard');
           }}
-          className="rounded-full bg-[var(--color-primary)] py-4 font-semibold text-[var(--color-dark)]"
+          className="rounded-full bg-[var(--color-primary)] py-4 font-semibold text-[var(--color-dark)] transition-transform active:scale-95"
         >
           Done
         </button>

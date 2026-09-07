@@ -66,23 +66,36 @@ export default function SendConfirmPage() {
     <GlowBackground className="flex flex-col px-6 py-10">
       <BackButton />
 
-      <h1 className="mt-8 text-center text-3xl font-bold text-[var(--color-light)]">
+      <h1 className="animate-rise-in mt-8 text-center text-3xl font-bold text-[var(--color-light)]">
         Sending To
       </h1>
 
-      <p className="mt-8 text-center text-xl font-bold text-[var(--color-light)]">
-        {recipient.accountName}
-      </p>
-      <p className="mt-4 text-center text-[var(--color-light)]">UIPay</p>
-      <p className="mt-4 text-center text-[var(--color-light)]">
-        {recipient.accountNumber}
-      </p>
+      <div
+        className="animate-rise-in mt-6 flex flex-col items-center gap-2"
+        style={{ animationDelay: '0.05s' }}
+      >
+        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.15)] text-2xl font-bold text-[var(--color-primary)]">
+          {recipient.accountName.charAt(0).toUpperCase()}
+        </span>
+        <p className="text-xl font-bold text-[var(--color-light)]">
+          {recipient.accountName}
+        </p>
+        <p className="text-sm text-white/50">
+          UIPay &middot; {recipient.accountNumber}
+        </p>
+      </div>
 
-      <p className="mt-8 text-center text-4xl font-extrabold text-[var(--color-light)]">
+      <p
+        className="animate-rise-in mt-8 text-center text-4xl font-extrabold text-[var(--color-light)]"
+        style={{ animationDelay: '0.1s' }}
+      >
         {formatNaira(amount)}
       </p>
 
-      <div className="mt-auto flex flex-col gap-3 rounded-2xl bg-[#0d1929] p-5 text-[var(--color-light)]">
+      <div
+        className="animate-rise-in mt-auto flex flex-col gap-3 rounded-2xl bg-[#0d1929] p-5 text-[var(--color-light)]"
+        style={{ animationDelay: '0.15s' }}
+      >
         <div className="flex justify-between">
           <span>Amount</span>
           <span>{formatNaira(amount)}</span>
@@ -107,7 +120,7 @@ export default function SendConfirmPage() {
         type="button"
         onClick={handleConfirm}
         disabled={isChecking}
-        className="mt-4 mb-6 rounded-full bg-[var(--color-primary)] py-4 font-semibold text-[var(--color-dark)] disabled:opacity-60"
+        className="mt-4 mb-6 rounded-full bg-[var(--color-primary)] py-4 font-semibold text-[var(--color-dark)] transition-transform active:scale-95 disabled:opacity-60"
       >
         {isChecking ? 'Please wait...' : 'Confirm & Pay'}
       </button>

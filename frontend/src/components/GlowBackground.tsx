@@ -6,17 +6,17 @@ export function GlowBackground({
   className?: string;
 }) {
   return (
-    <main
-      className={`relative min-h-screen w-screen overflow-hidden bg-[var(--color-dark)] ${className}`}
-    >
+    <main className="relative flex min-h-screen w-screen flex-col overflow-hidden bg-[var(--color-dark)]">
       <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[var(--color-primary)] opacity-30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[var(--color-primary)] opacity-30 blur-3xl" />
-      {/* flex-1 flex-col so a direct child using mt-auto (a bottom-pinned
-          button, say) actually reaches the bottom of the viewport - without
-          this the wrapper only sizes to its content, same as
-          AuthScreenLayout's own inner wrapper already does for the same
-          reason */}
-      <div className="relative flex flex-1 flex-col">{children}</div>
+      {/* the caller's className (flex direction, alignment, padding) has to
+          land on THIS element, not <main> - it's the actual flex container
+          around {children}. flex-1 makes it fill <main>'s full height (so a
+          child using mt-auto reaches the real bottom of the viewport);
+          <main> itself stays a fixed flex-col base so flex-1 has something
+          to grow against, independent of whatever direction/alignment the
+          caller asks for here. */}
+      <div className={`relative flex-1 ${className}`}>{children}</div>
     </main>
   );
 }

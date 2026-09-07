@@ -21,15 +21,22 @@ export default function SendFailurePage() {
 
   return (
     <GlowBackground className="flex flex-col items-center px-6 py-16">
-      <span className="flex h-32 w-32 items-center justify-center rounded-full bg-[var(--color-primary)]">
-        <X className="h-16 w-16 text-[var(--color-dark)]" />
+      <span className="animate-pop-in flex h-28 w-28 items-center justify-center rounded-full bg-red-500/15">
+        <span className="animate-shake flex h-20 w-20 items-center justify-center rounded-full bg-red-500">
+          <X className="h-10 w-10 text-[var(--color-light)]" strokeWidth={3} />
+        </span>
       </span>
 
-      <h1 className="mt-8 text-2xl font-bold text-[var(--color-light)]">
+      <h1 className="animate-rise-in mt-8 text-2xl font-bold text-[var(--color-light)]">
         Payment Unsuccessful
       </h1>
 
-      <p className="mt-4 text-center text-white/60">{lastError}</p>
+      <div
+        className="animate-rise-in mt-6 w-full rounded-2xl bg-[#0d1929] px-6 py-5 text-center text-white/60"
+        style={{ animationDelay: '0.1s' }}
+      >
+        {lastError}
+      </div>
 
       <button
         type="button"
@@ -37,7 +44,7 @@ export default function SendFailurePage() {
           clear();
           router.push('/dashboard');
         }}
-        className="mt-auto w-full rounded-full bg-[var(--color-primary)] py-4 font-semibold text-[var(--color-dark)]"
+        className="mt-auto w-full rounded-full bg-[var(--color-primary)] py-4 font-semibold text-[var(--color-dark)] transition-transform active:scale-95"
       >
         Done
       </button>
