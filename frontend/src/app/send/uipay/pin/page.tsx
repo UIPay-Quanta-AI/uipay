@@ -2,8 +2,9 @@
 
 import { Fingerprint } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GlowBackground } from '@/components/GlowBackground';
+import { PinInput } from '@/components/PinInput';
 import api, { getApiErrorMessage } from '@/services/api';
 import { useAuthHydration, useAuthStore } from '@/store/auth';
 import { useSendStore } from '@/store/send';
@@ -21,7 +22,8 @@ export default function EnterPinPage() {
 
   const [digits, setDigits] = useState<string[]>(Array(PIN_LENGTH).fill(''));
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [shake, setShake] = useState(false);
 
   useEffect(() => {
     if (hasHydrated && !accessToken) {
@@ -38,6 +40,7 @@ export default function EnterPinPage() {
   useEffect(() => {
     if (digits.every((d) => d !== '') && !isSubmitting && recipient && amount) {
       setIsSubmitting(true);
+      setError(null);
       api
         .post('/wallet/transfer', {
           recipientId: recipient.userId,
@@ -53,64 +56,63 @@ export default function EnterPinPage() {
           router.push('/send/uipay/success');
         })
         .catch((err) => {
-          setLastError(getApiErrorMessage(err));
+          const message = getApiErrorMessage(err);
+          // a mistyped PIN is by far the most common failure and deserves
+          // an immediate retry right here - anything else (insufficient
+          // balance, no wallet, etc) goes to the real failure screen
+          if (message === 'Incorrect PIN') {
+            setError(message);
+            setShake(true);
+            setTimeout(() => setShake(false), 500);
+            setDigits(Array(PIN_LENGTH).fill(''));
+            setIsSubmitting(false);
+            return;
+          }
+
+          setLastError(message);
           router.push('/send/uipay/failure');
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [digits]);
 
-  const handleChange = (index: number, value: string) => {
-    const digit = value.replace(/\D/g, '').slice(-1);
-    const next = [...digits];
-    next[index] = digit;
-    setDigits(next);
-    if (digit && index < PIN_LENGTH - 1) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (
-    index: number,
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    if (event.key === 'Backspace' && !digits[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
   if (!hasHydrated || !accessToken || !recipient || !amount) return null;
 
   return (
     <GlowBackground className="flex flex-col items-center px-6 py-10">
-      <h1 className="mt-16 text-3xl font-bold text-[var(--color-light)]">
-        Enter Pin
-      </h1>
-
-      <div className="mt-10 flex gap-3">
-        {digits.map((digit, index) => (
-          <input
-            key={index}
-            ref={(el) => {
-              inputRefs.current[index] = el;
-            }}
-            value={digit}
-            onChange={(event) => handleChange(index, event.target.value)}
-            onKeyDown={(event) => handleKeyDown(index, event)}
-            inputMode="numeric"
-            maxLength={1}
-            type="password"
-            disabled={isSubmitting}
-            className="h-16 w-14 rounded-xl border border-[rgba(var(--color-primary-rgb),0.5)] bg-[rgba(var(--color-primary-rgb),0.1)] text-center text-2xl font-bold text-[var(--color-primary)] focus:border-[var(--color-primary)] focus:outline-none disabled:opacity-50"
-          />
-        ))}
+      <div className="relative mt-16 flex h-20 w-20 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.12)]">
+        <Fingerprint className="h-10 w-10 text-[var(--color-primary)]" />
       </div>
 
-      {isSubmitting && (
-        <p className="mt-6 text-sm text-white/40">Processing payment...</p>
-      )}
+      <h1 className="animate-rise-in mt-8 text-3xl font-bold text-[var(--color-light)]">
+        Enter Pin
+      </h1>
+      <p
+        className="animate-rise-in mt-2 text-white/50"
+        style={{ animationDelay: '0.05s' }}
+      >
+        Authorize this payment of{' '}
+        <span className="text-[var(--color-primary)]">
+          ₦{amount.toLocaleString('en-NG', { minimumFractionDigits: 2 })}
+        </span>
+      </p>
 
-      <Fingerprint className="mt-16 h-10 w-10 text-[var(--color-primary)]" />
+      <div className="animate-rise-in mt-10" style={{ animationDelay: '0.1s' }}>
+        <PinInput
+          digits={digits}
+          onChange={setDigits}
+          autoFocus
+          shake={shake}
+          disabled={isSubmitting}
+        />
+      </div>
+
+      {error && (
+        <p className="mt-4 text-sm text-red-400">{error}</p>
+      )}
+      {isSubmitting && !error && (
+        <p className="mt-4 text-sm text-white/40">Processing payment...</p>
+      )}
 
       <button
         type="button"

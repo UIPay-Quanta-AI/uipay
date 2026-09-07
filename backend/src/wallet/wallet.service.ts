@@ -88,10 +88,22 @@ export class WalletService {
   }
 
   async getHistory(userId: string) {
-    return this.prisma.transaction.findMany({
+    const transactions = await this.prisma.transaction.findMany({
       where: { OR: [{ senderId: userId }, { recipientId: userId }] },
       orderBy: { createdAt: 'desc' },
+      include: {
+        sender: { select: { firstName: true, lastName: true } },
+        recipient: { select: { firstName: true, lastName: true } },
+      },
     });
+
+    // flatten to plain counterpart names so the frontend doesn't need to
+    // know which side of sender/recipient it's looking at
+    return transactions.map(({ sender, recipient, ...tx }) => ({
+      ...tx,
+      senderName: `${sender.firstName} ${sender.lastName}`,
+      recipientName: `${recipient.firstName} ${recipient.lastName}`,
+    }));
   }
 
   // NFC/QR merchant payments call transfer() directly with their own DTOs

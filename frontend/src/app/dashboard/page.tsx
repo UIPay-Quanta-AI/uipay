@@ -27,6 +27,8 @@ interface Transaction {
   id: string;
   senderId: string;
   recipientId: string;
+  senderName: string;
+  recipientName: string;
   amount: string;
   method: string;
   reference: string;
@@ -385,6 +387,10 @@ export default function DashboardPage() {
 
           {transactions.slice(0, 5).map((tx) => {
             const isDebit = tx.senderId === userId;
+            const counterpartName = isDebit ? tx.recipientName : tx.senderName;
+            const label = isDebit
+              ? `Transfer to ${counterpartName}`
+              : `Transfer from ${counterpartName}`;
             return (
               <div
                 key={tx.id}
@@ -392,11 +398,11 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center gap-3">
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.15)] text-sm font-bold text-[var(--color-primary)]">
-                    {tx.recipientId.charAt(0).toUpperCase()}
+                    {counterpartName.charAt(0).toUpperCase()}
                   </span>
                   <div className="flex flex-col">
                     <span className="text-sm text-[var(--color-light)]">
-                      {tx.method}
+                      {label}
                     </span>
                     <span className="text-xs text-white/40">
                       {tx.reference.slice(0, 10)}...

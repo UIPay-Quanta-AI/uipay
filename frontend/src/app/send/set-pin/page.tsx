@@ -1,66 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BackButton } from '@/components/BackButton';
 import { GlowBackground } from '@/components/GlowBackground';
+import { PinInput } from '@/components/PinInput';
 import api, { getApiErrorMessage } from '@/services/api';
 import { useAuthHydration, useAuthStore } from '@/store/auth';
 import { useSendStore } from '@/store/send';
 
 const PIN_LENGTH = 4;
-
-function PinBoxes({
-  digits,
-  onChange,
-  autoFocus,
-}: {
-  digits: string[];
-  onChange: (digits: string[]) => void;
-  autoFocus?: boolean;
-}) {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
-  const handleChange = (index: number, value: string) => {
-    const digit = value.replace(/\D/g, '').slice(-1);
-    const next = [...digits];
-    next[index] = digit;
-    onChange(next);
-    if (digit && index < PIN_LENGTH - 1) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (
-    index: number,
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    if (event.key === 'Backspace' && !digits[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
-  return (
-    <div className="flex justify-center gap-3">
-      {digits.map((digit, index) => (
-        <input
-          key={index}
-          ref={(el) => {
-            inputRefs.current[index] = el;
-            if (autoFocus && index === 0) el?.focus();
-          }}
-          value={digit}
-          onChange={(event) => handleChange(index, event.target.value)}
-          onKeyDown={(event) => handleKeyDown(index, event)}
-          inputMode="numeric"
-          maxLength={1}
-          type="password"
-          className="h-16 w-14 rounded-xl border border-[rgba(var(--color-primary-rgb),0.5)] bg-[rgba(var(--color-primary-rgb),0.1)] text-center text-2xl font-bold text-[var(--color-primary)] focus:border-[var(--color-primary)] focus:outline-none"
-        />
-      ))}
-    </div>
-  );
-}
 
 export default function SetPinPage() {
   const router = useRouter();
@@ -75,6 +24,7 @@ export default function SetPinPage() {
   );
   const [step, setStep] = useState<'create' | 'confirm'>('create');
   const [error, setError] = useState<string | null>(null);
+  const [shake, setShake] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -103,6 +53,8 @@ export default function SetPinPage() {
     ) {
       if (pin.join('') !== confirmPin.join('')) {
         setError("PINs don't match, try again");
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
         setPin(Array(PIN_LENGTH).fill(''));
         setConfirmPin(Array(PIN_LENGTH).fill(''));
         setStep('create');
@@ -125,23 +77,41 @@ export default function SetPinPage() {
   if (!hasHydrated || !accessToken || !recipient || !amount) return null;
 
   return (
-    <GlowBackground className="flex flex-col px-6 py-10">
-      <BackButton />
+    <GlowBackground className="flex flex-col items-center px-6 py-10">
+      <div className="w-full">
+        <BackButton />
+      </div>
 
-      <h1 className="mt-8 text-center text-3xl font-bold text-[var(--color-light)]">
+      <h1 className="animate-rise-in mt-8 text-center text-3xl font-bold text-[var(--color-light)]">
         {step === 'create' ? 'Create Transaction PIN' : 'Confirm Your PIN'}
       </h1>
-      <p className="mt-2 text-center text-white/60">
+      <p
+        className="animate-rise-in mt-2 text-center text-white/60"
+        style={{ animationDelay: '0.05s' }}
+      >
         {step === 'create'
           ? 'This PIN authorizes every payment you make'
           : 'Enter the same 4 digits again'}
       </p>
 
-      <div className="mt-10">
+      <div className="animate-rise-in mt-12" style={{ animationDelay: '0.1s' }}>
         {step === 'create' ? (
-          <PinBoxes digits={pin} onChange={setPin} autoFocus />
+          <PinInput
+            key="create"
+            digits={pin}
+            onChange={setPin}
+            autoFocus
+            shake={shake}
+          />
         ) : (
-          <PinBoxes digits={confirmPin} onChange={setConfirmPin} autoFocus />
+          <PinInput
+            key="confirm"
+            digits={confirmPin}
+            onChange={setConfirmPin}
+            autoFocus
+            shake={shake}
+            disabled={isSubmitting}
+          />
         )}
       </div>
 
