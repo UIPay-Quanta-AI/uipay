@@ -22,11 +22,15 @@ export default function SendAmountPage() {
   const router = useRouter();
   const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
-  const recipient = useSendStore((state) => state.recipient);
+  const source = useSendStore((state) => state.source);
   const setAmount = useSendStore((state) => state.setAmount);
 
+  const fixedAmount = source?.method === 'qr' ? source.fixedAmount : undefined;
+
   const [balance, setBalance] = useState<number | null>(null);
-  const [amountInput, setAmountInput] = useState('');
+  const [amountInput, setAmountInput] = useState(
+    fixedAmount ? String(fixedAmount) : '',
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,13 +39,13 @@ export default function SendAmountPage() {
     }
   }, [hasHydrated, accessToken, router]);
 
-  // no recipient means this screen was opened directly (or after a
-  // refresh, since the send store isn't persisted) - nothing to send to
+  // no payment source means this screen was opened directly (or after a
+  // refresh, since the send store isn't persisted) - nothing to pay for
   useEffect(() => {
-    if (hasHydrated && accessToken && !recipient) {
-      router.replace('/send/uipay');
+    if (hasHydrated && accessToken && !source) {
+      router.replace('/send');
     }
-  }, [hasHydrated, accessToken, recipient, router]);
+  }, [hasHydrated, accessToken, source, router]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -63,12 +67,10 @@ export default function SendAmountPage() {
 
     setError(null);
     setAmount(numericAmount);
-    router.push('/send/uipay/confirm');
+    router.push('/send/confirm');
   };
 
-  if (!hasHydrated || !accessToken || !recipient) return null;
-
-  const maskedAccount = '*'.repeat(recipient.accountNumber.length);
+  if (!hasHydrated || !accessToken || !source) return null;
 
   return (
     <GlowBackground className="flex flex-col px-6 py-10">
@@ -76,14 +78,14 @@ export default function SendAmountPage() {
 
       <div className="animate-rise-in mt-6 flex items-center gap-4 rounded-2xl bg-[#0d1929] px-5 py-4">
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.15)] text-lg font-bold text-[var(--color-primary)]">
-          {recipient.accountName.charAt(0).toUpperCase()}
+          {source.name.charAt(0).toUpperCase()}
         </span>
         <div className="flex flex-col">
           <span className="text-xs text-white/40">Sending to</span>
           <span className="font-bold text-[var(--color-light)]">
-            {recipient.accountName}
+            {source.name}
           </span>
-          <span className="text-sm text-white/40">{maskedAccount}</span>
+          <span className="text-sm text-white/40">{source.detail}</span>
         </div>
       </div>
 
@@ -104,7 +106,9 @@ export default function SendAmountPage() {
         className="animate-rise-in mt-10 flex flex-col items-center gap-2"
         style={{ animationDelay: '0.1s' }}
       >
-        <span className="text-sm text-white/40">Amount</span>
+        <span className="text-sm text-white/40">
+          {fixedAmount ? 'Amount (set by merchant)' : 'Amount'}
+        </span>
         <div className="flex items-center gap-1">
           <span className="text-3xl font-bold text-[var(--color-primary)]">
             ₦
@@ -119,26 +123,29 @@ export default function SendAmountPage() {
             }}
             inputMode="decimal"
             placeholder="0.00"
-            autoFocus
-            className="w-full max-w-[220px] bg-transparent text-center text-5xl font-extrabold text-[var(--color-light)] placeholder:text-white/20 focus:outline-none"
+            autoFocus={!fixedAmount}
+            readOnly={Boolean(fixedAmount)}
+            className="w-full max-w-[220px] bg-transparent text-center text-5xl font-extrabold text-[var(--color-light)] placeholder:text-white/20 focus:outline-none disabled:opacity-70"
           />
         </div>
 
-        <div className="mt-4 flex gap-2">
-          {QUICK_AMOUNTS.map((quick) => (
-            <button
-              key={quick}
-              type="button"
-              onClick={() => {
-                setError(null);
-                setAmountInput(String(quick));
-              }}
-              className="rounded-full bg-[#0d1929] px-4 py-2 text-sm font-semibold text-[var(--color-light)] transition-transform active:scale-95"
-            >
-              ₦{quick.toLocaleString('en-NG')}
-            </button>
-          ))}
-        </div>
+        {!fixedAmount && (
+          <div className="mt-4 flex gap-2">
+            {QUICK_AMOUNTS.map((quick) => (
+              <button
+                key={quick}
+                type="button"
+                onClick={() => {
+                  setError(null);
+                  setAmountInput(String(quick));
+                }}
+                className="rounded-full bg-[#0d1929] px-4 py-2 text-sm font-semibold text-[var(--color-light)] transition-transform active:scale-95"
+              >
+                ₦{quick.toLocaleString('en-NG')}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {error && (

@@ -15,7 +15,7 @@ export default function EnterPinPage() {
   const router = useRouter();
   const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
-  const recipient = useSendStore((state) => state.recipient);
+  const source = useSendStore((state) => state.source);
   const amount = useSendStore((state) => state.amount);
   const setLastTransaction = useSendStore((state) => state.setLastTransaction);
   const setLastError = useSendStore((state) => state.setLastError);
@@ -32,28 +32,36 @@ export default function EnterPinPage() {
   }, [hasHydrated, accessToken, router]);
 
   useEffect(() => {
-    if (hasHydrated && accessToken && (!recipient || !amount)) {
-      router.replace('/send/uipay');
+    if (hasHydrated && accessToken && (!source || !amount)) {
+      router.replace('/send');
     }
-  }, [hasHydrated, accessToken, recipient, amount, router]);
+  }, [hasHydrated, accessToken, source, amount, router]);
 
   useEffect(() => {
-    if (digits.every((d) => d !== '') && !isSubmitting && recipient && amount) {
+    if (digits.every((d) => d !== '') && !isSubmitting && source && amount) {
       setIsSubmitting(true);
       setError(null);
-      api
-        .post('/wallet/transfer', {
-          recipientId: recipient.userId,
-          amount,
-          pin: digits.join(''),
-        })
+
+      const pin = digits.join('');
+      const request =
+        source.method === 'wallet'
+          ? api.post('/wallet/transfer', {
+              recipientId: source.recipientId,
+              amount,
+              pin,
+            })
+          : source.method === 'nfc'
+            ? api.post('/nfc/pay', { tagId: source.tagId, amount, pin })
+            : api.post('/qr/pay', { qrCode: source.qrCode, amount, pin });
+
+      request
         .then((res) => {
           setLastTransaction({
             amount,
-            accountName: recipient.accountName,
+            name: source.name,
             reference: res.data.data.reference,
           });
-          router.push('/send/uipay/success');
+          router.push('/send/success');
         })
         .catch((err) => {
           const message = getApiErrorMessage(err);
@@ -70,13 +78,13 @@ export default function EnterPinPage() {
           }
 
           setLastError(message);
-          router.push('/send/uipay/failure');
+          router.push('/send/failure');
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [digits]);
 
-  if (!hasHydrated || !accessToken || !recipient || !amount) return null;
+  if (!hasHydrated || !accessToken || !source || !amount) return null;
 
   return (
     <GlowBackground className="flex flex-col items-center px-6 py-10">

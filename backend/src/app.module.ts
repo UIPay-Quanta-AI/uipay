@@ -17,6 +17,7 @@ import { NfcModule } from './nfc/nfc.module';
 import { QrModule } from './qr/qr.module';
 import { AdminModule } from './admin/admin.module';
 import { ProfileModule } from './profile/profile.module';
+import { SupportModule } from './support/support.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ProfileModule } from './profile/profile.module';
     QrModule,
     AdminModule,
     ProfileModule,
+    SupportModule,
   ],
   providers: [AuthService, RedisService],
 })

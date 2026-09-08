@@ -1,8 +1,61 @@
-import { IsEnum, Matches } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+} from 'class-validator';
 
 export class SetPinDto {
   @Matches(/^\d{4}$/, { message: 'PIN must be exactly 4 digits' })
   pin!: string;
+}
+
+export class VerifyPinDto {
+  @Matches(/^\d{4}$/, { message: 'PIN must be exactly 4 digits' })
+  pin!: string;
+}
+
+export class ChangePasswordDto {
+  @IsString()
+  @IsNotEmpty()
+  currentPassword!: string;
+
+  @IsString()
+  @Matches(/^(?=.*[A-Z])(?=.*[a-z])[^"'!.\-/\\|]{12,}$/, {
+    message:
+      'Password must be at least 12 characters, include an uppercase and a lowercase letter, and not contain " \' ! . - / \\ |',
+  })
+  newPassword!: string;
+}
+
+export class DeleteAccountDto {
+  @IsString()
+  @IsNotEmpty()
+  password!: string;
+}
+
+export class UpdateNotificationPreferencesDto {
+  @IsOptional()
+  @IsBoolean()
+  notifyGeneral?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  notifySmsAlerts?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  notifyCardTransactions?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  notifyTransfers?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  notifyOthers?: boolean;
 }
 
 export enum VerifiedIdType {

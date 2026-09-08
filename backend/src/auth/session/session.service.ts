@@ -29,4 +29,19 @@ export class SessionService {
       where: { userId },
     });
   }
+
+  async findAllForUser(userId: string) {
+    return this.prisma.session.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  // also filter by userId, so nobody can revoke another person's session
+  // just by guessing the id
+  async deleteOneForUser(userId: string, sessionId: string) {
+    await this.prisma.session.deleteMany({
+      where: { id: sessionId, userId },
+    });
+  }
 }

@@ -19,7 +19,7 @@ export default function SendConfirmPage() {
   const router = useRouter();
   const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
-  const recipient = useSendStore((state) => state.recipient);
+  const source = useSendStore((state) => state.source);
   const amount = useSendStore((state) => state.amount);
 
   const [balance, setBalance] = useState<number | null>(null);
@@ -33,10 +33,10 @@ export default function SendConfirmPage() {
   }, [hasHydrated, accessToken, router]);
 
   useEffect(() => {
-    if (hasHydrated && accessToken && (!recipient || !amount)) {
-      router.replace('/send/uipay');
+    if (hasHydrated && accessToken && (!source || !amount)) {
+      router.replace('/send');
     }
-  }, [hasHydrated, accessToken, recipient, amount, router]);
+  }, [hasHydrated, accessToken, source, amount, router]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -49,7 +49,7 @@ export default function SendConfirmPage() {
     try {
       const res = await api.get('/profile/me');
       if (res.data.data.hasTransactionPin) {
-        router.push('/send/uipay/pin');
+        router.push('/send/pin');
       } else {
         router.push('/send/set-pin');
       }
@@ -60,7 +60,7 @@ export default function SendConfirmPage() {
     }
   };
 
-  if (!hasHydrated || !accessToken || !recipient || !amount) return null;
+  if (!hasHydrated || !accessToken || !source || !amount) return null;
 
   return (
     <GlowBackground className="flex flex-col px-6 py-10">
@@ -75,14 +75,12 @@ export default function SendConfirmPage() {
         style={{ animationDelay: '0.05s' }}
       >
         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.15)] text-2xl font-bold text-[var(--color-primary)]">
-          {recipient.accountName.charAt(0).toUpperCase()}
+          {source.name.charAt(0).toUpperCase()}
         </span>
         <p className="text-xl font-bold text-[var(--color-light)]">
-          {recipient.accountName}
+          {source.name}
         </p>
-        <p className="text-sm text-white/50">
-          UIPay &middot; {recipient.accountNumber}
-        </p>
+        <p className="text-sm text-white/50">{source.detail}</p>
       </div>
 
       <p

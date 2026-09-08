@@ -168,20 +168,20 @@ export default function DashboardPage() {
             </span>
           </Link>
           <div className="flex gap-2">
-            <button
-              type="button"
+            <Link
+              href="/more/support"
               aria-label="Support"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.15)] text-[var(--color-primary)]"
             >
               <Headphones className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
+            </Link>
+            <Link
+              href="/notifications"
               aria-label="Notifications"
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.15)] text-[var(--color-primary)]"
             >
               <Bell className="h-5 w-5" />
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -388,9 +388,15 @@ export default function DashboardPage() {
           {transactions.slice(0, 5).map((tx) => {
             const isDebit = tx.senderId === userId;
             const counterpartName = isDebit ? tx.recipientName : tx.senderName;
+            const verb =
+              tx.method === 'nfc'
+                ? 'NFC payment'
+                : tx.method === 'qr'
+                  ? 'QR payment'
+                  : 'Transfer';
             const label = isDebit
-              ? `Transfer to ${counterpartName}`
-              : `Transfer from ${counterpartName}`;
+              ? `${verb} to ${counterpartName}`
+              : `${verb} from ${counterpartName}`;
             return (
               <div
                 key={tx.id}

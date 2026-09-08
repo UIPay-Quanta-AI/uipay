@@ -53,6 +53,8 @@ export class QrService {
   }
 
   async pay(customerId: string, dto: PayWithQrDto) {
+    await this.walletService.verifyTransactionPin(customerId, dto.pin);
+
     const resolved = await this.resolveQrCode(dto.qrCode);
 
     const amount = resolved.amount ?? dto.amount;

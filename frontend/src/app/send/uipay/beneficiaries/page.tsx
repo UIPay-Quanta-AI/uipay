@@ -26,7 +26,7 @@ export default function BeneficiariesPage() {
   const router = useRouter();
   const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
-  const setRecipient = useSendStore((state) => state.setRecipient);
+  const setSource = useSendStore((state) => state.setSource);
 
   const [tab, setTab] = useState<'recent' | 'saved'>('saved');
   const [recent, setRecent] = useState<RecentRecipient[]>([]);
@@ -53,12 +53,13 @@ export default function BeneficiariesPage() {
     setError(null);
     try {
       const res = await api.get(`/wallet/resolve/${accountNumber}`);
-      setRecipient({
-        userId: res.data.data.userId,
-        accountName: res.data.data.accountName,
-        accountNumber,
+      setSource({
+        method: 'wallet',
+        recipientId: res.data.data.userId,
+        name: res.data.data.accountName,
+        detail: `UIPay · ${accountNumber}`,
       });
-      router.push('/send/uipay/amount');
+      router.push('/send/amount');
     } catch (err) {
       setError(getApiErrorMessage(err));
     } finally {
