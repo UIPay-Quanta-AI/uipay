@@ -47,6 +47,8 @@ export class NfcService {
   }
 
   async pay(customerId: string, dto: PayWithTagDto) {
+    await this.walletService.verifyTransactionPin(customerId, dto.pin);
+
     const tag = await this.findActiveTagOrThrow(dto.tagId);
 
     return this.walletService.transfer(

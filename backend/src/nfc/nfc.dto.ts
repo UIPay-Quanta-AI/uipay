@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsPositive, IsString, Matches } from 'class-validator';
 
 export class RegisterTagDto {
   @IsString()
@@ -14,4 +14,7 @@ export class PayWithTagDto {
   @IsNumber()
   @IsPositive()
   amount!: number;
+
+  @Matches(/^\d{4}$/, { message: 'PIN must be exactly 4 digits' })
+  pin!: string;
 }

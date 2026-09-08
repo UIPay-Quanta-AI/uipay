@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  Matches,
   ValidateIf,
 } from 'class-validator';
 
@@ -38,4 +39,7 @@ export class PayWithQrDto {
   @IsNumber()
   @IsPositive()
   amount?: number;
+
+  @Matches(/^\d{4}$/, { message: 'PIN must be exactly 4 digits' })
+  pin!: string;
 }

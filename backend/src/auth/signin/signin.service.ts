@@ -6,6 +6,11 @@ import { AppJwtService } from '../jwt/app-jwt.service';
 import { SessionService } from '../session/session.service';
 import { cryptoHash } from '../../common/crypto/crypto';
 
+interface DeviceInfo {
+  userAgent?: string;
+  ipAddress?: string;
+}
+
 @Injectable()
 export class SignInService {
   constructor(
@@ -14,7 +19,7 @@ export class SignInService {
     private readonly sessionService: SessionService,
   ) {}
 
-  async signIn(body: SignInDto) {
+  async signIn(body: SignInDto, device: DeviceInfo = {}) {
     const email = body.email.trim().toLowerCase();
 
     const user = await this.prisma.user.findUnique({
@@ -46,6 +51,8 @@ export class SignInService {
       userId: user.id,
       refreshTokenHash,
       expiresAt: this.appJwtService.getRefreshTokenExpiryDate(),
+      userAgent: device.userAgent,
+      ipAddress: device.ipAddress,
     });
 
     return {

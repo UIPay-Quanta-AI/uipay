@@ -15,7 +15,7 @@ export default function SetPinPage() {
   const router = useRouter();
   const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
-  const recipient = useSendStore((state) => state.recipient);
+  const source = useSendStore((state) => state.source);
   const amount = useSendStore((state) => state.amount);
 
   const [pin, setPin] = useState<string[]>(Array(PIN_LENGTH).fill(''));
@@ -34,10 +34,10 @@ export default function SetPinPage() {
   }, [hasHydrated, accessToken, router]);
 
   useEffect(() => {
-    if (hasHydrated && accessToken && (!recipient || !amount)) {
-      router.replace('/send/uipay');
+    if (hasHydrated && accessToken && (!source || !amount)) {
+      router.replace('/send');
     }
-  }, [hasHydrated, accessToken, recipient, amount, router]);
+  }, [hasHydrated, accessToken, source, amount, router]);
 
   useEffect(() => {
     if (step === 'create' && pin.every((d) => d !== '')) {
@@ -65,7 +65,7 @@ export default function SetPinPage() {
       setIsSubmitting(true);
       api
         .post('/profile/pin', { pin: pin.join('') })
-        .then(() => router.push('/send/uipay/pin'))
+        .then(() => router.push('/send/pin'))
         .catch((err) => {
           setError(getApiErrorMessage(err));
           setIsSubmitting(false);
@@ -74,7 +74,7 @@ export default function SetPinPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [confirmPin]);
 
-  if (!hasHydrated || !accessToken || !recipient || !amount) return null;
+  if (!hasHydrated || !accessToken || !source || !amount) return null;
 
   return (
     <GlowBackground className="flex flex-col items-center px-6 py-10">

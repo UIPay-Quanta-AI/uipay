@@ -31,7 +31,7 @@ export default function SendSuccessPage() {
       navigator
         .share({
           title: 'Payment receipt',
-          text: `Paid ${formatNaira(lastTransaction.amount)} to ${lastTransaction.accountName}. Ref: ${lastTransaction.reference}`,
+          text: `Paid ${formatNaira(lastTransaction.amount)} to ${lastTransaction.name}. Ref: ${lastTransaction.reference}`,
         })
         .catch(() => {
           // user cancelled the share sheet - nothing to do
@@ -69,7 +69,7 @@ export default function SendSuccessPage() {
       >
         <span className="text-sm text-white/50">Paid To</span>
         <span className="text-lg font-semibold text-[var(--color-light)]">
-          {lastTransaction.accountName}
+          {lastTransaction.name}
         </span>
         <span className="mt-2 text-xs text-white/30">
           REF: {lastTransaction.reference}
@@ -91,7 +91,7 @@ export default function SendSuccessPage() {
           type="button"
           onClick={() => {
             clear();
-            router.push('/send/uipay');
+            router.push('/send');
           }}
           className="rounded-full bg-[#0d1929] py-4 font-semibold text-[var(--color-primary)] transition-transform active:scale-95"
         >

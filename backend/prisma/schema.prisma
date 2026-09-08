@@ -24,6 +24,14 @@ model User {
   identityVerifiedAt DateTime? @map("identity_verified_at")
   // hashed 4-digit PIN required to authorize a transfer, separate from the login password
   transactionPinHash String?   @map("transaction_pin_hash")
+  // which notification categories this user wants - no delivery system
+  // exists yet (no push/SMS/email sender), so these are real, saved
+  // preferences with nothing to gate just yet
+  notifyGeneral            Boolean  @default(true) @map("notify_general")
+  notifySmsAlerts          Boolean  @default(true) @map("notify_sms_alerts")
+  notifyCardTransactions   Boolean  @default(true) @map("notify_card_transactions")
+  notifyTransfers          Boolean  @default(true) @map("notify_transfers")
+  notifyOthers             Boolean  @default(true) @map("notify_others")
   createdAt          DateTime  @default(now()) @map("created_at")
   updatedAt          DateTime  @updatedAt() @map("updated_at")
   sessions           Session[]
@@ -34,6 +42,7 @@ model User {
   receivedTransactions Transaction[]  @relation("TransactionRecipient")
   merchants            Merchant[]
   voiceProfile         VoiceProfile?
+  supportMessages      SupportMessage[]
 
   @@map("users")
 }
@@ -43,6 +52,10 @@ model Session {
   userId           String
   refreshTokenHash String
   expiresAt        DateTime
+  // captured at sign-in/sign-up time from the request, purely for display
+  // on the Active Device List - not used for anything security-sensitive
+  userAgent        String?
+  ipAddress        String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -51,6 +64,23 @@ model Session {
 
   @@index([userId])
   @@map("session")
+}
+
+// "Chat with us" / "Report Issue" messages from the Support screen - just
+// persisted for now, no admin viewer or live chat wired up yet
+model SupportMessage {
+  id      String @id @default(uuid())
+  userId  String @map("user_id")
+  // "chat" or "issue"
+  type    String
+  message String
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("support_messages")
 }
 
 // holds a user's spendable balance. one wallet per user for now, may support multiple currencies later

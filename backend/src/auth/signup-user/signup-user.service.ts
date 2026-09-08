@@ -91,7 +91,11 @@ export class SignupUserService {
     };
   }
 
-  async verifyOtp(emailAddress: string, otp: string) {
+  async verifyOtp(
+    emailAddress: string,
+    otp: string,
+    device: { userAgent?: string; ipAddress?: string } = {},
+  ) {
     const email = emailAddress.toLowerCase().trim();
 
     if (!email) {
@@ -145,6 +149,8 @@ export class SignupUserService {
       userId: user.id,
       refreshTokenHash,
       expiresAt: this.appJwtService.getRefreshTokenExpiryDate(),
+      userAgent: device.userAgent,
+      ipAddress: device.ipAddress,
     });
 
     await this.redis.client.del(`register:${email}`);

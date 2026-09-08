@@ -32,7 +32,7 @@ export default function SendToUipayAccountPage() {
   const router = useRouter();
   const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
-  const setRecipient = useSendStore((state) => state.setRecipient);
+  const setSource = useSendStore((state) => state.setSource);
 
   const [accountNumber, setAccountNumber] = useState('');
   const [resolved, setResolved] = useState<ResolvedRecipient | null>(null);
@@ -92,12 +92,13 @@ export default function SendToUipayAccountPage() {
 
   const handleProceed = () => {
     if (!resolved) return;
-    setRecipient({
-      userId: resolved.userId,
-      accountName: resolved.accountName,
-      accountNumber,
+    setSource({
+      method: 'wallet',
+      recipientId: resolved.userId,
+      name: resolved.accountName,
+      detail: `UIPay · ${accountNumber}`,
     });
-    router.push('/send/uipay/amount');
+    router.push('/send/amount');
   };
 
   if (!hasHydrated || !accessToken) return null;
