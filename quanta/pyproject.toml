@@ -3,7 +3,7 @@ name = "quanta"
 version = "0.1.0"
 description = "Quanta AI microservice – intelligent orchestration layer for UI Pay"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
@@ -18,12 +18,15 @@ dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",
     "ruff>=0.7.0",
-    "httpx",
 ]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+# Tell Hatchling that the package code is inside the `app` folder
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
 
 [tool.ruff]
 line-length = 100
