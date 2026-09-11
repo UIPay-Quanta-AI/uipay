@@ -407,6 +407,20 @@ enforcing user ownership and authorization.
 
 ---
 
+### 5.2.1 Response Security
+
+Responses must never include:
+- payment PINs
+- passwords
+- API keys
+- service tokens
+- full account numbers (unless explicitly required and masked)
+- internal stack traces
+
+Every response must carry the request_id from the trusted RequestContext
+so that audit and observability systems can correlate the response with
+the original authenticated request.
+
 ## 5.3 Service-to-service authentication
 
 UI Pay Backend → Quanta Proxy and/or Quanta should use authenticated service-to-service communication.

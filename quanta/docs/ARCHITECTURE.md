@@ -429,6 +429,15 @@ This ensures every operation has an explicit identity and traceable request.
 
 # 12. Standard Response Contract
 
+All Quanta responses use a single structured contract:
+
+- request_id          (from RequestContext)
+- status
+- speech (optional)
+- ui
+- data (optional)
+- error (optional)
+
 All Quanta operations should converge on a predictable response structure.
 
 Example:
@@ -459,6 +468,7 @@ processing
 cancelled
 error
 ```
+The response contract is the only shape returned by the API layer.
 
 ### Supported UI types
 

@@ -3,6 +3,7 @@ from fastapi import FastAPI, Header, HTTPException
 from app.core.config import settings
 from app.core.constants import Operations
 from app.core.context import RequestContext
+from app.schemas.response import QuantaResponse, UIType
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -53,3 +54,28 @@ async def context_test(
         "operation": context.operation,
         "locale": context.locale,
     }
+
+@app.get("/response-test", response_model=QuantaResponse)
+async def response_test(
+    x_user_id: str | None = Header(default=None),
+    x_session_id: str | None = Header(default=None),
+):
+    if not x_user_id or not x_session_id:
+        raise HTTPException(status_code=401, detail="Missing trusted context")
+
+    context = RequestContext.create(
+        user_id=x_user_id,
+        session_id=x_session_id,
+        operation=Operations.VOICE,
+    )
+
+    # Demonstrate a confirmation-style response
+    return QuantaResponse.confirmation_required(
+        request_id=context.request_id,
+        speech_text="Confirm transfer of five thousand naira to Amaka Okafor.",
+        data={
+            "amount": 5000,
+            "currency": "NGN",
+            "recipient_name": "Amaka Okafor",
+        },
+    )
