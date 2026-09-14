@@ -21,8 +21,7 @@ class InvalidStateTransitionError(Exception):
         self.requested_state = requested_state
 
         super().__init__(
-            f"Invalid state transition: "
-            f"{current_state.value} -> {requested_state.value}"
+            f"Invalid state transition: {current_state.value} -> {requested_state.value}"
         )
 
 
@@ -37,9 +36,7 @@ class StateMachine:
 
     current_state: QuantaState = QuantaState.IDLE
 
-    _ALLOWED_TRANSITIONS: ClassVar[
-        dict[QuantaState, frozenset[QuantaState]]
-    ] = {
+    _ALLOWED_TRANSITIONS: ClassVar[dict[QuantaState, frozenset[QuantaState]]] = {
         QuantaState.IDLE: frozenset(
             {
                 QuantaState.PROCESSING,

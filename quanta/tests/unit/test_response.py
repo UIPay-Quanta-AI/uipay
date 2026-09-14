@@ -6,9 +6,8 @@ from pydantic import ValidationError
 from app.schemas.response import (
     QuantaResponse,
     ResponseStatus,
-    UIType,
     SpeechPayload,
-    ErrorPayload,
+    UIType,
 )
 
 
@@ -102,6 +101,7 @@ def test_request_id_is_required():
 def test_speech_payload_min_length():
     with pytest.raises(ValidationError):
         SpeechPayload(text="")
+
 
 def test_response_serialization():
     request_id = uuid4()

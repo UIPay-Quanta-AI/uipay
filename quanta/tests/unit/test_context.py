@@ -88,6 +88,7 @@ def test_context_is_immutable():
     with pytest.raises(AttributeError):
         context.user_id = "attacker"
 
+
 def test_log_dict_excludes_metadata():
     context = RequestContext.create(
         user_id="user_123",

@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ResponseStatus(str, Enum):
@@ -63,7 +63,7 @@ class QuantaResponse(BaseModel):
         speech_text: str | None = None,
         ui_type: UIType = UIType.SUCCESS,
         data: dict[str, Any] | None = None,
-    ) -> "QuantaResponse":
+    ) -> QuantaResponse:
         payload: dict[str, Any] = {
             "request_id": request_id,
             "status": ResponseStatus.SUCCESS,
@@ -82,15 +82,17 @@ class QuantaResponse(BaseModel):
         request_id: UUID,
         speech_text: str,
         data: dict[str, Any] | None = None,
-    ) -> "QuantaResponse":
-        return cls.model_validate({
-            "request_id": request_id,
-            "status": ResponseStatus.CONFIRMATION_REQUIRED,
-            "speech": {"text": speech_text},
-            "ui": {"type": UIType.TRANSFER_CONFIRMATION},
-            "data": data,
-            "error": None,
-        })
+    ) -> QuantaResponse:
+        return cls.model_validate(
+            {
+                "request_id": request_id,
+                "status": ResponseStatus.CONFIRMATION_REQUIRED,
+                "speech": {"text": speech_text},
+                "ui": {"type": UIType.TRANSFER_CONFIRMATION},
+                "data": data,
+                "error": None,
+            }
+        )
 
     @classmethod
     def input_required(
@@ -100,15 +102,17 @@ class QuantaResponse(BaseModel):
         speech_text: str,
         ui_type: UIType = UIType.ACCOUNT_INPUT,
         data: dict[str, Any] | None = None,
-    ) -> "QuantaResponse":
-        return cls.model_validate({
-            "request_id": request_id,
-            "status": ResponseStatus.INPUT_REQUIRED,
-            "speech": {"text": speech_text},
-            "ui": {"type": ui_type},
-            "data": data,
-            "error": None,
-        })
+    ) -> QuantaResponse:
+        return cls.model_validate(
+            {
+                "request_id": request_id,
+                "status": ResponseStatus.INPUT_REQUIRED,
+                "speech": {"text": speech_text},
+                "ui": {"type": ui_type},
+                "data": data,
+                "error": None,
+            }
+        )
 
     @classmethod
     def clarification_required(
@@ -118,15 +122,17 @@ class QuantaResponse(BaseModel):
         speech_text: str,
         ui_type: UIType = UIType.BENEFICIARY_SELECTION,
         data: dict[str, Any] | None = None,
-    ) -> "QuantaResponse":
-        return cls.model_validate({
-            "request_id": request_id,
-            "status": ResponseStatus.CLARIFICATION_REQUIRED,
-            "speech": {"text": speech_text},
-            "ui": {"type": ui_type},
-            "data": data,
-            "error": None,
-        })
+    ) -> QuantaResponse:
+        return cls.model_validate(
+            {
+                "request_id": request_id,
+                "status": ResponseStatus.CLARIFICATION_REQUIRED,
+                "speech": {"text": speech_text},
+                "ui": {"type": ui_type},
+                "data": data,
+                "error": None,
+            }
+        )
 
     @classmethod
     def error_response(
@@ -136,7 +142,7 @@ class QuantaResponse(BaseModel):
         code: str,
         message: str,
         speech_text: str | None = None,
-    ) -> "QuantaResponse":
+    ) -> QuantaResponse:
         payload: dict[str, Any] = {
             "request_id": request_id,
             "status": ResponseStatus.ERROR,

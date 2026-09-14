@@ -3,7 +3,7 @@ from fastapi import FastAPI, Header, HTTPException
 from app.core.config import settings
 from app.core.constants import Operations
 from app.core.context import RequestContext
-from app.schemas.response import QuantaResponse, UIType
+from app.schemas.response import QuantaResponse
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -20,6 +20,7 @@ async def health_check():
         "service": settings.APP_NAME,
         "environment": settings.ENVIRONMENT,
     }
+
 
 @app.get("/context-test")
 async def context_test(
@@ -54,6 +55,7 @@ async def context_test(
         "operation": context.operation,
         "locale": context.locale,
     }
+
 
 @app.get("/response-test", response_model=QuantaResponse)
 async def response_test(

@@ -1656,11 +1656,7 @@ All transitions should pass through a central transition mechanism.
 Conceptually:
 
 ```python
-transition(
-    current_state,
-    requested_state,
-    context
-)
+transition(current_state, requested_state, context)
 ```
 
 The transition guard should verify:
@@ -1684,11 +1680,7 @@ No arbitrary code should directly mutate the state.
 Conceptually:
 
 ```python
-if not state_machine.can_transition(
-    current_state,
-    next_state,
-    context
-):
+if not state_machine.can_transition(current_state, next_state, context):
     raise InvalidStateTransition()
 ```
 
@@ -2164,21 +2156,9 @@ Conceptually:
 
 ```python
 class StateMachine:
-    def can_transition(
-        self,
-        current_state,
-        next_state,
-        context
-    ) -> bool:
-        ...
+    def can_transition(self, current_state, next_state, context) -> bool: ...
 
-    def transition(
-        self,
-        current_state,
-        next_state,
-        context
-    ):
-        ...
+    def transition(self, current_state, next_state, context): ...
 ```
 
 And:

@@ -16,5 +16,10 @@ class Settings(BaseSettings):
     UIPAY_BASE_URL: str = "http://localhost:8001"
     UIPAY_SERVICE_TOKEN: str | None = None
 
+    LLM_PROVIDER: str = "claude"
+    ASR_PROVIDER: str = "naijavox"
+    OCR_PROVIDER: str = "paddleocr"
+    TTS_PROVIDER: str = "edge"
+
 
 settings = Settings()

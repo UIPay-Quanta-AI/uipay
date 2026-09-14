@@ -33,7 +33,7 @@ class RequestContext:
         operation: str,
         locale: str = "en-NG",
         metadata: dict[str, Any] | None = None,
-    ) -> "RequestContext":
+    ) -> RequestContext:
         """
         Create a new request context with a generated request ID.
         """

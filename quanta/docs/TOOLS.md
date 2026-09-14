@@ -175,19 +175,13 @@ Every tool must implement the same conceptual interface.
 
 ```python
 class Tool(ABC):
-
     name: str
     description: str
     risk: ToolRisk
     input_schema: type
     output_schema: type
 
-    async def execute(
-        self,
-        args: dict,
-        context: RequestContext
-    ) -> ToolResult:
-        ...
+    async def execute(self, args: dict, context: RequestContext) -> ToolResult: ...
 ```
 
 The implementation should never receive authentication credentials directly from Claude.
@@ -1216,23 +1210,10 @@ Example:
 
 ```python
 TOOL_ALLOWED_STATES = {
-    "search_beneficiary": {
-        "PROCESSING",
-        "AWAITING_INPUT"
-    },
-
-    "validate_account": {
-        "PROCESSING",
-        "AWAITING_INPUT"
-    },
-
-    "prepare_transfer": {
-        "PROCESSING"
-    },
-
-    "generate_budget": {
-        "PROCESSING"
-    }
+    "search_beneficiary": {"PROCESSING", "AWAITING_INPUT"},
+    "validate_account": {"PROCESSING", "AWAITING_INPUT"},
+    "prepare_transfer": {"PROCESSING"},
+    "generate_budget": {"PROCESSING"},
 }
 ```
 
@@ -1752,10 +1733,7 @@ Tools must not contain scattered raw HTTP calls.
 Bad:
 
 ```python
-requests.post(
-    "https://ui-pay/api/transfer",
-    ...
-)
+requests.post("https://ui-pay/api/transfer", ...)
 ```
 
 inside every tool.
@@ -1805,12 +1783,7 @@ Example:
 
 ```python
 mock_ui_pay.beneficiaries = [
-    {
-        "id": "ben_123",
-        "name": "Amaka Okafor",
-        "nickname": "Amaka",
-        "bank": "GTBank"
-    }
+    {"id": "ben_123", "name": "Amaka Okafor", "nickname": "Amaka", "bank": "GTBank"}
 ]
 ```
 
