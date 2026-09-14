@@ -102,3 +102,18 @@ def test_request_id_is_required():
 def test_speech_payload_min_length():
     with pytest.raises(ValidationError):
         SpeechPayload(text="")
+
+def test_response_serialization():
+    request_id = uuid4()
+
+    response = QuantaResponse.success(
+        request_id=request_id,
+        speech_text="Done.",
+    )
+
+    payload = response.model_dump(mode="json")
+
+    assert payload["request_id"] == str(request_id)
+    assert payload["status"] == "success"
+    assert payload["speech"]["text"] == "Done."
+    assert payload["ui"]["type"] == "success"
