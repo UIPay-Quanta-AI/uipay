@@ -53,14 +53,6 @@ def test_llm_message_rejects_invalid_role():
         )
 
 
-def test_llm_message_rejects_empty_content():
-    with pytest.raises(ValidationError):
-        LLMMessage(
-            role="user",
-            content="",
-        )
-
-
 def test_llm_tool_call():
     tool_call = LLMToolCall(
         id="call_123",

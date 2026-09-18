@@ -201,11 +201,12 @@ class Orchestrator:
         application state that should be returned without another LLM call.
         """
 
-        if llm_response.content:
+        if llm_response.content or llm_response.tool_calls:
             conversation.append(
                 LLMMessage(
                     role=LLMMessageRole.ASSISTANT,
                     content=llm_response.content,
+                    tool_calls=llm_response.tool_calls,
                 )
             )
 
@@ -262,28 +263,19 @@ class Orchestrator:
         tool_name: str,
         result: ToolResult,
     ) -> LLMMessage:
-        """
-        Normalize a tool result into the provider-neutral LLM message model.
-
-        The concrete Claude adapter will translate this normalized
-        representation into Claude's native tool-result format.
-        """
-
-        payload = {
-            "tool_call_id": tool_call_id,
-            "tool_name": tool_name,
-            "success": result.success,
-            "data": result.data,
-            "error_code": result.error_code,
-            "error_message": result.error_message,
-        }
-
         return LLMMessage(
             role=LLMMessageRole.TOOL,
             content=json.dumps(
-                payload,
+                {
+                    "tool_name": tool_name,
+                    "success": result.success,
+                    "data": result.data,
+                    "error_code": result.error_code,
+                    "error_message": result.error_message,
+                },
                 separators=(",", ":"),
             ),
+            tool_call_id=tool_call_id,
         )
 
     def _build_deterministic_response(

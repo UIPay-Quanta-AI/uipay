@@ -203,7 +203,7 @@ async def test_orchestrator_executes_llm_requested_tool():
     tool_messages = [message for message in second_messages if message.role.value == "tool"]
 
     assert len(tool_messages) == 1
-    assert "call-1" in tool_messages[0].content
+    assert tool_messages[0].tool_call_id == "call-1"
     assert '"success":true' in tool_messages[0].content
 
 
