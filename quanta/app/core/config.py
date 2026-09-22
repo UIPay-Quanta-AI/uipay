@@ -39,6 +39,14 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = "mock"
 
     ASR_PROVIDER: str = "naijavox"
+    ASR_MAX_AUDIO_BYTES: int = 10_000_000
+    ASR_MAX_DURATION_SECONDS: float = 60.0
+    ASR_NAIJAVOX_MODEL_ID: str = "Axiveri/NaijaVox-2.0"
+    ASR_NAIJAVOX_DEVICE: str = "auto"
+    ASR_FASTER_WHISPER_MODEL: str = "large-v3"
+    ASR_FASTER_WHISPER_DEVICE: str = "auto"
+    ASR_FASTER_WHISPER_COMPUTE_TYPE: str = "auto"
+
     OCR_PROVIDER: str = "paddleocr"
     TTS_PROVIDER: str = "edge"
 
