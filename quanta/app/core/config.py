@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     GROQ_MAX_RETRIES: int = 2
     GROQ_DISABLE_PARALLEL_TOOL_USE: bool = True
 
+    NAIJALINGO_API_KEY: str | None = None
+
     # ------------------------------------------------------------------ #
     # Domain constants                                                    #
     # ------------------------------------------------------------------ #
@@ -62,6 +64,7 @@ class Settings(BaseSettings):
     OCR_PADDLE_DEVICE: str = "auto"
 
     TTS_PROVIDER: str = "edge"
+    TTS_DEFAULT_GENDER: str = "female"
 
 
 settings = Settings()

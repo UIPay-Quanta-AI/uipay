@@ -1,0 +1,1710 @@
+================================================================================
+9jaLingo Speaker Discovery
+================================================================================
+
+================================================================================
+Hausa (ha)
+================================================================================
+Found 33 speaker(s).
+
+--- Speaker 1 ---
+id: abdullahi_ha
+name: Abdullahi
+language: ha
+gender: male
+details: Speaker(id='abdullahi_ha', name='Abdullahi', language='ha', gender='male', domain='Everyday Conversation')
+
+--- Speaker 2 ---
+id: abubakar_ha
+name: Abubakar
+language: ha
+gender: male
+details: Speaker(id='abubakar_ha', name='Abubakar', language='ha', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 3 ---
+id: aisha_ha
+name: Aisha
+language: ha
+gender: female
+details: Speaker(id='aisha_ha', name='Aisha', language='ha', gender='female', domain='Everyday Conversation')
+
+--- Speaker 4 ---
+id: aliyu_ha
+name: Aliyu
+language: ha
+gender: male
+details: Speaker(id='aliyu_ha', name='Aliyu', language='ha', gender='male', domain='Everyday Conversation')
+
+--- Speaker 5 ---
+id: bello_ha
+name: Bello
+language: ha
+gender: male
+details: Speaker(id='bello_ha', name='Bello', language='ha', gender='male', domain='Everyday Conversation')
+
+--- Speaker 6 ---
+id: bilkisu_ha
+name: Bilkisu
+language: ha
+gender: female
+details: Speaker(id='bilkisu_ha', name='Bilkisu', language='ha', gender='female', domain='Everyday Conversation')
+
+--- Speaker 7 ---
+id: binta_ha
+name: Binta
+language: ha
+gender: female
+details: Speaker(id='binta_ha', name='Binta', language='ha', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 8 ---
+id: danladi_ha
+name: Danladi
+language: ha
+gender: male
+details: Speaker(id='danladi_ha', name='Danladi', language='ha', gender='male', domain='Everyday Conversation')
+
+--- Speaker 9 ---
+id: fatima_ha
+name: Fatima
+language: ha
+gender: female
+details: Speaker(id='fatima_ha', name='Fatima', language='ha', gender='female', domain='Health Conversation')
+
+--- Speaker 10 ---
+id: hadiza_ha
+name: Hadiza
+language: ha
+gender: female
+details: Speaker(id='hadiza_ha', name='Hadiza', language='ha', gender='female', domain='Everyday Conversation')
+
+--- Speaker 11 ---
+id: halima_ha
+name: Halima
+language: ha
+gender: female
+details: Speaker(id='halima_ha', name='Halima', language='ha', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 12 ---
+id: hamza_ha
+name: Hamza
+language: ha
+gender: male
+details: Speaker(id='hamza_ha', name='Hamza', language='ha', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 13 ---
+id: haruna_ha
+name: Haruna
+language: ha
+gender: male
+details: Speaker(id='haruna_ha', name='Haruna', language='ha', gender='male', domain='Everyday Conversation')
+
+--- Speaker 14 ---
+id: hassan_ha
+name: Hassan
+language: ha
+gender: male
+details: Speaker(id='hassan_ha', name='Hassan', language='ha', gender='male', domain='Everyday Conversation')
+
+--- Speaker 15 ---
+id: hauwa_ha
+name: Hauwa
+language: ha
+gender: female
+details: Speaker(id='hauwa_ha', name='Hauwa', language='ha', gender='female', domain='Health Conversation')
+
+--- Speaker 16 ---
+id: hussaina_ha
+name: Hussaina
+language: ha
+gender: female
+details: Speaker(id='hussaina_ha', name='Hussaina', language='ha', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 17 ---
+id: ibrahim_ha
+name: Ibrahim
+language: ha
+gender: male
+details: Speaker(id='ibrahim_ha', name='Ibrahim', language='ha', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 18 ---
+id: ismail_ha
+name: Ismail
+language: ha
+gender: male
+details: Speaker(id='ismail_ha', name='Ismail', language='ha', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 19 ---
+id: jamila_ha
+name: Jamila
+language: ha
+gender: female
+details: Speaker(id='jamila_ha', name='Jamila', language='ha', gender='female', domain='Health Conversation')
+
+--- Speaker 20 ---
+id: mahmud_ha
+name: Mahmud
+language: ha
+gender: male
+details: Speaker(id='mahmud_ha', name='Mahmud', language='ha', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 21 ---
+id: maryam_ha
+name: Maryam
+language: ha
+gender: female
+details: Speaker(id='maryam_ha', name='Maryam', language='ha', gender='female', domain='Everyday Conversation')
+
+--- Speaker 22 ---
+id: mustapha_ha
+name: Mustapha
+language: ha
+gender: male
+details: Speaker(id='mustapha_ha', name='Mustapha', language='ha', gender='male', domain='Everyday Conversation')
+
+--- Speaker 23 ---
+id: nafisa_ha
+name: Nafisa
+language: ha
+gender: female
+details: Speaker(id='nafisa_ha', name='Nafisa', language='ha', gender='female', domain='Health Conversation')
+
+--- Speaker 24 ---
+id: nuhu_ha
+name: Nuhu
+language: ha
+gender: male
+details: Speaker(id='nuhu_ha', name='Nuhu', language='ha', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 25 ---
+id: rabi_ha
+name: Rabi
+language: ha
+gender: female
+details: Speaker(id='rabi_ha', name='Rabi', language='ha', gender='female', domain='Everyday Conversation')
+
+--- Speaker 26 ---
+id: sadiya_ha
+name: Sadiya
+language: ha
+gender: female
+details: Speaker(id='sadiya_ha', name='Sadiya', language='ha', gender='female', domain='Health Conversation')
+
+--- Speaker 27 ---
+id: safiya_ha
+name: Safiya
+language: ha
+gender: female
+details: Speaker(id='safiya_ha', name='Safiya', language='ha', gender='female', domain='Health Conversation')
+
+--- Speaker 28 ---
+id: sanusi_ha
+name: Sanusi
+language: ha
+gender: male
+details: Speaker(id='sanusi_ha', name='Sanusi', language='ha', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 29 ---
+id: shehu_ha
+name: Shehu
+language: ha
+gender: male
+details: Speaker(id='shehu_ha', name='Shehu', language='ha', gender='male', domain='Health Conversation')
+
+--- Speaker 30 ---
+id: tanko_ha
+name: Tanko
+language: ha
+gender: male
+details: Speaker(id='tanko_ha', name='Tanko', language='ha', gender='male', domain='Health Conversation')
+
+--- Speaker 31 ---
+id: usman_ha
+name: Usman
+language: ha
+gender: male
+details: Speaker(id='usman_ha', name='Usman', language='ha', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 32 ---
+id: yusuf_ha
+name: Yusuf
+language: ha
+gender: male
+details: Speaker(id='yusuf_ha', name='Yusuf', language='ha', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 33 ---
+id: zainab_ha
+name: Zainab
+language: ha
+gender: female
+details: Speaker(id='zainab_ha', name='Zainab', language='ha', gender='female', domain='Agricultural Conversation')
+
+
+================================================================================
+Igbo (ig)
+================================================================================
+Found 66 speaker(s).
+
+--- Speaker 1 ---
+id: adaeze_ig
+name: Adaeze
+language: ig
+gender: female
+details: Speaker(id='adaeze_ig', name='Adaeze', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 2 ---
+id: adanna_ig
+name: Adanna
+language: ig
+gender: female
+details: Speaker(id='adanna_ig', name='Adanna', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 3 ---
+id: adaora_ig
+name: Adaora
+language: ig
+gender: female
+details: Speaker(id='adaora_ig', name='Adaora', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 4 ---
+id: amarachi_ig
+name: Amarachi
+language: ig
+gender: female
+details: Speaker(id='amarachi_ig', name='Amarachi', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 5 ---
+id: awulika_ig
+name: Awulika
+language: ig
+gender: female
+details: Speaker(id='awulika_ig', name='Awulika', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 6 ---
+id: azubuike_ig
+name: Azubuike
+language: ig
+gender: male
+details: Speaker(id='azubuike_ig', name='Azubuike', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 7 ---
+id: chiamaka_ig
+name: Chiamaka
+language: ig
+gender: female
+details: Speaker(id='chiamaka_ig', name='Chiamaka', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 8 ---
+id: chibueze_ig
+name: Chibueze
+language: ig
+gender: male
+details: Speaker(id='chibueze_ig', name='Chibueze', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 9 ---
+id: chidimma_ig
+name: Chidimma
+language: ig
+gender: female
+details: Speaker(id='chidimma_ig', name='Chidimma', language='ig', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 10 ---
+id: chidinma_ig
+name: Chidinma
+language: ig
+gender: None
+details: Speaker(id='chidinma_ig', name='Chidinma', language='ig', gender=None, domain=None)
+
+--- Speaker 11 ---
+id: chijioke_ig
+name: Chijioke
+language: ig
+gender: male
+details: Speaker(id='chijioke_ig', name='Chijioke', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 12 ---
+id: chika_ig
+name: Chika
+language: ig
+gender: female
+details: Speaker(id='chika_ig', name='Chika', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 13 ---
+id: chinedu_ig
+name: Chinedu
+language: ig
+gender: male
+details: Speaker(id='chinedu_ig', name='Chinedu', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 14 ---
+id: chinwe_ig
+name: Chinwe
+language: ig
+gender: female
+details: Speaker(id='chinwe_ig', name='Chinwe', language='ig', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 15 ---
+id: chinyere_ig
+name: Chinyere
+language: ig
+gender: female
+details: Speaker(id='chinyere_ig', name='Chinyere', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 16 ---
+id: chisimdi_ig
+name: Chisimdi
+language: ig
+gender: female
+details: Speaker(id='chisimdi_ig', name='Chisimdi', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 17 ---
+id: chizoba_ig
+name: Chizoba
+language: ig
+gender: female
+details: Speaker(id='chizoba_ig', name='Chizoba', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 18 ---
+id: ekene_ig
+name: Ekene
+language: ig
+gender: male
+details: Speaker(id='ekene_ig', name='Ekene', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 19 ---
+id: emeka_ig
+name: Emeka
+language: ig
+gender: male
+details: Speaker(id='emeka_ig', name='Emeka', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 20 ---
+id: ezinne_ig
+name: Ezinne
+language: ig
+gender: female
+details: Speaker(id='ezinne_ig', name='Ezinne', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 21 ---
+id: ginika_ig
+name: Ginika
+language: ig
+gender: female
+details: Speaker(id='ginika_ig', name='Ginika', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 22 ---
+id: ifeanyi_ig
+name: Ifeanyi
+language: ig
+gender: male
+details: Speaker(id='ifeanyi_ig', name='Ifeanyi', language='ig', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 23 ---
+id: ifeanyichukwu_ig
+name: Ifeanyichukwu
+language: ig
+gender: female
+details: Speaker(id='ifeanyichukwu_ig', name='Ifeanyichukwu', language='ig', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 24 ---
+id: ifeoma_ig
+name: Ifeoma
+language: ig
+gender: female
+details: Speaker(id='ifeoma_ig', name='Ifeoma', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 25 ---
+id: ifunanya_ig
+name: Ifunanya
+language: ig
+gender: female
+details: Speaker(id='ifunanya_ig', name='Ifunanya', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 26 ---
+id: ijeoma_ig
+name: Ijeoma
+language: ig
+gender: female
+details: Speaker(id='ijeoma_ig', name='Ijeoma', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 27 ---
+id: ikechukwu_ig
+name: Ikechukwu
+language: ig
+gender: male
+details: Speaker(id='ikechukwu_ig', name='Ikechukwu', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 28 ---
+id: isioma_ig
+name: Isioma
+language: ig
+gender: female
+details: Speaker(id='isioma_ig', name='Isioma', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 29 ---
+id: jidenna_ig
+name: Jidenna
+language: ig
+gender: male
+details: Speaker(id='jidenna_ig', name='Jidenna', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 30 ---
+id: kelechi_ig
+name: Kelechi
+language: ig
+gender: female
+details: Speaker(id='kelechi_ig', name='Kelechi', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 31 ---
+id: kenechukwu_ig
+name: Kenechukwu
+language: ig
+gender: male
+details: Speaker(id='kenechukwu_ig', name='Kenechukwu', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 32 ---
+id: lotachi_ig
+name: Lotachi
+language: ig
+gender: female
+details: Speaker(id='lotachi_ig', name='Lotachi', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 33 ---
+id: munachi_ig
+name: Munachi
+language: ig
+gender: female
+details: Speaker(id='munachi_ig', name='Munachi', language='ig', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 34 ---
+id: ndubuisi_ig
+name: Ndubuisi
+language: ig
+gender: male
+details: Speaker(id='ndubuisi_ig', name='Ndubuisi', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 35 ---
+id: ngozi_ig
+name: Ngozi
+language: ig
+gender: female
+details: Speaker(id='ngozi_ig', name='Ngozi', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 36 ---
+id: nkechi_ig
+name: Nkechi
+language: ig
+gender: female
+details: Speaker(id='nkechi_ig', name='Nkechi', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 37 ---
+id: nkeiru_ig
+name: Nkeiru
+language: ig
+gender: female
+details: Speaker(id='nkeiru_ig', name='Nkeiru', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 38 ---
+id: nkemjika_ig
+name: Nkemjika
+language: ig
+gender: female
+details: Speaker(id='nkemjika_ig', name='Nkemjika', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 39 ---
+id: nkiruka_ig
+name: Nkiruka
+language: ig
+gender: female
+details: Speaker(id='nkiruka_ig', name='Nkiruka', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 40 ---
+id: nmesoma_ig
+name: Nmesoma
+language: ig
+gender: female
+details: Speaker(id='nmesoma_ig', name='Nmesoma', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 41 ---
+id: nneamaka_ig
+name: Nneamaka
+language: ig
+gender: female
+details: Speaker(id='nneamaka_ig', name='Nneamaka', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 42 ---
+id: nneka_ig
+name: Nneka
+language: ig
+gender: female
+details: Speaker(id='nneka_ig', name='Nneka', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 43 ---
+id: nnenne_ig
+name: Nnenne
+language: ig
+gender: female
+details: Speaker(id='nnenne_ig', name='Nnenne', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 44 ---
+id: nneoma_ig
+name: Nneoma
+language: ig
+gender: female
+details: Speaker(id='nneoma_ig', name='Nneoma', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 45 ---
+id: nwaka_ig
+name: Nwaka
+language: ig
+gender: female
+details: Speaker(id='nwaka_ig', name='Nwaka', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 46 ---
+id: nwamaka_ig
+name: Nwamaka
+language: ig
+gender: female
+details: Speaker(id='nwamaka_ig', name='Nwamaka', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 47 ---
+id: obi_ig
+name: Obi
+language: ig
+gender: male
+details: Speaker(id='obi_ig', name='Obi', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 48 ---
+id: obiageli_ig
+name: Obiageli
+language: ig
+gender: female
+details: Speaker(id='obiageli_ig', name='Obiageli', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 49 ---
+id: obianuju_ig
+name: Obianuju
+language: ig
+gender: female
+details: Speaker(id='obianuju_ig', name='Obianuju', language='ig', gender='female', domain='Business Conversation')
+
+--- Speaker 50 ---
+id: obinna_ig
+name: Obinna
+language: ig
+gender: male
+details: Speaker(id='obinna_ig', name='Obinna', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 51 ---
+id: obiora_ig
+name: Obiora
+language: ig
+gender: male
+details: Speaker(id='obiora_ig', name='Obiora', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 52 ---
+id: ogadinma_ig
+name: Ogadinma
+language: ig
+gender: female
+details: Speaker(id='ogadinma_ig', name='Ogadinma', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 53 ---
+id: ogechi_ig
+name: Ogechi
+language: ig
+gender: female
+details: Speaker(id='ogechi_ig', name='Ogechi', language='ig', gender='female', domain='Business Conversation')
+
+--- Speaker 54 ---
+id: ogechukwu_ig
+name: Ogechukwu
+language: ig
+gender: female
+details: Speaker(id='ogechukwu_ig', name='Ogechukwu', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 55 ---
+id: okechukwu_ig
+name: Okechukwu
+language: ig
+gender: male
+details: Speaker(id='okechukwu_ig', name='Okechukwu', language='ig', gender='male', domain='Business Conversation')
+
+--- Speaker 56 ---
+id: oluomachi_ig
+name: Oluomachi
+language: ig
+gender: female
+details: Speaker(id='oluomachi_ig', name='Oluomachi', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 57 ---
+id: onyinye_ig
+name: Onyinye
+language: ig
+gender: female
+details: Speaker(id='onyinye_ig', name='Onyinye', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 58 ---
+id: somtochi_ig
+name: Somtochi
+language: ig
+gender: female
+details: Speaker(id='somtochi_ig', name='Somtochi', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 59 ---
+id: tochukwu_ig
+name: Tochukwu
+language: ig
+gender: male
+details: Speaker(id='tochukwu_ig', name='Tochukwu', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 60 ---
+id: uchenna_ig
+name: Uchenna
+language: ig
+gender: female
+details: Speaker(id='uchenna_ig', name='Uchenna', language='ig', gender='female', domain='Business Conversation')
+
+--- Speaker 61 ---
+id: ugochi_ig
+name: Ugochi
+language: ig
+gender: female
+details: Speaker(id='ugochi_ig', name='Ugochi', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 62 ---
+id: ugochukwu_ig
+name: Ugochukwu
+language: ig
+gender: male
+details: Speaker(id='ugochukwu_ig', name='Ugochukwu', language='ig', gender='male', domain='Everyday Conversation')
+
+--- Speaker 63 ---
+id: ujunwa_ig
+name: Ujunwa
+language: ig
+gender: female
+details: Speaker(id='ujunwa_ig', name='Ujunwa', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 64 ---
+id: uloaku_ig
+name: Uloaku
+language: ig
+gender: female
+details: Speaker(id='uloaku_ig', name='Uloaku', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 65 ---
+id: uloma_ig
+name: Uloma
+language: ig
+gender: female
+details: Speaker(id='uloma_ig', name='Uloma', language='ig', gender='female', domain='Everyday Conversation')
+
+--- Speaker 66 ---
+id: uzoamaka_ig
+name: Uzoamaka
+language: ig
+gender: female
+details: Speaker(id='uzoamaka_ig', name='Uzoamaka', language='ig', gender='female', domain='Everyday Conversation')
+
+
+================================================================================
+Yoruba (yo)
+================================================================================
+Found 59 speaker(s).
+
+--- Speaker 1 ---
+id: abimbola_yo
+name: Abimbola
+language: yo
+gender: female
+details: Speaker(id='abimbola_yo', name='Abimbola', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 2 ---
+id: abisoye_yo
+name: Abisoye
+language: yo
+gender: female
+details: Speaker(id='abisoye_yo', name='Abisoye', language='yo', gender='female', domain='Business Conversation')
+
+--- Speaker 3 ---
+id: adekunle_yo
+name: Adekunle
+language: yo
+gender: male
+details: Speaker(id='adekunle_yo', name='Adekunle', language='yo', gender='male', domain='Health Conversation')
+
+--- Speaker 4 ---
+id: adeniyi_yo
+name: Adeniyi
+language: yo
+gender: male
+details: Speaker(id='adeniyi_yo', name='Adeniyi', language='yo', gender='male', domain='Health Conversation')
+
+--- Speaker 5 ---
+id: adeola_yo
+name: Adeola
+language: yo
+gender: female
+details: Speaker(id='adeola_yo', name='Adeola', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 6 ---
+id: adetokunbo_yo
+name: Adetokunbo
+language: yo
+gender: male
+details: Speaker(id='adetokunbo_yo', name='Adetokunbo', language='yo', gender='male', domain='Health Conversation')
+
+--- Speaker 7 ---
+id: adetola_yo
+name: Adetola
+language: yo
+gender: female
+details: Speaker(id='adetola_yo', name='Adetola', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 8 ---
+id: adunni_yo
+name: Adunni
+language: yo
+gender: female
+details: Speaker(id='adunni_yo', name='Adunni', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 9 ---
+id: afolake_yo
+name: Afolake
+language: yo
+gender: female
+details: Speaker(id='afolake_yo', name='Afolake', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 10 ---
+id: ayomide_yo
+name: Ayomide
+language: yo
+gender: female
+details: Speaker(id='ayomide_yo', name='Ayomide', language='yo', gender='female', domain='Business Conversation')
+
+--- Speaker 11 ---
+id: babajide_yo
+name: Babajide
+language: yo
+gender: male
+details: Speaker(id='babajide_yo', name='Babajide', language='yo', gender='male', domain='Business Conversation')
+
+--- Speaker 12 ---
+id: babatunde_yo
+name: Babatunde
+language: yo
+gender: male
+details: Speaker(id='babatunde_yo', name='Babatunde', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 13 ---
+id: bimpe_yo
+name: Bimpe
+language: yo
+gender: female
+details: Speaker(id='bimpe_yo', name='Bimpe', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 14 ---
+id: boluwatife_yo
+name: Boluwatife
+language: yo
+gender: female
+details: Speaker(id='boluwatife_yo', name='Boluwatife', language='yo', gender='female', domain='Health Conversation')
+
+--- Speaker 15 ---
+id: busayo_yo
+name: Busayo
+language: yo
+gender: female
+details: Speaker(id='busayo_yo', name='Busayo', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 16 ---
+id: dayo_yo
+name: Dayo
+language: yo
+gender: male
+details: Speaker(id='dayo_yo', name='Dayo', language='yo', gender='male', domain='Health Conversation')
+
+--- Speaker 17 ---
+id: eniola_yo
+name: Eniola
+language: yo
+gender: female
+details: Speaker(id='eniola_yo', name='Eniola', language='yo', gender='female', domain='Business Conversation')
+
+--- Speaker 18 ---
+id: femi_yo
+name: Femi
+language: yo
+gender: male
+details: Speaker(id='femi_yo', name='Femi', language='yo', gender='male', domain='Health Conversation')
+
+--- Speaker 19 ---
+id: folake_yo
+name: Folake
+language: yo
+gender: female
+details: Speaker(id='folake_yo', name='Folake', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 20 ---
+id: funmilayo_yo
+name: Funmilayo
+language: yo
+gender: female
+details: Speaker(id='funmilayo_yo', name='Funmilayo', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 21 ---
+id: ifeoluwa_yo
+name: Ifeoluwa
+language: yo
+gender: female
+details: Speaker(id='ifeoluwa_yo', name='Ifeoluwa', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 22 ---
+id: iyabo_yo
+name: Iyabo
+language: yo
+gender: female
+details: Speaker(id='iyabo_yo', name='Iyabo', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 23 ---
+id: jide_yo
+name: Jide
+language: yo
+gender: male
+details: Speaker(id='jide_yo', name='Jide', language='yo', gender='male', domain='Health Conversation')
+
+--- Speaker 24 ---
+id: jumoke_yo
+name: Jumoke
+language: yo
+gender: female
+details: Speaker(id='jumoke_yo', name='Jumoke', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 25 ---
+id: kehinde_yo
+name: Kehinde
+language: yo
+gender: male
+details: Speaker(id='kehinde_yo', name='Kehinde', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 26 ---
+id: kofoworola_yo
+name: Kofoworola
+language: yo
+gender: female
+details: Speaker(id='kofoworola_yo', name='Kofoworola', language='yo', gender='female', domain='Health Conversation')
+
+--- Speaker 27 ---
+id: kunle_yo
+name: Kunle
+language: yo
+gender: male
+details: Speaker(id='kunle_yo', name='Kunle', language='yo', gender='male', domain='Health Conversation')
+
+--- Speaker 28 ---
+id: mojisola_yo
+name: Mojisola
+language: yo
+gender: female
+details: Speaker(id='mojisola_yo', name='Mojisola', language='yo', gender='female', domain='Health Conversation')
+
+--- Speaker 29 ---
+id: morenike_yo
+name: Morenike
+language: yo
+gender: female
+details: Speaker(id='morenike_yo', name='Morenike', language='yo', gender='female', domain='Business Conversation')
+
+--- Speaker 30 ---
+id: morenikeji_yo
+name: Morenikeji
+language: yo
+gender: female
+details: Speaker(id='morenikeji_yo', name='Morenikeji', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 31 ---
+id: oladipo_yo
+name: Oladipo
+language: yo
+gender: male
+details: Speaker(id='oladipo_yo', name='Oladipo', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 32 ---
+id: olalekan_yo
+name: Olalekan
+language: yo
+gender: male
+details: Speaker(id='olalekan_yo', name='Olalekan', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 33 ---
+id: olatunde_yo
+name: Olatunde
+language: yo
+gender: male
+details: Speaker(id='olatunde_yo', name='Olatunde', language='yo', gender='male', domain='Business Conversation')
+
+--- Speaker 34 ---
+id: olatunji_yo
+name: Olatunji
+language: yo
+gender: male
+details: Speaker(id='olatunji_yo', name='Olatunji', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 35 ---
+id: olayinka_yo
+name: Olayinka
+language: yo
+gender: female
+details: Speaker(id='olayinka_yo', name='Olayinka', language='yo', gender='female', domain='Health Conversation')
+
+--- Speaker 36 ---
+id: ololade_yo
+name: Ololade
+language: yo
+gender: female
+details: Speaker(id='ololade_yo', name='Ololade', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 37 ---
+id: olufunke_yo
+name: Olufunke
+language: yo
+gender: female
+details: Speaker(id='olufunke_yo', name='Olufunke', language='yo', gender='female', domain='Business Conversation')
+
+--- Speaker 38 ---
+id: olusegun_yo
+name: Olusegun
+language: yo
+gender: male
+details: Speaker(id='olusegun_yo', name='Olusegun', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 39 ---
+id: oluwafemi_yo
+name: Oluwafemi
+language: yo
+gender: male
+details: Speaker(id='oluwafemi_yo', name='Oluwafemi', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 40 ---
+id: oluwakemi_yo
+name: Oluwakemi
+language: yo
+gender: female
+details: Speaker(id='oluwakemi_yo', name='Oluwakemi', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 41 ---
+id: oluwaseyi_yo
+name: Oluwaseyi
+language: yo
+gender: female
+details: Speaker(id='oluwaseyi_yo', name='Oluwaseyi', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 42 ---
+id: omolade_yo
+name: Omolade
+language: yo
+gender: female
+details: Speaker(id='omolade_yo', name='Omolade', language='yo', gender='female', domain='Health Conversation')
+
+--- Speaker 43 ---
+id: omolara_yo
+name: Omolara
+language: yo
+gender: female
+details: Speaker(id='omolara_yo', name='Omolara', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 44 ---
+id: omowunmi_yo
+name: Omowunmi
+language: yo
+gender: female
+details: Speaker(id='omowunmi_yo', name='Omowunmi', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 45 ---
+id: opeyemi_yo
+name: Opeyemi
+language: yo
+gender: female
+details: Speaker(id='opeyemi_yo', name='Opeyemi', language='yo', gender='female', domain='Health Conversation')
+
+--- Speaker 46 ---
+id: oyindamola_yo
+name: Oyindamola
+language: yo
+gender: female
+details: Speaker(id='oyindamola_yo', name='Oyindamola', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 47 ---
+id: ronke_yo
+name: Ronke
+language: yo
+gender: female
+details: Speaker(id='ronke_yo', name='Ronke', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 48 ---
+id: sade_yo
+name: Sade
+language: yo
+gender: female
+details: Speaker(id='sade_yo', name='Sade', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 49 ---
+id: segun_yo
+name: Segun
+language: yo
+gender: male
+details: Speaker(id='segun_yo', name='Segun', language='yo', gender='male', domain='Business Conversation')
+
+--- Speaker 50 ---
+id: simisola_yo
+name: Simisola
+language: yo
+gender: female
+details: Speaker(id='simisola_yo', name='Simisola', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 51 ---
+id: taiwo_yo
+name: Taiwo
+language: yo
+gender: male
+details: Speaker(id='taiwo_yo', name='Taiwo', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 52 ---
+id: temilade_yo
+name: Temilade
+language: yo
+gender: female
+details: Speaker(id='temilade_yo', name='Temilade', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 53 ---
+id: temiloluwa_yo
+name: Temiloluwa
+language: yo
+gender: male
+details: Speaker(id='temiloluwa_yo', name='Temiloluwa', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 54 ---
+id: temitope_yo
+name: Temitope
+language: yo
+gender: female
+details: Speaker(id='temitope_yo', name='Temitope', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 55 ---
+id: titilayo_yo
+name: Titilayo
+language: yo
+gender: female
+details: Speaker(id='titilayo_yo', name='Titilayo', language='yo', gender='female', domain='Everyday Conversation')
+
+--- Speaker 56 ---
+id: tolulope_yo
+name: Tolulope
+language: yo
+gender: female
+details: Speaker(id='tolulope_yo', name='Tolulope', language='yo', gender='female', domain='Health Conversation')
+
+--- Speaker 57 ---
+id: tunde_yo
+name: Tunde
+language: yo
+gender: male
+details: Speaker(id='tunde_yo', name='Tunde', language='yo', gender='male', domain='Business Conversation')
+
+--- Speaker 58 ---
+id: wale_yo
+name: Wale
+language: yo
+gender: male
+details: Speaker(id='wale_yo', name='Wale', language='yo', gender='male', domain='Everyday Conversation')
+
+--- Speaker 59 ---
+id: yetunde_yo
+name: Yetunde
+language: yo
+gender: female
+details: Speaker(id='yetunde_yo', name='Yetunde', language='yo', gender='female', domain='Business Conversation')
+
+
+================================================================================
+Nigerian Pidgin (pcm)
+================================================================================
+Found 82 speaker(s).
+
+--- Speaker 1 ---
+id: ada_pcm
+name: Ada
+language: pcm
+gender: female
+details: Speaker(id='ada_pcm', name='Ada', language='pcm', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 2 ---
+id: aisha_pcm
+name: Aisha
+language: pcm
+gender: female
+details: Speaker(id='aisha_pcm', name='Aisha', language='pcm', gender='female', domain='Health Conversation')
+
+--- Speaker 3 ---
+id: blessing_pcm
+name: Blessing
+language: pcm
+gender: female
+details: Speaker(id='blessing_pcm', name='Blessing', language='pcm', gender='female', domain='Health Conversation')
+
+--- Speaker 4 ---
+id: bola_pcm
+name: Bola
+language: pcm
+gender: male
+details: Speaker(id='bola_pcm', name='Bola', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 5 ---
+id: bose_pcm
+name: Bose
+language: pcm
+gender: female
+details: Speaker(id='bose_pcm', name='Bose', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 6 ---
+id: bright_pcm
+name: Bright
+language: pcm
+gender: male
+details: Speaker(id='bright_pcm', name='Bright', language='pcm', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 7 ---
+id: bunmi_pcm
+name: Bunmi
+language: pcm
+gender: female
+details: Speaker(id='bunmi_pcm', name='Bunmi', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 8 ---
+id: charles_pcm
+name: Charles
+language: pcm
+gender: male
+details: Speaker(id='charles_pcm', name='Charles', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 9 ---
+id: chioma_pcm
+name: Chioma
+language: pcm
+gender: female
+details: Speaker(id='chioma_pcm', name='Chioma', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 10 ---
+id: christy_pcm
+name: Christy
+language: pcm
+gender: female
+details: Speaker(id='christy_pcm', name='Christy', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 11 ---
+id: comfort_pcm
+name: Comfort
+language: pcm
+gender: female
+details: Speaker(id='comfort_pcm', name='Comfort', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 12 ---
+id: daniel_pcm
+name: Daniel
+language: pcm
+gender: male
+details: Speaker(id='daniel_pcm', name='Daniel', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 13 ---
+id: david_pcm
+name: David
+language: pcm
+gender: male
+details: Speaker(id='david_pcm', name='David', language='pcm', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 14 ---
+id: deborah_pcm
+name: Deborah
+language: pcm
+gender: female
+details: Speaker(id='deborah_pcm', name='Deborah', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 15 ---
+id: dora_pcm
+name: Dora
+language: pcm
+gender: female
+details: Speaker(id='dora_pcm', name='Dora', language='pcm', gender='female', domain='Business Conversation')
+
+--- Speaker 16 ---
+id: edith_pcm
+name: Edith
+language: pcm
+gender: female
+details: Speaker(id='edith_pcm', name='Edith', language='pcm', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 17 ---
+id: edwin_pcm
+name: Edwin
+language: pcm
+gender: male
+details: Speaker(id='edwin_pcm', name='Edwin', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 18 ---
+id: emmanuel_pcm
+name: Emmanuel
+language: pcm
+gender: male
+details: Speaker(id='emmanuel_pcm', name='Emmanuel', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 19 ---
+id: esther_pcm
+name: Esther
+language: pcm
+gender: female
+details: Speaker(id='esther_pcm', name='Esther', language='pcm', gender='female', domain='Health Conversation')
+
+--- Speaker 20 ---
+id: evelyn_pcm
+name: Evelyn
+language: pcm
+gender: female
+details: Speaker(id='evelyn_pcm', name='Evelyn', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 21 ---
+id: faith_pcm
+name: Faith
+language: pcm
+gender: female
+details: Speaker(id='faith_pcm', name='Faith', language='pcm', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 22 ---
+id: felix_pcm
+name: Felix
+language: pcm
+gender: male
+details: Speaker(id='felix_pcm', name='Felix', language='pcm', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 23 ---
+id: flora_pcm
+name: Flora
+language: pcm
+gender: female
+details: Speaker(id='flora_pcm', name='Flora', language='pcm', gender='female', domain='Health Conversation')
+
+--- Speaker 24 ---
+id: frank_pcm
+name: Frank
+language: pcm
+gender: male
+details: Speaker(id='frank_pcm', name='Frank', language='pcm', gender='male', domain='Business Conversation')
+
+--- Speaker 25 ---
+id: funke_pcm
+name: Funke
+language: pcm
+gender: female
+details: Speaker(id='funke_pcm', name='Funke', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 26 ---
+id: george_pcm
+name: George
+language: pcm
+gender: male
+details: Speaker(id='george_pcm', name='George', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 27 ---
+id: gift_pcm
+name: Gift
+language: pcm
+gender: female
+details: Speaker(id='gift_pcm', name='Gift', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 28 ---
+id: gloria_pcm
+name: Gloria
+language: pcm
+gender: female
+details: Speaker(id='gloria_pcm', name='Gloria', language='pcm', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 29 ---
+id: grace_pcm
+name: Grace
+language: pcm
+gender: female
+details: Speaker(id='grace_pcm', name='Grace', language='pcm', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 30 ---
+id: helen_pcm
+name: Helen
+language: pcm
+gender: female
+details: Speaker(id='helen_pcm', name='Helen', language='pcm', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 31 ---
+id: henry_pcm
+name: Henry
+language: pcm
+gender: male
+details: Speaker(id='henry_pcm', name='Henry', language='pcm', gender='male', domain='Health Conversation')
+
+--- Speaker 32 ---
+id: hope_pcm
+name: Hope
+language: pcm
+gender: female
+details: Speaker(id='hope_pcm', name='Hope', language='pcm', gender='female', domain='Health Conversation')
+
+--- Speaker 33 ---
+id: ify_pcm
+name: Ify
+language: pcm
+gender: female
+details: Speaker(id='ify_pcm', name='Ify', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 34 ---
+id: ike_pcm
+name: Ike
+language: pcm
+gender: male
+details: Speaker(id='ike_pcm', name='Ike', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 35 ---
+id: james_pcm
+name: James
+language: pcm
+gender: male
+details: Speaker(id='james_pcm', name='James', language='pcm', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 36 ---
+id: janet_pcm
+name: Janet
+language: pcm
+gender: female
+details: Speaker(id='janet_pcm', name='Janet', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 37 ---
+id: joseph_pcm
+name: Joseph
+language: pcm
+gender: male
+details: Speaker(id='joseph_pcm', name='Joseph', language='pcm', gender='male', domain='Business Conversation')
+
+--- Speaker 38 ---
+id: joy_pcm
+name: Joy
+language: pcm
+gender: female
+details: Speaker(id='joy_pcm', name='Joy', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 39 ---
+id: kalatu_pcm
+name: Kalatu
+language: pcm
+gender: female
+details: Speaker(id='kalatu_pcm', name='Kalatu', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 40 ---
+id: kemi_pcm
+name: Kemi
+language: pcm
+gender: female
+details: Speaker(id='kemi_pcm', name='Kemi', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 41 ---
+id: kenneth_pcm
+name: Kenneth
+language: pcm
+gender: male
+details: Speaker(id='kenneth_pcm', name='Kenneth', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 42 ---
+id: lawrence_pcm
+name: Lawrence
+language: pcm
+gender: male
+details: Speaker(id='lawrence_pcm', name='Lawrence', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 43 ---
+id: linda_pcm
+name: Linda
+language: pcm
+gender: female
+details: Speaker(id='linda_pcm', name='Linda', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 44 ---
+id: lola_pcm
+name: Lola
+language: pcm
+gender: female
+details: Speaker(id='lola_pcm', name='Lola', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 45 ---
+id: lucky_pcm
+name: Lucky
+language: pcm
+gender: male
+details: Speaker(id='lucky_pcm', name='Lucky', language='pcm', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 46 ---
+id: mabel_pcm
+name: Mabel
+language: pcm
+gender: female
+details: Speaker(id='mabel_pcm', name='Mabel', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 47 ---
+id: mary_pcm
+name: Mary
+language: pcm
+gender: female
+details: Speaker(id='mary_pcm', name='Mary', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 48 ---
+id: mercy_pcm
+name: Mercy
+language: pcm
+gender: female
+details: Speaker(id='mercy_pcm', name='Mercy', language='pcm', gender='female', domain='Health Conversation')
+
+--- Speaker 49 ---
+id: michael_pcm
+name: Michael
+language: pcm
+gender: male
+details: Speaker(id='michael_pcm', name='Michael', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 50 ---
+id: moses_pcm
+name: Moses
+language: pcm
+gender: male
+details: Speaker(id='moses_pcm', name='Moses', language='pcm', gender='male', domain='Business Conversation')
+
+--- Speaker 51 ---
+id: nike_pcm
+name: Nike
+language: pcm
+gender: female
+details: Speaker(id='nike_pcm', name='Nike', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 52 ---
+id: nkem_pcm
+name: Nkem
+language: pcm
+gender: male
+details: Speaker(id='nkem_pcm', name='Nkem', language='pcm', gender='male', domain='Business Conversation')
+
+--- Speaker 53 ---
+id: nonso_pcm
+name: Nonso
+language: pcm
+gender: male
+details: Speaker(id='nonso_pcm', name='Nonso', language='pcm', gender='male', domain='Health Conversation')
+
+--- Speaker 54 ---
+id: obasi_pcm
+name: Obasi
+language: pcm
+gender: male
+details: Speaker(id='obasi_pcm', name='Obasi', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 55 ---
+id: olu_pcm
+name: Olu
+language: pcm
+gender: male
+details: Speaker(id='olu_pcm', name='Olu', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 56 ---
+id: ovie_pcm
+name: Ovie
+language: pcm
+gender: female
+details: Speaker(id='ovie_pcm', name='Ovie', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 57 ---
+id: patience_pcm
+name: Patience
+language: pcm
+gender: female
+details: Speaker(id='patience_pcm', name='Patience', language='pcm', gender='female', domain='Health Conversation')
+
+--- Speaker 58 ---
+id: patrick_pcm
+name: Patrick
+language: pcm
+gender: male
+details: Speaker(id='patrick_pcm', name='Patrick', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 59 ---
+id: pauline_pcm
+name: Pauline
+language: pcm
+gender: female
+details: Speaker(id='pauline_pcm', name='Pauline', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 60 ---
+id: peace_pcm
+name: Peace
+language: pcm
+gender: female
+details: Speaker(id='peace_pcm', name='Peace', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 61 ---
+id: peter_pcm
+name: Peter
+language: pcm
+gender: male
+details: Speaker(id='peter_pcm', name='Peter', language='pcm', gender='male', domain='Health Conversation')
+
+--- Speaker 62 ---
+id: precious_pcm
+name: Precious
+language: pcm
+gender: female
+details: Speaker(id='precious_pcm', name='Precious', language='pcm', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 63 ---
+id: queen_pcm
+name: Queen
+language: pcm
+gender: female
+details: Speaker(id='queen_pcm', name='Queen', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 64 ---
+id: raymond_pcm
+name: Raymond
+language: pcm
+gender: male
+details: Speaker(id='raymond_pcm', name='Raymond', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 65 ---
+id: richard_pcm
+name: Richard
+language: pcm
+gender: male
+details: Speaker(id='richard_pcm', name='Richard', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 66 ---
+id: rose_pcm
+name: Rose
+language: pcm
+gender: female
+details: Speaker(id='rose_pcm', name='Rose', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 67 ---
+id: ruth_pcm
+name: Ruth
+language: pcm
+gender: female
+details: Speaker(id='ruth_pcm', name='Ruth', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 68 ---
+id: samuel_pcm
+name: Samuel
+language: pcm
+gender: male
+details: Speaker(id='samuel_pcm', name='Samuel', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 69 ---
+id: sarah_pcm
+name: Sarah
+language: pcm
+gender: female
+details: Speaker(id='sarah_pcm', name='Sarah', language='pcm', gender='female', domain='Health Conversation')
+
+--- Speaker 70 ---
+id: seun_pcm
+name: Seun
+language: pcm
+gender: male
+details: Speaker(id='seun_pcm', name='Seun', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 71 ---
+id: stella_pcm
+name: Stella
+language: pcm
+gender: female
+details: Speaker(id='stella_pcm', name='Stella', language='pcm', gender='female', domain='Business Conversation')
+
+--- Speaker 72 ---
+id: sunday_pcm
+name: Sunday
+language: pcm
+gender: male
+details: Speaker(id='sunday_pcm', name='Sunday', language='pcm', gender='male', domain='Agricultural Conversation')
+
+--- Speaker 73 ---
+id: tayo_pcm
+name: Tayo
+language: pcm
+gender: male
+details: Speaker(id='tayo_pcm', name='Tayo', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 74 ---
+id: temi_pcm
+name: Temi
+language: pcm
+gender: female
+details: Speaker(id='temi_pcm', name='Temi', language='pcm', gender='female', domain='Agricultural Conversation')
+
+--- Speaker 75 ---
+id: toyin_pcm
+name: Toyin
+language: pcm
+gender: female
+details: Speaker(id='toyin_pcm', name='Toyin', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 76 ---
+id: uju_pcm
+name: Uju
+language: pcm
+gender: female
+details: Speaker(id='uju_pcm', name='Uju', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 77 ---
+id: victor_pcm
+name: Victor
+language: pcm
+gender: male
+details: Speaker(id='victor_pcm', name='Victor', language='pcm', gender='male', domain='Everyday Conversation')
+
+--- Speaker 78 ---
+id: victoria_pcm
+name: Victoria
+language: pcm
+gender: female
+details: Speaker(id='victoria_pcm', name='Victoria', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 79 ---
+id: vivian_pcm
+name: Vivian
+language: pcm
+gender: female
+details: Speaker(id='vivian_pcm', name='Vivian', language='pcm', gender='female', domain='Health Conversation')
+
+--- Speaker 80 ---
+id: wunmi_pcm
+name: Wunmi
+language: pcm
+gender: female
+details: Speaker(id='wunmi_pcm', name='Wunmi', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 81 ---
+id: yeside_pcm
+name: Yeside
+language: pcm
+gender: female
+details: Speaker(id='yeside_pcm', name='Yeside', language='pcm', gender='female', domain='Everyday Conversation')
+
+--- Speaker 82 ---
+id: zainab_pcm
+name: Zainab
+language: pcm
+gender: female
+details: Speaker(id='zainab_pcm', name='Zainab', language='pcm', gender='female', domain='Everyday Conversation')
+
+================================================================================
+Speaker discovery complete.
+================================================================================

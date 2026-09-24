@@ -21,7 +21,7 @@ class RequestContext:
     user_id: str
     session_id: str
     operation: str
-    locale: str = "en-NG"
+    locale: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
@@ -31,7 +31,7 @@ class RequestContext:
         user_id: str,
         session_id: str,
         operation: str,
-        locale: str = "en-NG",
+        locale: str | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> RequestContext:
         """

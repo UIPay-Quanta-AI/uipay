@@ -27,6 +27,12 @@ class TTSProviderError(ProviderError):
     """
 
 
+class TTSConfigurationError(TTSProviderError):
+    """
+    Raised when TTS provider configuration is invalid or unsupported.
+    """
+
+
 class TTSProvider(Provider):
     """
     Provider-neutral interface for text-to-speech providers.
