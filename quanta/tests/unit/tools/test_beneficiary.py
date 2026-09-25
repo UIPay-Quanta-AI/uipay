@@ -2,7 +2,7 @@ import pytest
 
 from app.clients.ui_pay.mock import MockUIPayClient
 from app.core.context import RequestContext
-from app.tools.implementations.beneficiary import (
+from app.tools.implementations.beneficiaries.beneficiary import (
     SearchBeneficiaryInput,
     SearchBeneficiaryTool,
 )
@@ -95,6 +95,7 @@ async def test_beneficiary_search_respects_authenticated_user(
         ),
     )
 
+    assert result.data is not None
     found = result.data["beneficiaries"]
 
     assert all(item["account_name"] != "Another User" for item in found)
@@ -125,7 +126,9 @@ async def test_search_beneficiary_by_account_name(
         ),
     )
 
+    assert result.data is not None
     found = result.data["beneficiaries"]
 
     assert len(found) == 1
     assert found[0]["nickname"] == "Brother"
+

@@ -13,7 +13,7 @@ from app.orchestration.transfer_guard import (
 from app.schemas.response import ResponseStatus
 from app.services.confirmation_service import handle_pending_confirmation
 from app.tools.executor import ToolExecutor
-from app.tools.implementations.beneficiary import SearchBeneficiaryTool
+from app.tools.implementations.beneficiaries.beneficiary import SearchBeneficiaryTool
 from app.tools.implementations.transfer import PrepareTransferTool
 from app.tools.policy import ToolPolicy
 from app.tools.registry import ToolRegistry

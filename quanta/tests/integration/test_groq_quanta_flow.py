@@ -9,7 +9,7 @@ from app.providers.llm.groq import GroqProvider
 from app.schemas.response import ResponseStatus
 from app.tools.base import Tool, ToolClassification, ToolResult
 from app.tools.executor import ToolExecutor
-from app.tools.implementations.beneficiary import SearchBeneficiaryTool
+from app.tools.implementations.beneficiaries.beneficiary import SearchBeneficiaryTool
 from app.tools.policy import ToolPolicy
 from app.tools.registry import ToolRegistry
 

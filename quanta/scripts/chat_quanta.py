@@ -53,7 +53,7 @@ from app.providers.llm.groq import GroqProvider
 from app.providers.llm.mock import MockLLMProvider
 from app.schemas.response import QuantaResponse, ResponseStatus
 from app.tools.executor import ToolExecutor
-from app.tools.implementations.beneficiary import SearchBeneficiaryTool
+from app.tools.implementations.beneficiaries.beneficiary import SearchBeneficiaryTool
 from app.tools.implementations.transfer import PrepareTransferTool
 from app.tools.policy import ToolPolicy
 from app.tools.registry import ToolRegistry
