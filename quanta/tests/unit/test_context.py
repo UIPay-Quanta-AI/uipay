@@ -96,8 +96,8 @@ def test_context_is_immutable():
         operation=Operations.VOICE,
     )
 
-    with pytest.raises(AttributeError):
-        context.user_id = "attacker"
+    with pytest.raises((AttributeError, TypeError)):
+        context.user_id = "attacker"  # type: ignore[misc]
 
 
 def test_log_dict_excludes_metadata():

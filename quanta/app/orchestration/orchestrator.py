@@ -291,7 +291,7 @@ class Orchestrator:
                 tool_name="prepare_transfer",
             )
 
-            if tool_message is None:
+            if tool_message is None or tool_message.content is None:
                 return QuantaResponse.error_response(
                     request_id=context.request_id,
                     code="MISSING_PREPARATION_RESULT",
@@ -388,7 +388,7 @@ class Orchestrator:
         tool_name: str,
     ) -> LLMMessage | None:
         for message in reversed(conversation):
-            if message.role != LLMMessageRole.TOOL:
+            if message.role != LLMMessageRole.TOOL or not message.content:
                 continue
 
             try:

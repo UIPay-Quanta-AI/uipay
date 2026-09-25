@@ -26,15 +26,8 @@ class MockUIPayClient(UIPayClient):
             for beneficiary in self._beneficiaries
             if beneficiary["user_id"] == user_id
             and (
-                normalized_query
-                in beneficiary.get(
-                    "nickname",
-                    "",
-                ).lower()
-                or normalized_query
-                in beneficiary.get(
-                    "account_name",
-                    "",
-                ).lower()
+                normalized_query in beneficiary.get("nickname", "").lower()
+                or normalized_query in beneficiary.get("account_name", "").lower()
+                or normalized_query in beneficiary.get("account_number", "").lower()
             )
         ]
