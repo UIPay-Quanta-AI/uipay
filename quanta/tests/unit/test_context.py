@@ -16,8 +16,19 @@ def test_context_creation():
     assert context.user_id == "user_123"
     assert context.session_id == "session_456"
     assert context.operation == Operations.VOICE
-    assert context.locale == "en-NG"
+    assert context.locale is None
     assert isinstance(context.request_id, UUID)
+
+
+def test_context_creation_with_locale():
+    context = RequestContext.create(
+        user_id="user_123",
+        session_id="session_456",
+        operation=Operations.VOICE,
+        locale="en-NG",
+    )
+
+    assert context.locale == "en-NG"
 
 
 def test_request_ids_are_unique():
@@ -85,8 +96,8 @@ def test_context_is_immutable():
         operation=Operations.VOICE,
     )
 
-    with pytest.raises(AttributeError):
-        context.user_id = "attacker"
+    with pytest.raises((AttributeError, TypeError)):
+        context.user_id = "attacker"  # type: ignore[misc]
 
 
 def test_log_dict_excludes_metadata():
@@ -106,3 +117,5 @@ def test_log_dict_excludes_metadata():
     assert "internal_value" not in log_data
     assert "request_id" in log_data
     assert "user_id" in log_data
+    assert "locale" in log_data
+    assert log_data["locale"] is None

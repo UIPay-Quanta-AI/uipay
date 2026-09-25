@@ -18,6 +18,10 @@ class MockTTSProvider(TTSProvider):
         voice: str | None = None,
         language: str | None = None,
     ) -> TTSResult:
+        assert text == "Your transfer was successful."
+        assert voice == "default"
+        assert language == "en-NG"
+
         return TTSResult(
             audio=b"fake-audio",
             content_type="audio/mpeg",

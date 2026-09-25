@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     GROQ_MAX_RETRIES: int = 2
     GROQ_DISABLE_PARALLEL_TOOL_USE: bool = True
 
+    NAIJALINGO_API_KEY: str | None = None
+
     # ------------------------------------------------------------------ #
     # Domain constants                                                    #
     # ------------------------------------------------------------------ #
@@ -48,7 +50,21 @@ class Settings(BaseSettings):
     ASR_FASTER_WHISPER_COMPUTE_TYPE: str = "auto"
 
     OCR_PROVIDER: str = "paddleocr"
+
+    # Maximum raw image payload size accepted before even decoding.
+    # Default: 20 MB — generous enough for high-res screenshots; configurable.
+    OCR_MAX_IMAGE_BYTES: int = 20_000_000
+
+    # Maximum pixel count (width × height) to guard against decompression bombs.
+    # Default: 50 MP (e.g. 10000×5000) — covers very large document scans.
+    OCR_MAX_IMAGE_PIXELS: int = 50_000_000
+
+    # PaddleOCR device: "auto" selects GPU if available, otherwise CPU.
+    # "cpu" forces CPU.  "gpu" requires a CUDA GPU and fails clearly if absent.
+    OCR_PADDLE_DEVICE: str = "auto"
+
     TTS_PROVIDER: str = "edge"
+    TTS_DEFAULT_GENDER: str = "female"
 
 
 settings = Settings()
