@@ -28,6 +28,18 @@ class Settings(BaseSettings):
 
     NAIJALINGO_API_KEY: str | None = None
 
+    
+    # Speaker Verification: Picovoice Eagle
+
+    PICOVOICE_ACCESS_KEY: str | None = None
+    SPEAKER_PROVIDER: str = "eagle"
+
+    # Similarity score (0.0-1.0) at or above which a verification counts as
+    # a match. Below this, the caller must fall back to PIN.
+    SPEAKER_VERIFICATION_THRESHOLD: float = 0.8
+    SPEAKER_MAX_AUDIO_BYTES: int = 10_000_000
+    SPEAKER_MAX_DURATION_SECONDS: float = 30.0
+
     # ------------------------------------------------------------------ #
     # Domain constants                                                    #
     # ------------------------------------------------------------------ #
