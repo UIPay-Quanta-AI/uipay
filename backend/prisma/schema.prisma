@@ -46,6 +46,7 @@ model User {
   merchants            Merchant[]
   voiceProfile         VoiceProfile?
   supportMessages      SupportMessage[]
+  walletFundings       WalletFunding[]
 
   @@map("users")
 }
@@ -103,6 +104,26 @@ model Wallet {
 
   @@index([userId])
   @@map("wallets")
+}
+
+// one row per attempt to fund a wallet via Paystack. Created "pending" when
+// the user starts a payment, flipped to "success"/"failed" once we get a
+// confirmed result (webhook and the client-side verify call race for this;
+// only one of them actually credits the wallet, see WalletService)
+model WalletFunding {
+  id        String  @id @default(uuid())
+  userId    String  @map("user_id")
+  reference String  @unique
+  amount    Decimal @db.Decimal(18, 2)
+  status    String  @default("pending")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("wallet_fundings")
 }
 
 // saved transfer recipients, so users don't have to retype account details every time

@@ -3,7 +3,7 @@ import { CurrentUser } from '../auth/jwt/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
 import { JwtPayload } from '../auth/jwt/jwt-payload.interface';
 import { successResponse } from '../common/response/success-response';
-import { TransferDto } from './wallet.dto';
+import { InitiateFundingDto, TransferDto, VerifyFundingDto } from './wallet.dto';
 import { WalletService } from './wallet.service';
 
 @UseGuards(JwtAuthGuard)
@@ -67,5 +67,29 @@ export class WalletController {
       'Transaction history retrieved successfully',
       history,
     );
+  }
+
+  @Post('fund/initiate')
+  async initiateFunding(
+    @CurrentUser() user: JwtPayload,
+    @Body() body: InitiateFundingDto,
+  ) {
+    const result = await this.service.initiateFunding(
+      user.sub,
+      user.email,
+      body.amount,
+    );
+
+    return successResponse('Payment initialized', result);
+  }
+
+  @Post('fund/verify')
+  async verifyFunding(
+    @CurrentUser() user: JwtPayload,
+    @Body() body: VerifyFundingDto,
+  ) {
+    const result = await this.service.verifyFunding(user.sub, body.reference);
+
+    return successResponse('Funding status retrieved', result);
   }
 }

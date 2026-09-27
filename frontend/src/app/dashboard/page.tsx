@@ -21,20 +21,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import api, { getApiErrorMessage } from '@/services/api';
+import { copyToClipboard } from '@/lib/clipboard';
+import { Transaction, TransactionRow } from '@/components/TransactionRow';
 import { useAuthHydration, useAuthStore } from '@/store/auth';
-
-interface Transaction {
-  id: string;
-  senderId: string;
-  recipientId: string;
-  senderName: string;
-  recipientName: string;
-  amount: string;
-  method: string;
-  reference: string;
-  status: string;
-  createdAt: string;
-}
 
 interface Profile {
   firstName: string;
@@ -65,7 +54,7 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [balanceHidden, setBalanceHidden] = useState(false);
-  const [justCopied, setJustCopied] = useState(false);
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle');
   const [trendPeriod, setTrendPeriod] = useState<'week' | 'month'>('week');
 
   useEffect(() => {
@@ -130,13 +119,9 @@ export default function DashboardPage() {
 
   const handleCopyAccountNumber = async () => {
     if (!accountNumber) return;
-    try {
-      await navigator.clipboard.writeText(accountNumber);
-      setJustCopied(true);
-      setTimeout(() => setJustCopied(false), 1500);
-    } catch {
-      // clipboard access can be denied by the browser - nothing useful to do
-    }
+    const ok = await copyToClipboard(accountNumber);
+    setCopyState(ok ? 'copied' : 'failed');
+    setTimeout(() => setCopyState('idle'), 1500);
   };
 
   if (!hasHydrated || !accessToken) return null;
@@ -199,9 +184,14 @@ export default function DashboardPage() {
                   {accountNumber} | {fullName}
                 </span>
                 <Copy className="h-4 w-4 text-[var(--color-primary)]" />
-                {justCopied && (
+                {copyState === 'copied' && (
                   <span className="text-xs text-[var(--color-primary)]">
                     Copied!
+                  </span>
+                )}
+                {copyState === 'failed' && (
+                  <span className="text-xs text-red-400">
+                    Couldn&apos;t copy - long-press to select
                   </span>
                 )}
               </button>
@@ -238,14 +228,12 @@ export default function DashboardPage() {
             </div>
 
             <div className="mt-2 flex gap-3">
-              <button
-                type="button"
-                disabled
-                title="Coming soon"
-                className="flex-1 rounded-full border border-white/15 py-3 text-sm font-semibold text-white/40"
+              <Link
+                href="/fund"
+                className="flex-1 rounded-full border border-[var(--color-primary)] py-3 text-center text-sm font-semibold text-[var(--color-primary)]"
               >
                 Add Money
-              </button>
+              </Link>
               <Link
                 href="/send"
                 className="flex-1 rounded-full bg-[var(--color-primary)] py-3 text-center text-sm font-semibold text-[var(--color-dark)]"
@@ -385,47 +373,9 @@ export default function DashboardPage() {
             <p className="text-sm text-white/40">No transactions yet.</p>
           )}
 
-          {transactions.slice(0, 5).map((tx) => {
-            const isDebit = tx.senderId === userId;
-            const counterpartName = isDebit ? tx.recipientName : tx.senderName;
-            const verb =
-              tx.method === 'nfc'
-                ? 'NFC payment'
-                : tx.method === 'qr'
-                  ? 'QR payment'
-                  : 'Transfer';
-            const label = isDebit
-              ? `${verb} to ${counterpartName}`
-              : `${verb} from ${counterpartName}`;
-            return (
-              <div
-                key={tx.id}
-                className="flex items-center justify-between rounded-2xl bg-[#0d1929] px-4 py-3"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.15)] text-sm font-bold text-[var(--color-primary)]">
-                    {counterpartName.charAt(0).toUpperCase()}
-                  </span>
-                  <div className="flex flex-col">
-                    <span className="text-sm text-[var(--color-light)]">
-                      {label}
-                    </span>
-                    <span className="text-xs text-white/40">
-                      {tx.reference.slice(0, 10)}...
-                    </span>
-                  </div>
-                </div>
-                <span
-                  className={`text-sm font-semibold ${
-                    isDebit ? 'text-red-400' : 'text-[var(--color-primary)]'
-                  }`}
-                >
-                  {isDebit ? '-' : '+'}
-                  {formatNaira(tx.amount)}
-                </span>
-              </div>
-            );
-          })}
+          {transactions
+            .slice(0, 5)
+            .map((tx) => <TransactionRow key={tx.id} tx={tx} userId={userId} />)}
         </div>
       </div>
 

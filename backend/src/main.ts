@@ -18,7 +18,10 @@ const PRIVATE_LAN_DEV_ORIGIN =
   /^http:\/\/(?:10(?:\.\d{1,3}){3}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}|192\.168(?:\.\d{1,3}){2}):300[0-3]$/;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // rawBody: true keeps the exact request bytes on req.rawBody alongside
+  // the normal parsed req.body - needed to verify Paystack's webhook
+  // signature, which is computed over the raw bytes, not the parsed JSON.
+  const app = await NestFactory.create(AppModule, { rawBody: true });
 
   const extraOrigins = process.env.FRONTEND_URLS?.split(',') ?? [];
   const allowedOrigins = [...DEFAULT_LOCALHOST_ORIGINS, ...extraOrigins];
