@@ -96,6 +96,21 @@ export default function QrScanPage() {
   const handleStartScan = async () => {
     setError(null);
     handledRef.current = false;
+
+    // Camera access is blocked outright on an insecure origin (plain http,
+    // anything other than localhost) - mobile browsers won't even prompt
+    // for permission, they just don't expose getUserMedia at all. This is
+    // the case when testing over a LAN IP (http://192.168.x.x:3000); it
+    // works fine once the site is served over https (production, or a
+    // tunnel like ngrok during dev).
+    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+      setState('error');
+      setError(
+        'Camera access needs a secure (https) connection - it\'s blocked on a plain http address like this one. Use Upload From Gallery instead, or test camera scanning on the deployed https site.',
+      );
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' },
@@ -107,13 +122,28 @@ export default function QrScanPage() {
       }
       setState('scanning');
       rafRef.current = requestAnimationFrame(scanFrame);
-    } catch {
+    } catch (err) {
       setState('error');
-      setError(
-        'Could not access the camera. Check your browser/site camera permission, or use Upload From Gallery instead.',
-      );
+      if (err instanceof DOMException && err.name === 'NotAllowedError') {
+        setError(
+          'Camera permission was denied. Allow camera access for this site in your browser settings, or use Upload From Gallery instead.',
+        );
+      } else if (err instanceof DOMException && err.name === 'NotFoundError') {
+        setError('No camera was found on this device. Use Upload From Gallery instead.');
+      } else {
+        setError(
+          'Could not access the camera. Check your browser/site camera permission, or use Upload From Gallery instead.',
+        );
+      }
     }
   };
+
+  // Phone camera photos can be 12+ megapixels. Running getImageData/jsQR at
+  // full resolution allocates a huge buffer and can block the main thread
+  // for a long time on a mid-range phone - it looks like the app froze, it's
+  // just a very slow synchronous decode. A QR code is easily readable at a
+  // much smaller size, so cap the longest side before decoding.
+  const MAX_DECODE_DIMENSION = 1200;
 
   const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -122,26 +152,53 @@ export default function QrScanPage() {
 
     handledRef.current = false;
     setError(null);
+    setState('resolving');
 
+    const objectUrl = URL.createObjectURL(file);
     const image = new window.Image();
-    image.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = image.width;
-      canvas.height = image.height;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      ctx.drawImage(image, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, imageData.width, imageData.height);
 
-      if (code?.data) {
-        handleDecoded(code.data);
-      } else {
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+
+      const scale = Math.min(
+        1,
+        MAX_DECODE_DIMENSION / Math.max(image.width, image.height),
+      );
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(image.width * scale);
+      canvas.height = Math.round(image.height * scale);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
         setState('error');
-        setError('No QR code found in that image. Try another one.');
+        setError('Could not read that image. Try another one.');
+        return;
       }
+
+      // Let the "Checking code..." spinner actually paint before the
+      // (still synchronous) decode work runs.
+      requestAnimationFrame(() => {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+        if (code?.data) {
+          handleDecoded(code.data);
+        } else {
+          setState('error');
+          setError('No QR code found in that image. Try another one.');
+        }
+      });
     };
-    image.src = URL.createObjectURL(file);
+
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      setState('error');
+      setError(
+        'Could not open that image (unsupported format). Try a screenshot or a PNG/JPEG photo instead.',
+      );
+    };
+
+    image.src = objectUrl;
   };
 
   if (!hasHydrated || !accessToken) return null;

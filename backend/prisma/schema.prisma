@@ -18,6 +18,9 @@ model User {
   passwordHash       String    @map("password_hash")
   // "user" or "admin", only admins can access the admin endpoints
   role               String    @default("user")
+  // "active" or "suspended", set by an admin - a suspended user keeps their
+  // data but is blocked from signing in (see JwtAuthGuard/local strategy)
+  status             String    @default("active")
   // "nin" or "bvn", set once the user verifies an ID during profile setup
   idType             String?   @map("id_type")
   idNumber           String?   @map("id_number")
@@ -127,6 +130,11 @@ model Transaction {
   method      String
   reference   String  @unique
   status      String  @default("pending")
+  // set by an admin reviewing a transaction, e.g. for a suspected mismatch
+  // or malicious activity - purely a review marker, it does not affect
+  // whether the transaction already happened
+  flagged     Boolean @default(false)
+  flagReason  String? @map("flag_reason")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

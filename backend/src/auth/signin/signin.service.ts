@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SignInDto } from './signin.dto';
 import { comparePassword } from '../../common/crypto/password';
@@ -37,6 +41,12 @@ export class SignInService {
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password');
+    }
+
+    if (user.status === 'suspended') {
+      throw new ForbiddenException(
+        'This account has been suspended. Contact support for help.',
+      );
     }
 
     const { accessToken, refreshToken } =

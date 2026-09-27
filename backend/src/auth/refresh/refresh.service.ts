@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { cryptoHash } from '../../common/crypto/crypto';
 import { AppJwtService } from '../jwt/app-jwt.service';
@@ -34,6 +38,13 @@ export class RefreshService {
     });
     if (!user) {
       throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    if (user.status === 'suspended') {
+      await this.sessionService.deleteByRefreshTokenHash(refreshTokenHash);
+      throw new ForbiddenException(
+        'This account has been suspended. Contact support for help.',
+      );
     }
 
     const accessToken = await this.appJwtService.generateAccessToken({
