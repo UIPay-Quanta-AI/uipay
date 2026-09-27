@@ -10,5 +10,6 @@ import { QrService } from './qr.service';
   imports: [PrismaModule, AppJwtModule, RedisModule, WalletModule],
   controllers: [QrController],
   providers: [QrService],
+  exports: [QrService],
 })
 export class QrModule {}

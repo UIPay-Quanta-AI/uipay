@@ -20,6 +20,24 @@ interface DynamicQrPayload {
   amount: number;
 }
 
+// admin-issued codes pay a specific user directly, not a merchant
+// application - kept in a separate redis key namespace so they can't
+// collide with (or be confused for) merchant-issued codes
+const ADMIN_QR_TTL_SECONDS = 15 * 60;
+
+interface AdminDynamicQrPayload {
+  recipientId: string;
+  amount: number;
+}
+
+interface ResolvedQrCode {
+  recipientUserId: string;
+  displayName: string;
+  category: string | null;
+  type: QrCodeType;
+  amount?: number;
+}
+
 @Injectable()
 export class QrService {
   constructor(
@@ -43,10 +61,14 @@ export class QrService {
   async validate(qrCode: string) {
     const resolved = await this.resolveQrCode(qrCode);
 
+    // field names kept as businessName/category for backward compatibility -
+    // the frontend scan flow just displays these as "who you're paying" /
+    // a subtitle, so an admin-issued code (real name, no category) fits the
+    // same shape without any frontend change
     return {
-      merchantId: resolved.merchant.id,
-      businessName: resolved.merchant.businessName,
-      category: resolved.merchant.category,
+      recipientId: resolved.recipientUserId,
+      businessName: resolved.displayName,
+      category: resolved.category,
       type: resolved.type,
       amount: resolved.amount,
     };
@@ -64,16 +86,47 @@ export class QrService {
 
     const transaction = await this.walletService.transfer(
       customerId,
-      { recipientId: resolved.merchant.userId, amount },
+      { recipientId: resolved.recipientUserId, amount },
       QR_PAYMENT_METHOD,
     );
 
     // dynamic codes can only be used once, so remove it once it's been paid
     if (resolved.type === QrCodeType.DYNAMIC) {
       await this.redis.client.del(`qr:dynamic:${dto.qrCode}`);
+      await this.redis.client.del(`qr:admin-dynamic:${dto.qrCode}`);
     }
 
     return transaction;
+  }
+
+  // admin-only: a dynamic code that pays a specific user directly, e.g. so
+  // a customer can scan and pay without that user needing a merchant
+  // application at all
+  async generateForAdmin(recipientId: string, amount: number) {
+    const recipient = await this.prisma.user.findUnique({
+      where: { id: recipientId },
+    });
+    if (!recipient) {
+      throw new NotFoundException('Recipient user was not found');
+    }
+
+    const qrCode = randomUUID();
+    const payload: AdminDynamicQrPayload = { recipientId, amount };
+
+    await this.redis.client.set(
+      `qr:admin-dynamic:${qrCode}`,
+      JSON.stringify(payload),
+      'EX',
+      ADMIN_QR_TTL_SECONDS,
+    );
+
+    return {
+      qrCode,
+      type: QrCodeType.DYNAMIC,
+      amount,
+      expiresIn: ADMIN_QR_TTL_SECONDS,
+      recipientName: `${recipient.firstName} ${recipient.lastName}`,
+    };
   }
 
   private async generateDynamicCode(merchantId: string, amount: number) {
@@ -113,7 +166,30 @@ export class QrService {
     return { qrCode, type: QrCodeType.STATIC };
   }
 
-  private async resolveQrCode(qrCode: string) {
+  private async resolveQrCode(qrCode: string): Promise<ResolvedQrCode> {
+    const adminPayload = await this.redis.client.get(
+      `qr:admin-dynamic:${qrCode}`,
+    );
+    if (adminPayload) {
+      const { recipientId, amount }: AdminDynamicQrPayload =
+        JSON.parse(adminPayload);
+
+      const recipient = await this.prisma.user.findUnique({
+        where: { id: recipientId },
+      });
+      if (!recipient) {
+        throw new NotFoundException('Recipient for this QR code was not found');
+      }
+
+      return {
+        recipientUserId: recipient.id,
+        displayName: `${recipient.firstName} ${recipient.lastName}`,
+        category: null,
+        type: QrCodeType.DYNAMIC,
+        amount,
+      };
+    }
+
     const dynamicPayload = await this.redis.client.get(`qr:dynamic:${qrCode}`);
 
     if (dynamicPayload) {
@@ -127,7 +203,13 @@ export class QrService {
         throw new NotFoundException('Merchant for this QR code was not found');
       }
 
-      return { merchant, type: QrCodeType.DYNAMIC, amount };
+      return {
+        recipientUserId: merchant.userId,
+        displayName: merchant.businessName,
+        category: merchant.category,
+        type: QrCodeType.DYNAMIC,
+        amount,
+      };
     }
 
     const merchant = await this.prisma.merchant.findFirst({
@@ -137,7 +219,13 @@ export class QrService {
       throw new NotFoundException('QR code not found or expired');
     }
 
-    return { merchant, type: QrCodeType.STATIC, amount: undefined };
+    return {
+      recipientUserId: merchant.userId,
+      displayName: merchant.businessName,
+      category: merchant.category,
+      type: QrCodeType.STATIC,
+      amount: undefined,
+    };
   }
 
   private async findApprovedMerchantOrThrow(userId: string) {
