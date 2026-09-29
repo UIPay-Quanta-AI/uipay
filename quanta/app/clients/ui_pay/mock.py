@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from typing import Any
 from uuid import uuid4
@@ -17,12 +17,14 @@ class MockUIPayClient(UIPayClient):
         goals: dict[str, list[dict[str, Any]]] | None = None,
         budgets: dict[str, list[dict[str, Any]]] | None = None,
         transaction_contexts: dict[str, dict[str, Any]] | None = None,
+        transactions: dict[str, list[dict[str, Any]]] | None = None,
     ) -> None:
         self._beneficiaries = beneficiaries or []
         self._profiles = profiles or {}
         self._goals = goals or {}
         self._budgets = budgets or {}
         self._transaction_contexts = transaction_contexts or {}
+        self._transactions = transactions or {}
 
     async def search_beneficiaries(
         self,
@@ -197,6 +199,29 @@ class MockUIPayClient(UIPayClient):
     ) -> list[dict[str, Any]]:
         user_budgets = self._budgets.get(user_id, [])
         return [dict(b) for b in sorted(user_budgets, key=lambda b: b.get("version", 1))]
+
+    async def get_transactions(
+        self,
+        *,
+        user_id: str,
+        start_date: date,
+        end_date: date,
+    ) -> list[dict[str, Any]]:
+        user_txs = self._transactions.get(user_id, [])
+        return [dict(tx) for tx in user_txs if self._tx_in_window(tx, start_date, end_date)]
+
+    def _tx_in_window(self, tx: dict[str, Any], start_date: date, end_date: date) -> bool:
+        date_value = tx.get("date")
+        if isinstance(date_value, str):
+            try:
+                tx_date = date.fromisoformat(date_value)
+            except ValueError:
+                return True
+        elif isinstance(date_value, date):
+            tx_date = date_value
+        else:
+            return True
+        return start_date <= tx_date <= end_date
 
     async def get_transaction_budget_context(
         self,

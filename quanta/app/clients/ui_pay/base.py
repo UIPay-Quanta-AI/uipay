@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from datetime import date
 from typing import Any
 
 
@@ -99,6 +100,16 @@ class UIPayClient(ABC):
         self,
         *,
         user_id: str,
+    ) -> list[dict[str, Any]]:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_transactions(
+        self,
+        *,
+        user_id: str,
+        start_date: date,
+        end_date: date,
     ) -> list[dict[str, Any]]:
         raise NotImplementedError
 

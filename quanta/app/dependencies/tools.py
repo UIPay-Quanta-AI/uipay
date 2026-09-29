@@ -4,6 +4,7 @@ from app.clients.ui_pay.base import UIPayClient
 from app.services.budget_service import BudgetService
 from app.services.financial_profile_service import FinancialProfileService
 from app.services.goal_service import GoalService
+from app.services.transaction_intelligence_service import TransactionIntelligenceService
 from app.tools.implementations.beneficiaries.beneficiary import SearchBeneficiaryTool
 from app.tools.implementations.budget import (
     GenerateBudgetTool,
@@ -21,6 +22,7 @@ from app.tools.implementations.goals import (
     GetGoalTool,
     UpdateGoalTool,
 )
+from app.tools.implementations.transaction_intelligence import GetTransactionInsightsTool
 from app.tools.implementations.transfer import PrepareTransferTool
 from app.tools.registry import ToolRegistry
 
@@ -38,6 +40,7 @@ def build_tool_registry(
         profile_service=profile_service,
         goal_service=goal_service,
     )
+    tx_intelligence_service = TransactionIntelligenceService(client=ui_pay_client)
 
     registry.register(
         SearchBeneficiaryTool(
@@ -93,6 +96,11 @@ def build_tool_registry(
     registry.register(
         GetBudgetHistoryTool(
             service=budget_service,
+        )
+    )
+    registry.register(
+        GetTransactionInsightsTool(
+            service=tx_intelligence_service,
         )
     )
 

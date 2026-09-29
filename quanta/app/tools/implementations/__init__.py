@@ -40,6 +40,11 @@ from app.tools.implementations.goals import (
     UpdateGoalOutput,
     UpdateGoalTool,
 )
+from app.tools.implementations.transaction_intelligence import (
+    GetTransactionInsightsInput,
+    GetTransactionInsightsOutput,
+    GetTransactionInsightsTool,
+)
 from app.tools.implementations.transfer.transfer import (
     PrepareTransferInput,
     PrepareTransferOutput,
@@ -69,6 +74,9 @@ __all__ = [
     "GetGoalsInput",
     "GetGoalsOutput",
     "GetGoalsTool",
+    "GetTransactionInsightsInput",
+    "GetTransactionInsightsOutput",
+    "GetTransactionInsightsTool",
     "PrepareTransferInput",
     "PrepareTransferOutput",
     "PrepareTransferTool",

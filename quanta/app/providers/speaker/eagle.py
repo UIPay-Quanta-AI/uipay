@@ -125,9 +125,7 @@ class EagleProvider(SpeakerProvider):
         try:
             profile = pveagle.EagleProfile.from_bytes(profile_bytes)
         except Exception as exc:
-            raise SpeakerInputError(
-                f"Stored voice profile is invalid or corrupted: {exc}"
-            ) from exc
+            raise SpeakerInputError(f"Stored voice profile is invalid or corrupted: {exc}") from exc
 
         recognizer = pveagle.create_recognizer(access_key=self.access_key)
         try:
@@ -188,9 +186,7 @@ class EagleProvider(SpeakerProvider):
             raise SpeakerInputError("No enrolled voice profile was supplied.")
 
         pcm16 = self._decode_pcm16(audio)
-        effective_threshold = (
-            threshold if threshold is not None else self.verification_threshold
-        )
+        effective_threshold = threshold if threshold is not None else self.verification_threshold
 
         score = await asyncio.to_thread(self._run_verify, pcm16, profile)
 

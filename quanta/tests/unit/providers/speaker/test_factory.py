@@ -24,8 +24,12 @@ def test_factory_accepts_explicit_provider_override():
 
 
 def test_factory_unknown_provider_raises_configuration_error():
-    with pytest.raises(SpeakerConfigurationError, match="Unsupported speaker-verification provider"):
-        get_speaker_provider(provider_name="invalid_engine", settings=Settings(PICOVOICE_ACCESS_KEY="k"))
+    with pytest.raises(
+        SpeakerConfigurationError, match="Unsupported speaker-verification provider"
+    ):
+        get_speaker_provider(
+            provider_name="invalid_engine", settings=Settings(PICOVOICE_ACCESS_KEY="k")
+        )
 
 
 def test_factory_missing_access_key_raises_configuration_error():
