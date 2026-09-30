@@ -122,11 +122,12 @@ class VoicePipeline:
             )
 
         # --- Step 2: speech-to-text --------------------------------------
+        effective_language = language if language is not None else context.locale
         try:
             transcript = await self._asr_provider.transcribe(
                 audio=audio,
                 filename=filename,
-                language=language,
+                language=effective_language,
             )
         except ASRError as exc:
             return VoicePipelineResult(

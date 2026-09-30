@@ -4,6 +4,51 @@ from dataclasses import dataclass, field
 from typing import Any
 from uuid import UUID, uuid4
 
+SUPPORTED_LOCALES: set[str] = {"en", "pcm", "ig", "yo", "ha"}
+
+LOCALE_ALIASES: dict[str, str] = {
+    "english": "en",
+    "nigerian_english": "en",
+    "nigerian english": "en",
+    "en-ng": "en",
+    "en_ng": "en",
+    "pidgin": "pcm",
+    "nigerian_pidgin": "pcm",
+    "nigerian pidgin": "pcm",
+    "pcm-ng": "pcm",
+    "pcm_ng": "pcm",
+    "igbo": "ig",
+    "ig-ng": "ig",
+    "ig_ng": "ig",
+    "yoruba": "yo",
+    "yo-ng": "yo",
+    "yo_ng": "yo",
+    "hausa": "ha",
+    "ha-ng": "ha",
+    "ha_ng": "ha",
+}
+
+
+def normalize_locale(locale: str | None) -> str:
+    """
+    Normalize requested locale to one of Quanta's canonical supported language codes:
+    - 'en'  (Nigerian English)
+    - 'pcm' (Nigerian Pidgin)
+    - 'ig'  (Igbo)
+    - 'yo'  (Yoruba)
+    - 'ha'  (Hausa)
+
+    Defaults to 'en' if locale is None, empty, or unrecognised.
+    """
+    if not locale or not locale.strip():
+        return "en"
+    cleaned = locale.strip().lower()
+    if cleaned in SUPPORTED_LOCALES:
+        return cleaned
+    if cleaned in LOCALE_ALIASES:
+        return LOCALE_ALIASES[cleaned]
+    return "en"
+
 
 @dataclass(frozen=True, slots=True)
 class RequestContext:
@@ -21,7 +66,7 @@ class RequestContext:
     user_id: str
     session_id: str
     operation: str
-    locale: str | None = None
+    locale: str = "en"
     metadata: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
@@ -47,12 +92,14 @@ class RequestContext:
         if not operation.strip():
             raise ValueError("operation cannot be empty")
 
+        norm_locale = normalize_locale(locale)
+
         return cls(
             request_id=uuid4(),
             user_id=user_id,
             session_id=session_id,
             operation=operation,
-            locale=locale,
+            locale=norm_locale,
             metadata=dict(metadata or {}),
         )
 
