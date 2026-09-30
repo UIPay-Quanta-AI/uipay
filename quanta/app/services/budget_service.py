@@ -125,8 +125,27 @@ class BudgetService:
                 )
         else:
             # Use transaction history trends if available, otherwise default ratios
+            cat_percentages = dict(self.DEFAULT_CATEGORY_PERCENTAGES)
+            if _has_tx_history and tx_context.trends:
+                hist_pcts = (
+                    tx_context.trends.get("category_percentages") or tx_context.category_trends
+                )
+                if isinstance(hist_pcts, dict) and hist_pcts:
+                    parsed_pcts: dict[str, Decimal] = {}
+                    pct_sum = Decimal("0.00")
+                    for cat, val in hist_pcts.items():
+                        try:
+                            d_val = Decimal(str(val))
+                            if d_val > 0:
+                                parsed_pcts[cat.lower()] = d_val
+                                pct_sum += d_val
+                        except Exception:  # noqa: BLE001, S110
+                            pass
+                    if pct_sum > 0:
+                        cat_percentages = {c: (v / pct_sum) for c, v in parsed_pcts.items()}
+
             allocated_sum = Decimal("0.00")
-            for cat, pct in self.DEFAULT_CATEGORY_PERCENTAGES.items():
+            for cat, pct in cat_percentages.items():
                 cat_amount = (remaining_income_for_expenses * pct).quantize(Decimal("0.01"))
                 allocations.append(
                     BudgetAllocation(

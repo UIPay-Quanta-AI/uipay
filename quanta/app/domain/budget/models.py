@@ -77,6 +77,7 @@ class TransactionBudgetContext(BaseModel):
     lookback_period: dict[str, str] | None = None
     historical_periods: list[dict[str, Any]] = Field(default_factory=list)
     trends: dict[str, Any] = Field(default_factory=dict)
+    category_trends: dict[str, Any] = Field(default_factory=dict)
     notable_changes: list[str] = Field(default_factory=list)
 
 

@@ -84,6 +84,7 @@ class MultimodalProcessor:
         context: RequestContext,
         input_data: MultimodalInput,
         messages: list[Any] | None = None,
+        system_prompt: str | None = None,
     ) -> MultimodalResult:
         modalities: list[ModalityType] = []
         parts: list[str] = []
@@ -199,6 +200,7 @@ class MultimodalProcessor:
             context=context,
             user_input=combined_input,
             messages=messages,
+            system_prompt=system_prompt,
         )
 
         return MultimodalResult(
