@@ -1,0 +1,381 @@
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\budget.py:31:37
+   |
+29 | async def get_current_budget(
+30 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+31 |     budget_service: BudgetService = Depends(get_budget_service),
+   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+32 | ) -> Budget | None:
+33 |     """
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\budget.py:55:37
+   |
+53 |     body: GenerateBudgetRequest,
+54 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+55 |     budget_service: BudgetService = Depends(get_budget_service),
+   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+56 | ) -> Budget:
+57 |     """
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\budget.py:84:37
+   |
+82 | async def get_budget_history(
+83 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+84 |     budget_service: BudgetService = Depends(get_budget_service),
+   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+85 | ) -> list[Budget]:
+86 |     """
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\goals.py:35:33
+   |
+33 |     status_filter: GoalStatus | None = None,
+34 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+35 |     goal_service: GoalService = Depends(get_goal_service),
+   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+36 | ) -> list[FinancialGoal]:
+37 |     """
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\goals.py:62:33
+   |
+60 |     body: CreateGoalRequest,
+61 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+62 |     goal_service: GoalService = Depends(get_goal_service),
+   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+63 | ) -> FinancialGoal:
+64 |     """
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\goals.py:92:33
+   |
+90 |     body: UpdateGoalRequest,
+91 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+92 |     goal_service: GoalService = Depends(get_goal_service),
+   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+93 | ) -> FinancialGoal:
+94 |     """
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\interact.py:35:44
+   |
+33 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
+34 |     x_operation: str | None = Header(default=Operations.TEXT, alias="X-Operation"),
+35 |     runner: ConversationalWorkflowRunner = Depends(get_workflow_runner),
+   |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+36 | ) -> QuantaResponse:
+37 |     """
+   |
+
+B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\interact.py:75:32
+   |
+73 | async def interact_multipart(
+74 |     text: str | None = Form(default=None),
+75 |     image: UploadFile | None = File(default=None),
+   |                                ^^^^^^^^^^^^^^^^^^
+76 |     audio: UploadFile | None = File(default=None),
+77 |     voice_profile: UploadFile | None = File(default=None),
+   |
+
+B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\interact.py:76:32
+   |
+74 |     text: str | None = Form(default=None),
+75 |     image: UploadFile | None = File(default=None),
+76 |     audio: UploadFile | None = File(default=None),
+   |                                ^^^^^^^^^^^^^^^^^^
+77 |     voice_profile: UploadFile | None = File(default=None),
+78 |     verification_threshold: float | None = Form(default=None),
+   |
+
+B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\interact.py:77:40
+   |
+75 |     image: UploadFile | None = File(default=None),
+76 |     audio: UploadFile | None = File(default=None),
+77 |     voice_profile: UploadFile | None = File(default=None),
+   |                                        ^^^^^^^^^^^^^^^^^^
+78 |     verification_threshold: float | None = Form(default=None),
+79 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\interact.py:83:44
+   |
+81 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
+82 |     x_operation: str | None = Header(default=Operations.MULTIMODAL, alias="X-Operation"),
+83 |     runner: ConversationalWorkflowRunner = Depends(get_workflow_runner),
+   |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+84 | ) -> QuantaResponse:
+85 |     """
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\profile.py:27:48
+   |
+25 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+26 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+27 |     profile_service: FinancialProfileService = Depends(get_financial_profile_service),
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+28 | ) -> FinancialProfile:
+29 |     """
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\profile.py:52:48
+   |
+50 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+51 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+52 |     profile_service: FinancialProfileService = Depends(get_financial_profile_service),
+   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+53 | ) -> FinancialProfile:
+54 |     """
+   |
+
+B008 Do not perform function call `Query` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\transactions.py:21:24
+   |
+19 | @router.get("/intelligence", response_model=TransactionIntelligenceResult)
+20 | async def get_transaction_intelligence(
+21 |     start_date: date = Query(...),
+   |                        ^^^^^^^^^^
+22 |     end_date: date = Query(...),
+23 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+   |
+
+B008 Do not perform function call `Query` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\transactions.py:22:22
+   |
+20 | async def get_transaction_intelligence(
+21 |     start_date: date = Query(...),
+22 |     end_date: date = Query(...),
+   |                      ^^^^^^^^^^
+23 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+24 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\transactions.py:26:50
+   |
+24 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+25 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
+26 |     ti_service: TransactionIntelligenceService = Depends(get_transaction_intelligence_service),
+   |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+27 | ) -> TransactionIntelligenceResult:
+28 |     """
+   |
+
+B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\voice.py:21:25
+   |
+19 | @router.post("/interact", response_model=VoicePipelineResult)
+20 | async def voice_interact(
+21 |     audio: UploadFile = File(...),
+   |                         ^^^^^^^^^
+22 |     voice_profile: UploadFile | None = File(default=None),
+23 |     verification_threshold: float | None = Form(default=None),
+   |
+
+B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\voice.py:22:40
+   |
+20 | async def voice_interact(
+21 |     audio: UploadFile = File(...),
+22 |     voice_profile: UploadFile | None = File(default=None),
+   |                                        ^^^^^^^^^^^^^^^^^^
+23 |     verification_threshold: float | None = Form(default=None),
+24 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\voice.py:27:44
+   |
+25 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+26 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
+27 |     runner: ConversationalWorkflowRunner = Depends(get_workflow_runner),
+   |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+28 | ) -> VoicePipelineResult:
+29 |     """
+   |
+
+B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\voice.py:71:25
+   |
+69 | @router.post("/enroll", response_model=VoiceEnrollmentResponse)
+70 | async def voice_enroll(
+71 |     audio: UploadFile = File(...),
+   |                         ^^^^^^^^^
+72 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
+73 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+   |
+
+B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+  --> app\api\v1\endpoints\voice.py:75:50
+   |
+73 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
+74 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
+75 |     enrollment_service: VoiceEnrollmentService = Depends(get_voice_enrollment_service),
+   |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+76 | ) -> VoiceEnrollmentResponse:
+77 |     """
+   |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> app\dependencies\services.py:102:12
+    |
+100 |             orchestrator=orchestrator,
+101 |         )
+102 |     except Exception:
+    |            ^^^^^^^^^
+103 |         return None
+    |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> app\dependencies\services.py:112:12
+    |
+110 |     try:
+111 |         ocr_provider = get_ocr_provider()
+112 |     except Exception:
+    |            ^^^^^^^^^
+113 |         ocr_provider = None
+114 |     return MultimodalProcessor(
+    |
+
+RUF012 Mutable default value for class attribute
+  --> app\domain\conversational\requirements.py:30:57
+   |
+28 |       """
+29 |
+30 |       PROFILE_QUESTIONS: dict[str, QuestionRequirement] = {
+   |  _________________________________________________________^
+31 | |         "monthly_income": QuestionRequirement(
+32 | |             field_name="monthly_income",
+33 | |             question_text="What is your approximate monthly income?",
+34 | |             why_required="Required to establish your total monthly budget capacity.",
+35 | |             input_type="monetary",
+36 | |             is_optional=False,
+37 | |         ),
+38 | |         "income_frequency": QuestionRequirement(
+39 | |             field_name="income_frequency",
+40 | |             question_text="How frequently do you receive income? (monthly, biweekly, weekly, irregular)",
+41 | |             why_required="Required to align your spending schedule with your cash flow.",
+42 | |             input_type="select",
+43 | |             allowed_options=["monthly", "biweekly", "weekly", "irregular"],
+44 | |             is_optional=False,
+45 | |         ),
+46 | |         "employment_type": QuestionRequirement(
+47 | |             field_name="employment_type",
+48 | |             question_text="Is your income salaried, freelance, self-employed, or another type?",
+49 | |             why_required="Helps assess income stability when creating your budget plan.",
+50 | |             input_type="select",
+51 | |             allowed_options=["salaried", "self_employed", "freelance", "unemployed", "other"],
+52 | |             is_optional=False,
+53 | |         ),
+54 | |         "fixed_expenses": QuestionRequirement(
+55 | |             field_name="fixed_expenses",
+56 | |             question_text="What are your fixed monthly expenses (such as rent, utilities, or recurring bills)?",
+57 | |             why_required="Required to ensure essential obligations are covered before discretionary spending.",
+58 | |             input_type="monetary",
+59 | |             is_optional=False,
+60 | |         ),
+61 | |         "variable_expenses": QuestionRequirement(
+62 | |             field_name="variable_expenses",
+63 | |             question_text="Approximately how much do you spend on variable expenses (food, transport, entertainment) monthly?",
+64 | |             why_required="Helps set realistic category limits for day-to-day spending.",
+65 | |             input_type="monetary",
+66 | |             is_optional=False,
+67 | |         ),
+68 | |         "savings_target": QuestionRequirement(
+69 | |             field_name="savings_target",
+70 | |             question_text="What is your monthly savings target?",
+71 | |             why_required="Ensures a portion of income is allocated toward your savings goals.",
+72 | |             input_type="monetary",
+73 | |             is_optional=False,
+74 | |         ),
+75 | |     }
+   | |_____^
+76 |
+77 |       @classmethod
+   |
+help: Consider initializing in `__init__` or annotating with `typing.ClassVar`
+
+F841 Local variable `system_prompt` is assigned to but never used
+  --> app\orchestration\workflow_runner.py:84:9
+   |
+83 |         # 2. Build dynamic system prompt incorporating session state & safety guidelines
+84 |         system_prompt = build_quanta_system_prompt(
+   |         ^^^^^^^^^^^^^
+85 |             context=context,
+86 |             active_workflow=session.active_workflow,
+   |
+help: Remove assignment to unused variable `system_prompt`
+
+S110 `try`-`except`-`pass` detected, consider logging the exception
+   --> app\services\budget_service.py:142:25
+    |
+140 |                                   parsed_pcts[cat.lower()] = d_val
+141 |                                   pct_sum += d_val
+142 | /                         except Exception:
+143 | |                             pass
+    | |________________________________^
+144 |                       if pct_sum > 0:
+145 |                           cat_percentages = {c: (v / pct_sum) for c, v in parsed_pcts.items()}
+    |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> app\services\budget_service.py:142:32
+    |
+140 |                                 parsed_pcts[cat.lower()] = d_val
+141 |                                 pct_sum += d_val
+142 |                         except Exception:
+    |                                ^^^^^^^^^
+143 |                             pass
+144 |                     if pct_sum > 0:
+    |
+
+RUF059 Unpacked variable `client` is never used
+   --> tests\integration\test_mega1_scenarios.py:233:13
+    |
+231 | @pytest.mark.asyncio
+232 | async def test_scenario_7_text_transfer(scenario_setup):
+233 |     runner, client = scenario_setup
+    |             ^^^^^^
+234 |     ctx = RequestContext.create(user_id="user_scen", session_id="sess_scen7", operation="TEXT")
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+
+RUF059 Unpacked variable `client` is never used
+   --> tests\integration\test_mega1_scenarios.py:248:13
+    |
+246 | @pytest.mark.asyncio
+247 | async def test_scenario_10_image_plus_voice_transfer(scenario_setup):
+248 |     runner, client = scenario_setup
+    |             ^^^^^^
+249 |     ctx = RequestContext.create(
+250 |         user_id="user_scen", session_id="sess_scen10", operation="MULTIMODAL"
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+
+RUF059 Unpacked variable `client` is never used
+   --> tests\integration\test_mega1_scenarios.py:266:13
+    |
+264 | @pytest.mark.asyncio
+265 | async def test_scenario_12_conversation_continuation(scenario_setup):
+266 |     runner, client = scenario_setup
+    |             ^^^^^^
+267 |     session_id = "sess_scen12"
+268 |     ctx = RequestContext.create(user_id="user_scen", session_id=session_id, operation="TEXT")
+    |
+help: Prefix it with an underscore or any other dummy variable pattern
+
+Found 30 errors.
+No fixes available (4 hidden fixes can be enabled with the `--unsafe-fixes` option).

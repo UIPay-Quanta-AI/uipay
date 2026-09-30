@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Header, HTTPException
 
+from app.api.v1.router import v1_router
 from app.core.config import settings
 from app.core.constants import Operations
 from app.core.context import RequestContext
@@ -11,6 +12,8 @@ app = FastAPI(
     docs_url="/docs" if settings.ENVIRONMENT == "development" else None,
     redoc_url="/redoc" if settings.ENVIRONMENT == "development" else None,
 )
+
+app.include_router(v1_router, prefix="/api")
 
 
 @app.get("/health")

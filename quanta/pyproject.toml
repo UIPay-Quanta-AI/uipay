@@ -47,11 +47,17 @@ packages = ["app"]
 line-length = 100
 target-version = "py312"
 
+[tool.ruff.lint]
+ignore = ["B008"]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
 markers = [
     "integration: mark test as integration test",
+]
+filterwarnings = [
+    "ignore:The anyio.abc.BlockingPortal alias is deprecated:DeprecationWarning",
 ]
 
 # allow pyrefly to find scripts/ files for testing purposes

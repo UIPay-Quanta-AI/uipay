@@ -111,6 +111,7 @@ class Orchestrator:
         user_input: str,
         initial_state: QuantaState = QuantaState.IDLE,
         messages: list[LLMMessage] | None = None,
+        system_prompt: str | None = None,
     ) -> QuantaResponse:
         """
         Process one user interaction.
@@ -156,6 +157,7 @@ class Orchestrator:
                 context=context,
                 conversation=conversation,
                 state_machine=state_machine,
+                system_prompt=system_prompt,
             )
         except ProviderError as exc:
             return self._provider_error_response(
@@ -190,10 +192,12 @@ class Orchestrator:
         context: RequestContext,
         conversation: list[LLMMessage],
         state_machine: StateMachine,
+        system_prompt: str | None = None,
     ) -> QuantaResponse:
         for _iteration in range(self._max_tool_iterations):
             llm_response = await self._generate(
                 conversation=conversation,
+                system_prompt=system_prompt,
             )
 
             if llm_response.tool_calls:
@@ -226,10 +230,12 @@ class Orchestrator:
         self,
         *,
         conversation: list[LLMMessage],
+        system_prompt: str | None = None,
     ) -> LLMResponse:
+        effective_prompt = system_prompt if system_prompt is not None else self._system_prompt
         return await self._llm_provider.generate(
             messages=conversation,
-            system_prompt=self._system_prompt,
+            system_prompt=effective_prompt,
             tools=self._tool_registry.definitions(),
         )
 
