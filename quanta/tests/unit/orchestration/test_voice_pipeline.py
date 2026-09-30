@@ -25,7 +25,9 @@ def make_context() -> RequestContext:
 class FakeSpeakerProvider:
     """Test double: no real Eagle SDK involved, full control over the result."""
 
-    def __init__(self, *, result: VerificationResult | None = None, error: Exception | None = None) -> None:
+    def __init__(
+        self, *, result: VerificationResult | None = None, error: Exception | None = None
+    ) -> None:
         self.result = result
         self.error = error
         self.calls: list[dict] = []

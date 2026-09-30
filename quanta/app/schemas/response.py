@@ -6,6 +6,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
+VALID_RESPONSE_LANGUAGES: set[str] = {"en", "pcm", "ig", "yo", "ha"}
+
 
 class ResponseStatus(str, Enum):
     SUCCESS = "success"
@@ -50,6 +52,7 @@ class QuantaResponse(BaseModel):
     ui: UIPayload = Field(default_factory=UIPayload)
     data: dict[str, Any] | None = None
     error: ErrorPayload | None = None
+    response_language: str = Field(default="en")
 
     # ------------------------------------------------------------------
     # Factory methods
@@ -63,6 +66,7 @@ class QuantaResponse(BaseModel):
         speech_text: str | None = None,
         ui_type: UIType = UIType.SUCCESS,
         data: dict[str, Any] | None = None,
+        response_language: str = "en",
     ) -> QuantaResponse:
         payload: dict[str, Any] = {
             "request_id": request_id,
@@ -70,6 +74,7 @@ class QuantaResponse(BaseModel):
             "ui": {"type": ui_type},
             "data": data,
             "error": None,
+            "response_language": response_language,
         }
         if speech_text:
             payload["speech"] = {"text": speech_text}
@@ -82,6 +87,7 @@ class QuantaResponse(BaseModel):
         request_id: UUID,
         speech_text: str,
         data: dict[str, Any] | None = None,
+        response_language: str = "en",
     ) -> QuantaResponse:
         return cls.model_validate(
             {
@@ -91,6 +97,7 @@ class QuantaResponse(BaseModel):
                 "ui": {"type": UIType.TRANSFER_CONFIRMATION},
                 "data": data,
                 "error": None,
+                "response_language": response_language,
             }
         )
 
@@ -102,6 +109,7 @@ class QuantaResponse(BaseModel):
         speech_text: str,
         ui_type: UIType = UIType.ACCOUNT_INPUT,
         data: dict[str, Any] | None = None,
+        response_language: str = "en",
     ) -> QuantaResponse:
         return cls.model_validate(
             {
@@ -111,6 +119,7 @@ class QuantaResponse(BaseModel):
                 "ui": {"type": ui_type},
                 "data": data,
                 "error": None,
+                "response_language": response_language,
             }
         )
 
@@ -122,6 +131,7 @@ class QuantaResponse(BaseModel):
         speech_text: str,
         ui_type: UIType = UIType.BENEFICIARY_SELECTION,
         data: dict[str, Any] | None = None,
+        response_language: str = "en",
     ) -> QuantaResponse:
         return cls.model_validate(
             {
@@ -131,6 +141,7 @@ class QuantaResponse(BaseModel):
                 "ui": {"type": ui_type},
                 "data": data,
                 "error": None,
+                "response_language": response_language,
             }
         )
 
@@ -142,6 +153,7 @@ class QuantaResponse(BaseModel):
         code: str,
         message: str,
         speech_text: str | None = None,
+        response_language: str = "en",
     ) -> QuantaResponse:
         payload: dict[str, Any] = {
             "request_id": request_id,
@@ -149,6 +161,7 @@ class QuantaResponse(BaseModel):
             "ui": {"type": UIType.ERROR},
             "data": None,
             "error": {"code": code, "message": message},
+            "response_language": response_language,
         }
         if speech_text:
             payload["speech"] = {"text": speech_text}

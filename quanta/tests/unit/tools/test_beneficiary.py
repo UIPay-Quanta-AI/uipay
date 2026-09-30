@@ -131,4 +131,3 @@ async def test_search_beneficiary_by_account_name(
 
     assert len(found) == 1
     assert found[0]["nickname"] == "Brother"
-

@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
+from app.providers.base import ProviderError
 from app.providers.speaker import (
     EnrollmentResult,
     SpeakerConfigurationError,
@@ -13,7 +14,6 @@ from app.providers.speaker import (
     SpeakerVerificationError,
     VerificationResult,
 )
-from app.providers.base import ProviderError
 
 
 def test_enrollment_result_incomplete_has_no_profile():

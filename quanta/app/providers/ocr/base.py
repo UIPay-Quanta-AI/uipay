@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -106,6 +107,19 @@ class OCRProvider(Provider):
     """
     Provider-neutral interface for optical character recognition.
     """
+
+    @property
+    def capabilities(self) -> dict[str, Any]:
+        """
+        Return informational provider/model capability metadata.
+        """
+        return {
+            "provider": "unknown",
+            "model": "unknown",
+            "language_selection_supported": False,
+            "auto_detection_supported": False,
+            "supported_languages": [],
+        }
 
     @abstractmethod
     async def extract(

@@ -16,13 +16,6 @@ from app.providers.ocr.base import (
 )
 from app.providers.ocr.image import validate_image
 
-# On Windows environments, pre-loading PyTorch C++ DLLs prevents WinError 127 procedure conflicts
-# when Paddle C++ DLLs and PyTorch DLLs are loaded into the same process.
-try:
-    import torch  # type: ignore[import-untyped]  # noqa: F401
-except ImportError:
-    pass
-
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -326,6 +319,37 @@ class PaddleOCRProvider(OCRProvider):
         if self._resolved_device is None:
             self._resolved_device = resolve_paddle_device(self.device_setting)
         return self._resolved_device
+
+    @property
+    def capabilities(self) -> dict[str, Any]:
+        """
+        Expose PaddleOCR 3.7 / PP-OCRv6_medium capability metadata.
+
+        Informational only: PP-OCRv6_medium supports 50 languages, but
+        Igbo (ig), Yoruba (yo), Hausa (ha), and Nigerian Pidgin (pcm) are
+        not supported by PaddleOCR's model family.
+        """
+        return {
+            "provider": "paddleocr",
+            "model": "PP-OCRv6_medium",
+            "language_selection_supported": False,
+            "auto_detection_supported": True,
+            "supported_languages": [
+                "ch",
+                "en",
+                "fr",
+                "german",
+                "korean",
+                "japan",
+                "te",
+                "ta",
+                "latin",
+                "arabic",
+                "cyrillic",
+                "devanagari",
+            ],
+            "note": "Igbo (ig), Yoruba (yo), Hausa (ha), and Pidgin (pcm) are not supported language parameters.",
+        }
 
     def _ensure_loaded(self) -> None:
         """

@@ -21,6 +21,45 @@ from app.tools.base import (
 from app.tools.executor import ToolExecutor
 from app.tools.registry import ToolRegistry
 
+VALID_RESPONSE_LANGUAGES: set[str] = {"en", "pcm", "ig", "yo", "ha"}
+
+CONFIRMATION_SPEECH_BY_LANGUAGE: dict[str, str] = {
+    "en": "Please review and confirm the transfer.",
+    "pcm": "Abeg review and confirm this transfer.",
+    "ig": "Biko nyochaa ma kwado nnyefe a.",
+    "yo": "Jọ̀ọ́ yẹ̀ ẹ́ wò kọ́ o si fọwọ́ sí gbigbe owó yìí.",
+    "ha": "Taimaka ka duba kuma ka tabbatar da tura kudin.",
+}
+
+
+def resolve_effective_response_language(
+    context: RequestContext,
+    llm_response: LLMResponse | None = None,
+) -> str:
+    """
+    Determine the effective language Quanta responds in.
+
+    RequestContext.locale
+        = requested / default interaction preference (used as ASR hint).
+
+    response_language
+        = language Quanta actually responds in (used by TTS for voice resolution).
+
+    If the LLM provided an explicit response_language in provider_metadata, use it.
+    Otherwise, fall back to context.locale (normalized canonical code).
+    """
+    if llm_response and llm_response.provider_metadata:
+        candidate = llm_response.provider_metadata.get("response_language")
+        if candidate and isinstance(candidate, str):
+            norm = candidate.strip().lower()
+            if norm in VALID_RESPONSE_LANGUAGES:
+                return norm
+
+    if context.locale and context.locale.strip().lower() in VALID_RESPONSE_LANGUAGES:
+        return context.locale.strip().lower()
+
+    return "en"
+
 
 class OrchestrationError(Exception):
     """Base exception for orchestration failures."""
@@ -81,10 +120,12 @@ class Orchestrator:
         """
 
         if not user_input.strip():
+            resp_lang = resolve_effective_response_language(context)
             return QuantaResponse.error_response(
                 request_id=context.request_id,
                 code="EMPTY_INPUT",
                 message="User input cannot be empty.",
+                response_language=resp_lang,
             )
 
         state_machine = StateMachine(
@@ -92,10 +133,12 @@ class Orchestrator:
         )
 
         if state_machine.current_state != QuantaState.IDLE:
+            resp_lang = resolve_effective_response_language(context)
             return QuantaResponse.error_response(
                 request_id=context.request_id,
                 code="INVALID_INITIAL_STATE",
                 message=("A new orchestration request must begin from the idle state."),
+                response_language=resp_lang,
             )
 
         state_machine.transition(QuantaState.PROCESSING)
@@ -120,17 +163,21 @@ class Orchestrator:
                 error=exc,
             )
         except MaxToolIterationsError:
+            resp_lang = resolve_effective_response_language(context)
             return QuantaResponse.error_response(
                 request_id=context.request_id,
                 code="MAX_TOOL_ITERATIONS",
                 message=("The request required too many tool operations."),
                 speech_text=("I couldn't complete that request safely."),
+                response_language=resp_lang,
             )
         except ToolError as exc:
+            resp_lang = resolve_effective_response_language(context)
             return QuantaResponse.error_response(
                 request_id=context.request_id,
                 code="TOOL_ERROR",
                 message=str(exc),
+                response_language=resp_lang,
             )
         except Exception as exc:
             raise OrchestrationError("Unexpected orchestration failure.") from exc
@@ -162,6 +209,7 @@ class Orchestrator:
                         context=context,
                         conversation=conversation,
                         state_machine=state_machine,
+                        llm_response=llm_response,
                     )
 
                 continue
@@ -284,7 +332,10 @@ class Orchestrator:
         context: RequestContext,
         conversation: list[LLMMessage],
         state_machine: StateMachine,
+        llm_response: LLMResponse | None = None,
     ) -> QuantaResponse:
+        resp_lang = resolve_effective_response_language(context, llm_response)
+
         if state_machine.current_state == QuantaState.AWAITING_CONFIRMATION:
             tool_message = self._get_latest_tool_result(
                 conversation=conversation,
@@ -296,20 +347,26 @@ class Orchestrator:
                     request_id=context.request_id,
                     code="MISSING_PREPARATION_RESULT",
                     message=("Transfer preparation completed without a usable result."),
+                    response_language=resp_lang,
                 )
 
             payload = json.loads(tool_message.content)
+            speech_text = CONFIRMATION_SPEECH_BY_LANGUAGE.get(
+                resp_lang, CONFIRMATION_SPEECH_BY_LANGUAGE["en"]
+            )
 
             return QuantaResponse.confirmation_required(
                 request_id=context.request_id,
-                speech_text=("Please review and confirm the transfer."),
+                speech_text=speech_text,
                 data=payload.get("data") or {},
+                response_language=resp_lang,
             )
 
         return QuantaResponse.error_response(
             request_id=context.request_id,
             code="UNSUPPORTED_DETERMINISTIC_STATE",
             message=("The orchestration flow reached an unsupported deterministic state."),
+            response_language=resp_lang,
         )
 
     @staticmethod
@@ -347,12 +404,14 @@ class Orchestrator:
         A plain LLM response means the interaction completed without
         requiring deterministic confirmation/input handling here.
         """
+        resp_lang = resolve_effective_response_language(context, llm_response)
 
         if not llm_response.content:
             return QuantaResponse.error_response(
                 request_id=context.request_id,
                 code="EMPTY_LLM_RESPONSE",
                 message="The AI provider returned an empty response.",
+                response_language=resp_lang,
             )
 
         if state_machine.current_state == QuantaState.PROCESSING:
@@ -366,6 +425,7 @@ class Orchestrator:
             data={
                 "finish_reason": llm_response.finish_reason,
             },
+            response_language=resp_lang,
         )
 
     @staticmethod
@@ -374,11 +434,13 @@ class Orchestrator:
         context: RequestContext,
         error: ProviderError,
     ) -> QuantaResponse:
+        resp_lang = resolve_effective_response_language(context)
         return QuantaResponse.error_response(
             request_id=context.request_id,
             code="PROVIDER_ERROR",
             message="An AI provider failed while processing the request.",
             speech_text=("I'm having trouble processing that right now."),
+            response_language=resp_lang,
         )
 
     @staticmethod

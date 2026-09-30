@@ -28,7 +28,6 @@ class Settings(BaseSettings):
 
     NAIJALINGO_API_KEY: str | None = None
 
-    
     # Speaker Verification: Picovoice Eagle
 
     PICOVOICE_ACCESS_KEY: str | None = None
@@ -66,6 +65,12 @@ class Settings(BaseSettings):
     # Maximum raw image payload size accepted before even decoding.
     # Default: 20 MB — generous enough for high-res screenshots; configurable.
     OCR_MAX_IMAGE_BYTES: int = 20_000_000
+
+    # Transaction intelligence constants for bounded historical analysis.
+    TRANSACTION_MAX_LOOKBACK_DAYS: int = 365
+    TRANSACTION_SIGNIFICANT_CHANGE_PERCENT: float = 0.20
+    TRANSACTION_MINIMUM_ABSOLUTE_CHANGE: float = 10000.00
+    TRANSACTION_MINIMUM_OBSERVATION_PERIODS: int = 2
 
     # Maximum pixel count (width × height) to guard against decompression bombs.
     # Default: 50 MP (e.g. 10000×5000) — covers very large document scans.

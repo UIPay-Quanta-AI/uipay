@@ -16,7 +16,7 @@ def test_context_creation():
     assert context.user_id == "user_123"
     assert context.session_id == "session_456"
     assert context.operation == Operations.VOICE
-    assert context.locale is None
+    assert context.locale == "en"
     assert isinstance(context.request_id, UUID)
 
 
@@ -28,7 +28,25 @@ def test_context_creation_with_locale():
         locale="en-NG",
     )
 
-    assert context.locale == "en-NG"
+    assert context.locale == "en"
+
+    # Test other supported locales and aliases
+    assert (
+        RequestContext.create(user_id="u", session_id="s", operation="v", locale="igbo").locale
+        == "ig"
+    )
+    assert (
+        RequestContext.create(user_id="u", session_id="s", operation="v", locale="pcm-NG").locale
+        == "pcm"
+    )
+    assert (
+        RequestContext.create(user_id="u", session_id="s", operation="v", locale="yoruba").locale
+        == "yo"
+    )
+    assert (
+        RequestContext.create(user_id="u", session_id="s", operation="v", locale="hausa").locale
+        == "ha"
+    )
 
 
 def test_request_ids_are_unique():
@@ -118,4 +136,4 @@ def test_log_dict_excludes_metadata():
     assert "request_id" in log_data
     assert "user_id" in log_data
     assert "locale" in log_data
-    assert log_data["locale"] is None
+    assert log_data["locale"] == "en"
