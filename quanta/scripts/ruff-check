@@ -1,381 +1,653 @@
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\budget.py:31:37
-   |
-29 | async def get_current_budget(
-30 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-31 |     budget_service: BudgetService = Depends(get_budget_service),
-   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-32 | ) -> Budget | None:
-33 |     """
-   |
+============================= test session starts =============================
+platform win32 -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\HP\Desktop\UIPay\uipay\quanta\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\HP\Desktop\UIPay\uipay\quanta
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 641 items
 
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\budget.py:55:37
-   |
-53 |     body: GenerateBudgetRequest,
-54 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-55 |     budget_service: BudgetService = Depends(get_budget_service),
-   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-56 | ) -> Budget:
-57 |     """
-   |
+tests/contract/test_uipay_client_contract.py::test_get_or_initialize_profile_creates_default_when_missing PASSED [  0%]
+tests/contract/test_uipay_client_contract.py::test_get_or_initialize_profile_returns_existing PASSED [  0%]
+tests/contract/test_uipay_client_contract.py::test_get_or_initialize_profile_concurrency_race PASSED [  0%]
+tests/contract/test_uipay_client_contract.py::test_non_retryable_financial_write_policy PASSED [  0%]
+tests/contract/test_uipay_client_contract.py::test_retryable_read_policy PASSED [  0%]
+tests/contract/test_uipay_client_contract.py::test_status_error_mappings PASSED [  0%]
+tests/contract/test_uipay_client_contract.py::test_correlation_header_propagation PASSED [  1%]
+tests/integration/test_budget_workflow.py::test_budget_full_e2e_workflow PASSED [  1%]
+tests/integration/test_budget_workflow.py::test_budget_generation_without_transaction_context PASSED [  1%]
+tests/integration/test_claude_live.py::test_claude_live_text_completion SKIPPED [  1%]
+tests/integration/test_claude_live.py::test_claude_live_tool_call SKIPPED [  1%]
+tests/integration/test_groq_live.py::test_groq_live_text_completion PASSED [  1%]
+tests/integration/test_groq_live.py::test_groq_live_tool_call PASSED     [  2%]
+tests/integration/test_groq_quanta_flow.py::test_groq_quanta_flow_with_mock_uipay PASSED [  2%]
+tests/integration/test_mega1_scenarios.py::test_scenario_1_profile_to_budget PASSED [  2%]
+tests/integration/test_mega1_scenarios.py::test_scenario_4_goal_completion PASSED [  2%]
+tests/integration/test_mega1_scenarios.py::test_scenario_7_text_transfer PASSED [  2%]
+tests/integration/test_mega1_scenarios.py::test_scenario_10_image_plus_voice_transfer PASSED [  2%]
+tests/integration/test_mega1_scenarios.py::test_scenario_12_conversation_continuation PASSED [  2%]
+tests/integration/test_mega2_e2e_journeys.py::test_journey_1_financial_profile_setup PASSED [  3%]
+tests/integration/test_mega2_e2e_journeys.py::test_journey_2_budget_generation_with_context PASSED [  3%]
+tests/integration/test_mega2_e2e_journeys.py::test_journey_3_goal_creation_and_completion PASSED [  3%]
+tests/integration/test_mega2_e2e_journeys.py::test_journey_4_significant_change_budget_update_accepted PASSED [  3%]
+tests/integration/test_mega2_e2e_journeys.py::test_journey_5_significant_change_rejected_no_mutation PASSED [  3%]
+tests/integration/test_mega2_e2e_journeys.py::test_journey_6_transfer_workflow_confirmation PASSED [  3%]
+tests/integration/test_mock_quanta_flow.py::test_mock_provider_transfer_flow_reaches_confirmation PASSED [  4%]
+tests/integration/test_profile_and_goals_integration.py::test_step16_financial_profile_e2e_flow PASSED [  4%]
+tests/integration/test_profile_and_goals_integration.py::test_step17_financial_goals_e2e_flow PASSED [  4%]
+tests/integration/test_profile_and_goals_integration.py::test_profile_and_goals_coexist_independently_with_cross_user_isolation PASSED [  4%]
+tests/integration/test_real_uipay_smoke.py::test_real_uipay_backend_smoke_integration SKIPPED [  4%]
+tests/integration/test_step21_four_flows.py::test_flow_a_1_complete_known_beneficiary_and_amount PASSED [  4%]
+tests/integration/test_step21_four_flows.py::test_flow_a_2_beneficiary_known_amount_missing PASSED [  4%]
+tests/integration/test_step21_four_flows.py::test_flow_a_3_amount_known_beneficiary_missing PASSED [  5%]
+tests/integration/test_step21_four_flows.py::test_flow_a_4_both_beneficiary_and_amount_missing PASSED [  5%]
+tests/integration/test_step21_four_flows.py::test_flow_a_5_unknown_beneficiary PASSED [  5%]
+tests/integration/test_step21_four_flows.py::test_flow_a_6_invalid_amount PASSED [  5%]
+tests/integration/test_step21_four_flows.py::test_flow_a_7_malformed_account_number PASSED [  5%]
+tests/integration/test_step21_four_flows.py::test_flow_a_8_user_cancellation PASSED [  5%]
+tests/integration/test_step21_four_flows.py::test_flow_a_9_confirmation_flow_data_integrity PASSED [  6%]
+tests/integration/test_step21_four_flows.py::test_flow_a_10_repeated_input PASSED [  6%]
+tests/integration/test_step21_four_flows.py::test_flow_a_11_user_identity_isolation PASSED [  6%]
+tests/integration/test_step21_four_flows.py::test_flow_a_12_malicious_prompt_injection_in_text PASSED [  6%]
+tests/integration/test_step21_four_flows.py::test_flow_b_voice_all_five_languages PASSED [  6%]
+tests/integration/test_step21_four_flows.py::test_flow_b_asr_failure PASSED [  6%]
+tests/integration/test_step21_four_flows.py::test_flow_b_speaker_verification_failure PASSED [  7%]
+tests/integration/test_step21_four_flows.py::test_flow_b_voice_language_differing_from_locale PASSED [  7%]
+tests/integration/test_step21_four_flows.py::test_flow_c_clean_account_detail_image PASSED [  7%]
+tests/integration/test_step21_four_flows.py::test_flow_c_ocr_prompt_injection_in_image PASSED [  7%]
+tests/integration/test_step21_four_flows.py::test_flow_c_ocr_provider_failure_distinguished PASSED [  7%]
+tests/integration/test_step21_multimodal_scenarios.py::test_multimodal_a_image_plus_text PASSED [  7%]
+tests/integration/test_step21_multimodal_scenarios.py::test_multimodal_b_image_plus_voice PASSED [  7%]
+tests/integration/test_step21_multimodal_scenarios.py::test_multimodal_c_voice_plus_text PASSED [  8%]
+tests/integration/test_step21_multimodal_scenarios.py::test_multimodal_d_image_plus_voice_plus_text PASSED [  8%]
+tests/integration/test_step21_multimodal_scenarios.py::test_multimodal_e_conflicting_modalities_resolution PASSED [  8%]
+tests/integration/test_step21_multimodal_scenarios.py::test_multimodal_f_conflicting_amounts_resolution PASSED [  8%]
+tests/integration/test_step21_multimodal_scenarios.py::test_multimodal_g_ocr_prompt_injection_plus_voice PASSED [  8%]
+tests/integration/test_step21_multimodal_scenarios.py::test_multimodal_h_voice_prompt_injection_plus_image PASSED [  8%]
+tests/integration/test_step21_multimodal_scenarios.py::test_final_confirmation_boundary_no_quanta_execution PASSED [  9%]
+tests/integration/test_transaction_intelligence_e2e.py::test_transaction_intelligence_e2e_detects_multiple_patterns PASSED [  9%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_1_known_beneficiary_prepare PASSED [  9%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_2_direct_confirmation_yes PASSED [  9%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_3_pidgin_confirmation_run_am PASSED [  9%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_4_colloquial_confirmation_fire_down PASSED [  9%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_5_cancellation_dont_run_am PASSED [  9%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_6_modification_overrides_confirmation PASSED [ 10%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_7_expired_confirmation_rejected PASSED [ 10%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_8_ownership_isolation PASSED [ 10%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_9_replay_protection_consumed PASSED [ 10%]
+tests/integration/test_transfer_e2e_scenarios.py::test_scenario_10_beneficiary_switch_no_stale_amount PASSED [ 10%]
+tests/integration/test_transfer_workflow.py::test_step14_prepare_transfer_reaches_awaiting_confirmation PASSED [ 10%]
+tests/integration/test_transfer_workflow.py::test_step15_confirmation_workflow_confirm PASSED [ 11%]
+tests/integration/test_transfer_workflow.py::test_step15_confirmation_workflow_cancel PASSED [ 11%]
+tests/unit/api/test_interact_api.py::test_interact_missing_headers PASSED [ 11%]
+tests/unit/api/test_interact_api.py::test_interact_valid_headers PASSED  [ 11%]
+tests/unit/api/test_profile_goals_budget_api.py::test_profile_api_get PASSED [ 11%]
+tests/unit/api/test_profile_goals_budget_api.py::test_profile_api_update PASSED [ 11%]
+tests/unit/api/test_profile_goals_budget_api.py::test_goals_api_create_and_get PASSED [ 12%]
+tests/unit/api/test_profile_goals_budget_api.py::test_budget_api_generate_and_get PASSED [ 12%]
+tests/unit/domain/test_account_and_amount_validators.py::test_account_validator_success PASSED [ 12%]
+tests/unit/domain/test_account_and_amount_validators.py::test_account_validator_invalid_length PASSED [ 12%]
+tests/unit/domain/test_account_and_amount_validators.py::test_amount_validator_valid_slang PASSED [ 12%]
+tests/unit/domain/test_account_and_amount_validators.py::test_amount_validator_exceeds_limit PASSED [ 12%]
+tests/unit/domain/test_budget.py::test_valid_budget_creation PASSED      [ 12%]
+tests/unit/domain/test_budget.py::test_invalid_dates_start_after_end PASSED [ 13%]
+tests/unit/domain/test_budget.py::test_allocations_exceeding_income_rejection PASSED [ 13%]
+tests/unit/domain/test_budget.py::test_remaining_period_calculation PASSED [ 13%]
+tests/unit/domain/test_budget.py::test_ownership_validation PASSED       [ 13%]
+tests/unit/domain/test_budget_context_integration.py::test_budget_generation_without_transaction_history PASSED [ 13%]
+tests/unit/domain/test_budget_context_integration.py::test_budget_generation_consumes_transaction_budget_context PASSED [ 13%]
+tests/unit/domain/test_budget_context_integration.py::test_budget_versioning_and_superseded_status PASSED [ 14%]
+tests/unit/domain/test_budget_context_integration.py::test_budget_does_not_mutate_goal_status PASSED [ 14%]
+tests/unit/domain/test_confirmation_manager.py::test_create_and_get_confirmation PASSED [ 14%]
+tests/unit/domain/test_confirmation_manager.py::test_confirm_lifecycle_and_replay_protection PASSED [ 14%]
+tests/unit/domain/test_confirmation_manager.py::test_user_and_session_ownership_isolation PASSED [ 14%]
+tests/unit/domain/test_confirmation_manager.py::test_expiry_handling PASSED [ 14%]
+tests/unit/domain/test_confirmation_manager.py::test_cancellation_and_invalid_transition PASSED [ 14%]
+tests/unit/domain/test_confirmation_manager.py::test_not_found_handling PASSED [ 15%]
+tests/unit/domain/test_confirmation_resolver.py::test_normalize_lowercases_and_strips PASSED [ 15%]
+tests/unit/domain/test_confirmation_resolver.py::test_normalize_collapses_punctuation PASSED [ 15%]
+tests/unit/domain/test_confirmation_resolver.py::test_normalize_curly_apostrophe PASSED [ 15%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[yes] PASSED [ 15%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[confirm] PASSED [ 15%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[confirmed] PASSED [ 16%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[proceed] PASSED [ 16%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[go ahead] PASSED [ 16%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[okay] PASSED [ 16%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[ok] PASSED [ 16%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[yes send it] PASSED [ 16%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[do it] PASSED [ 17%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[that's correct] PASSED [ 17%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[i confirm] PASSED [ 17%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[sharp] PASSED [ 17%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[sharp sharp] PASSED [ 17%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[fire down] PASSED [ 17%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[fire down abeg] PASSED [ 17%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[correct no dulling] PASSED [ 18%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[no wahala] PASSED [ 18%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[no wahala run am] PASSED [ 18%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[e correct] PASSED [ 18%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[na correct] PASSED [ 18%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[run am now] PASSED [ 18%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[run am sharp sharp] PASSED [ 19%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[yes na] PASSED [ 19%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[yes abeg] PASSED [ 19%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[oya go] PASSED [ 19%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[make e go] PASSED [ 19%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[b\u1eb9\u1eb9ni] PASSED [ 19%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[b\u1eb9\u0301\u1eb9\u0300ni] PASSED [ 19%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[b\u1eb9\u1eb9ni t\u1eb9siwaju] PASSED [ 20%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[b\u1eb9\u0301\u1eb9\u0300ni t\u1eb9\u0301s\xedw\xe1j\xfa] PASSED [ 20%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[t\u1eb9siwaju] PASSED [ 20%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[t\u1eb9\u0301s\xedw\xe1j\xfa] PASSED [ 20%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[r\xe1n\u1e63\u1eb9\u0301] PASSED [ 20%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[o t\u1ecd] PASSED [ 20%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[\xf3 d\xe1a] PASSED [ 21%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[ko si wahala] PASSED [ 21%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[l\u1ecd siwaju] PASSED [ 21%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[eh] PASSED [ 21%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[eh ci gaba] PASSED [ 21%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[ci gaba] PASSED [ 21%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[ci gaba da shi] PASSED [ 21%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[yi shi] PASSED [ 22%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[ka yi shi] PASSED [ 22%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[to] PASSED [ 22%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[da kyau] PASSED [ 22%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[babu matsala] PASSED [ 22%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[mu ci gaba] PASSED [ 22%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[ee] PASSED [ 23%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[ee gaa n'ihu] PASSED [ 23%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[gaa n'ihu] PASSED [ 23%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[mee ya] PASSED [ 23%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[zip\u1ee5 ya] PASSED [ 23%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[\u1ecd d\u1ecb mma] PASSED [ 23%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[o di mma] PASSED [ 24%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[enwegh\u1ecb nsogbu] PASSED [ 24%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_phrases[ka any\u1ecb gaa] PASSED [ 24%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[run am] PASSED [ 24%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[run am for me] PASSED [ 24%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[run am for me abeg] PASSED [ 24%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[abeg run am] PASSED [ 24%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[yes send am] PASSED [ 25%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[oya send am] PASSED [ 25%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[send am] PASSED [ 25%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[send am abeg] PASSED [ 25%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[do am] PASSED [ 25%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[oya do am] PASSED [ 25%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[fire am] PASSED [ 26%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[fire am down] PASSED [ 26%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[you fit send am] PASSED [ 26%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_inside_confirmation[send am make e go] PASSED [ 26%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_outside_confirmation_returns_other[run am] PASSED [ 26%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_outside_confirmation_returns_other[send am] PASSED [ 26%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_outside_confirmation_returns_other[do am] PASSED [ 26%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_outside_confirmation_returns_other[fire am] PASSED [ 27%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[no] PASSED [ 27%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[cancel] PASSED [ 27%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[cancel it] PASSED [ 27%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[stop] PASSED [ 27%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[abort] PASSED [ 27%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[don't send it] PASSED [ 28%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[do not send it] PASSED [ 28%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[wait] PASSED [ 28%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[hold on] PASSED [ 28%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[i change my mind] PASSED [ 28%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[i don change my mind] PASSED [ 28%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[no send am] PASSED [ 29%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[no run am] PASSED [ 29%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[abeg no send am] PASSED [ 29%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[no do am] PASSED [ 29%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[leave am] PASSED [ 29%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[forget am] PASSED [ 29%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[make you cancel am] PASSED [ 29%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[cancel am abeg] PASSED [ 30%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[abeg stop] PASSED [ 30%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[don't run am] PASSED [ 30%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[dont run am] PASSED [ 30%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[r\xe1r\xe1] PASSED [ 30%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[rara] PASSED [ 30%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[fagil\xe9] PASSED [ 31%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[rara fagilee re] PASSED [ 31%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[r\xe1r\xe1 fagilee r\u1eb9\u0300] PASSED [ 31%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[ma \u1e63e r\xe1n\u1e63\u1eb9\u0301] PASSED [ 31%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[m\xe1 \u1e63e r\xe1n\u1e63\u1eb9\u0301] PASSED [ 31%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[da duro] PASSED [ 31%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[mo ti yi okan mi pada] PASSED [ 31%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[m\xe1 t\u1eb9siwaju] PASSED [ 32%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[a'a] PASSED [ 32%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[kar a aika] PASSED [ 32%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[kar ka aika] PASSED [ 32%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[daina] PASSED [ 32%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[bar shi] PASSED [ 32%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[mu dakata] PASSED [ 33%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[kar a ci gaba] PASSED [ 33%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[na canza raayi] PASSED [ 33%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[soke] PASSED [ 33%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[mba] PASSED [ 33%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[mba kagbuo ya] PASSED [ 33%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[kagbuo] PASSED [ 34%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[ezip\u1ee5la ya] PASSED [ 34%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[ezipula ya] PASSED [ 34%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[akwusi] PASSED [ 34%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[kw\u1ee5s\u1ecb ya] PASSED [ 34%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[ka ayi kwusi] PASSED [ 34%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation[achoghi m ya] PASSED [ 34%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[yes, make it 20k] PASSED [ 35%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[yes make it 20k] PASSED [ 35%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[run am for me, but make it 20k] PASSED [ 35%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[send it to Mum instead] PASSED [ 35%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[make it 15k] PASSED [ 35%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[change the beneficiary] PASSED [ 35%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[run am but make it 50k] PASSED [ 36%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[no, send to Mum instead] PASSED [ 36%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[no actually make it 5k] PASSED [ 36%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_modification_wins[cancel that, change it to 30k] PASSED [ 36%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation_wins_over_confirm[don't run am] PASSED [ 36%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation_wins_over_confirm[no, don't send it] PASSED [ 36%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation_wins_over_confirm[wait, don't fire down] PASSED [ 36%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation_wins_over_confirm[don't fire down yet] PASSED [ 37%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation_wins_over_confirm[make you no send am] PASSED [ 37%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation_wins_over_confirm[make you stop am] PASSED [ 37%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation_wins_over_confirm[leave am like that] PASSED [ 37%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_cancellation_wins_over_confirm[forget about am] PASSED [ 37%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_ambiguous[run am?] PASSED [ 37%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_ambiguous[should I run am?] PASSED [ 38%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_ambiguous[confirm?] PASSED [ 38%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_ambiguous[send it?] PASSED [ 38%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_ambiguous[hmm] PASSED [ 38%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_ambiguous[hmmmm] PASSED [ 38%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_ambiguous[maybe] PASSED [ 38%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_ambiguous[not sure] PASSED [ 39%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_empty_input PASSED [ 39%]
+tests/unit/domain/test_confirmation_resolver.py::test_resolver_unrelated_input PASSED [ 39%]
+tests/unit/domain/test_confirmation_resolver.py::test_explicit_confirm_and_cancel_sets_are_disjoint PASSED [ 39%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_confirm_not_in_explicit_cancel PASSED [ 39%]
+tests/unit/domain/test_confirmation_resolver.py::test_contextual_and_explicit_confirm_disjoint PASSED [ 39%]
+tests/unit/domain/test_conversational_requirements.py::test_question_requirement_model PASSED [ 39%]
+tests/unit/domain/test_conversational_requirements.py::test_missing_requirements_unconfirmed_profile PASSED [ 40%]
+tests/unit/domain/test_conversational_requirements.py::test_missing_requirements_partially_confirmed PASSED [ 40%]
+tests/unit/domain/test_financial_profile.py::test_valid_financial_profile_creation PASSED [ 40%]
+tests/unit/domain/test_financial_profile.py::test_invalid_negative_monetary_values PASSED [ 40%]
+tests/unit/domain/test_financial_profile.py::test_invalid_currency_rejection PASSED [ 40%]
+tests/unit/domain/test_financial_profile.py::test_empty_user_id_rejection PASSED [ 40%]
+tests/unit/domain/test_financial_profile.py::test_ownership_validation PASSED [ 41%]
+tests/unit/domain/test_goals.py::test_valid_financial_goal_creation PASSED [ 41%]
+tests/unit/domain/test_goals.py::test_invalid_target_amount_zero_or_negative PASSED [ 41%]
+tests/unit/domain/test_goals.py::test_invalid_current_amount_exceeding_target PASSED [ 41%]
+tests/unit/domain/test_goals.py::test_invalid_currency_rejection PASSED  [ 41%]
+tests/unit/domain/test_goals.py::test_cancelled_goal_update_restriction PASSED [ 41%]
+tests/unit/domain/test_goals.py::test_completed_goal_update_restriction PASSED [ 41%]
+tests/unit/domain/test_goals.py::test_goal_ownership_validation PASSED   [ 42%]
+tests/unit/orchestration/test_orchestrator.py::test_orchestrator_returns_final_llm_response PASSED [ 42%]
+tests/unit/orchestration/test_orchestrator.py::test_orchestrator_passes_registered_tools_to_llm PASSED [ 42%]
+tests/unit/orchestration/test_orchestrator.py::test_orchestrator_executes_llm_requested_tool PASSED [ 42%]
+tests/unit/orchestration/test_orchestrator.py::test_orchestrator_preserves_user_context_for_tool_execution PASSED [ 42%]
+tests/unit/orchestration/test_orchestrator.py::test_orchestrator_handles_provider_failure PASSED [ 42%]
+tests/unit/orchestration/test_orchestrator.py::test_orchestrator_enforces_max_tool_iterations PASSED [ 43%]
+tests/unit/orchestration/test_orchestrator.py::test_orchestrator_rejects_invalid_initial_state PASSED [ 43%]
+tests/unit/orchestration/test_orchestrator.py::test_orchestrator_rejects_unknown_tool PASSED [ 43%]
+tests/unit/orchestration/test_orchestrator.py::test_orchestrator_does_not_accept_user_id_from_llm_arguments PASSED [ 43%]
+tests/unit/orchestration/test_orchestrator.py::test_prepare_transfer_stops_orchestration_for_confirmation PASSED [ 43%]
+tests/unit/orchestration/test_orchestrator.py::test_failed_prepare_transfer_does_not_transition_to_confirmation PASSED [ 43%]
+tests/unit/orchestration/test_orchestrator.py::test_prepare_transfer_failure_does_not_request_confirmation PASSED [ 43%]
+tests/unit/orchestration/test_session_manager.py::test_session_manager_singleton_and_get PASSED [ 44%]
+tests/unit/orchestration/test_session_manager.py::test_session_state_reset PASSED [ 44%]
+tests/unit/orchestration/test_voice_pipeline.py::test_missing_profile_skips_asr_and_orchestrator PASSED [ 44%]
+tests/unit/orchestration/test_voice_pipeline.py::test_speaker_error_returns_verification_failed_and_skips_asr PASSED [ 44%]
+tests/unit/orchestration/test_voice_pipeline.py::test_verification_below_threshold_returns_verification_failed_and_skips_asr PASSED [ 44%]
+tests/unit/orchestration/test_voice_pipeline.py::test_asr_error_returns_transcription_failed_and_skips_orchestrator PASSED [ 44%]
+tests/unit/orchestration/test_voice_pipeline.py::test_full_success_path_passes_transcript_into_real_orchestrator PASSED [ 45%]
+tests/unit/prompts/test_prompt_builder.py::test_build_quanta_system_prompt PASSED [ 45%]
+tests/unit/providers/asr/test_asr_contract.py::test_normalize_language_canonical_codes PASSED [ 45%]
+tests/unit/providers/asr/test_asr_contract.py::test_normalize_language_aliases PASSED [ 45%]
+tests/unit/providers/asr/test_asr_contract.py::test_normalize_language_none_or_empty PASSED [ 45%]
+tests/unit/providers/asr/test_asr_contract.py::test_normalize_language_unsupported_raises_input_error PASSED [ 45%]
+tests/unit/providers/asr/test_asr_contract.py::test_asr_result_fields_and_aliases PASSED [ 46%]
+tests/unit/providers/asr/test_asr_contract.py::test_asr_result_validations PASSED [ 46%]
+tests/unit/providers/asr/test_asr_contract.py::test_error_hierarchy PASSED [ 46%]
+tests/unit/providers/asr/test_asr_provider.py::test_asr_result PASSED    [ 46%]
+tests/unit/providers/asr/test_asr_provider.py::test_asr_result_rejects_empty_text PASSED [ 46%]
+tests/unit/providers/asr/test_asr_provider.py::test_asr_confidence_must_be_between_zero_and_one PASSED [ 46%]
+tests/unit/providers/asr/test_asr_provider.py::test_asr_duration_cannot_be_negative PASSED [ 46%]
+tests/unit/providers/asr/test_asr_provider.py::test_asr_provider_contract PASSED [ 47%]
+tests/unit/providers/asr/test_asr_provider.py::test_asr_provider_error PASSED [ 47%]
+tests/unit/providers/asr/test_asr_provider.py::test_asr_provider_is_abstract PASSED [ 47%]
+tests/unit/providers/asr/test_audio.py::test_decode_audio_valid_wav_mono PASSED [ 47%]
+tests/unit/providers/asr/test_audio.py::test_decode_audio_valid_wav_stereo_converts_to_mono PASSED [ 47%]
+tests/unit/providers/asr/test_audio.py::test_decode_audio_empty_bytes_raises_error PASSED [ 47%]
+tests/unit/providers/asr/test_audio.py::test_decode_audio_exceeds_max_bytes PASSED [ 48%]
+tests/unit/providers/asr/test_audio.py::test_decode_audio_exceeds_max_duration PASSED [ 48%]
+tests/unit/providers/asr/test_audio.py::test_decode_audio_corrupt_data_raises_error PASSED [ 48%]
+tests/unit/providers/asr/test_factory.py::test_factory_returns_naijavox_provider PASSED [ 48%]
+tests/unit/providers/asr/test_factory.py::test_factory_returns_faster_whisper_provider PASSED [ 48%]
+tests/unit/providers/asr/test_factory.py::test_factory_accepts_explicit_provider_override PASSED [ 48%]
+tests/unit/providers/asr/test_factory.py::test_factory_unknown_provider_raises_configuration_error PASSED [ 48%]
+tests/unit/providers/asr/test_faster_whisper_provider.py::test_resolve_faster_whisper_device_cpu PASSED [ 49%]
+tests/unit/providers/asr/test_faster_whisper_provider.py::test_resolve_faster_whisper_device_cuda_unavailable_raises_error PASSED [ 49%]
+tests/unit/providers/asr/test_faster_whisper_provider.py::test_resolve_compute_type_auto PASSED [ 49%]
+tests/unit/providers/asr/test_faster_whisper_provider.py::test_faster_whisper_transcribe_success PASSED [ 49%]
+tests/unit/providers/asr/test_faster_whisper_provider.py::test_faster_whisper_empty_output_raises_transcription_error PASSED [ 49%]
+tests/unit/providers/asr/test_naijavox_provider.py::test_resolve_device_cpu PASSED [ 49%]
+tests/unit/providers/asr/test_naijavox_provider.py::test_resolve_device_cuda_unavailable_raises_error PASSED [ 50%]
+tests/unit/providers/asr/test_naijavox_provider.py::test_naijavox_transcribe_success PASSED [ 50%]
+tests/unit/providers/asr/test_naijavox_provider.py::test_naijavox_transcribe_empty_output_raises_transcription_error PASSED [ 50%]
+tests/unit/providers/asr/test_naijavox_provider.py::test_naijavox_missing_custom_tokens_raises_model_load_error PASSED [ 50%]
+tests/unit/providers/asr/test_provider_compatibility.py::test_providers_satisfy_common_asr_result_contract PASSED [ 50%]
+tests/unit/providers/llm/test_base.py::test_user_message_requires_content PASSED [ 50%]
+tests/unit/providers/llm/test_base.py::test_user_message_rejects_empty_content PASSED [ 51%]
+tests/unit/providers/llm/test_base.py::test_user_message_rejects_tool_calls PASSED [ 51%]
+tests/unit/providers/llm/test_base.py::test_assistant_message_can_contain_only_tool_calls PASSED [ 51%]
+tests/unit/providers/llm/test_base.py::test_assistant_message_can_contain_text PASSED [ 51%]
+tests/unit/providers/llm/test_base.py::test_assistant_message_rejects_empty_message PASSED [ 51%]
+tests/unit/providers/llm/test_base.py::test_tool_message_requires_tool_call_id PASSED [ 51%]
+tests/unit/providers/llm/test_base.py::test_tool_message_requires_content PASSED [ 51%]
+tests/unit/providers/llm/test_base.py::test_tool_message_is_valid PASSED [ 52%]
+tests/unit/providers/llm/test_base.py::test_system_message_requires_content PASSED [ 52%]
+tests/unit/providers/llm/test_claude_provider.py::test_claude_provider_normalizes_text_response PASSED [ 52%]
+tests/unit/providers/llm/test_claude_provider.py::test_claude_provider_normalizes_tool_call PASSED [ 52%]
+tests/unit/providers/llm/test_claude_provider.py::test_claude_provider_builds_system_prompt PASSED [ 52%]
+tests/unit/providers/llm/test_claude_provider.py::test_claude_provider_builds_tool_definition PASSED [ 52%]
+tests/unit/providers/llm/test_claude_provider.py::test_claude_provider_reconstructs_assistant_tool_use PASSED [ 53%]
+tests/unit/providers/llm/test_claude_provider.py::test_claude_provider_reconstructs_tool_result PASSED [ 53%]
+tests/unit/providers/llm/test_claude_provider.py::test_claude_provider_requires_api_key PASSED [ 53%]
+tests/unit/providers/llm/test_factory.py::test_factory_builds_groq_provider PASSED [ 53%]
+tests/unit/providers/llm/test_factory.py::test_factory_builds_claude_provider PASSED [ 53%]
+tests/unit/providers/llm/test_factory.py::test_factory_rejects_unknown_provider PASSED [ 53%]
+tests/unit/providers/llm/test_groq_provider.py::test_groq_provider_normalizes_text_response PASSED [ 53%]
+tests/unit/providers/llm/test_groq_provider.py::test_groq_provider_normalizes_tool_call PASSED [ 54%]
+tests/unit/providers/llm/test_groq_provider.py::test_groq_provider_sends_system_prompt PASSED [ 54%]
+tests/unit/providers/llm/test_groq_provider.py::test_groq_provider_sends_tools PASSED [ 54%]
+tests/unit/providers/llm/test_groq_provider.py::test_groq_provider_reconstructs_assistant_tool_calls PASSED [ 54%]
+tests/unit/providers/llm/test_groq_provider.py::test_groq_provider_reconstructs_tool_result PASSED [ 54%]
+tests/unit/providers/llm/test_groq_provider.py::test_groq_provider_rejects_system_messages PASSED [ 54%]
+tests/unit/providers/llm/test_groq_provider.py::test_groq_provider_rejects_tool_message_without_id PASSED [ 55%]
+tests/unit/providers/llm/test_groq_provider.py::test_groq_provider_requires_api_key PASSED [ 55%]
+tests/unit/providers/llm/test_llm_provider.py::test_llm_message_role PASSED [ 55%]
+tests/unit/providers/llm/test_llm_provider.py::test_llm_message PASSED   [ 55%]
+tests/unit/providers/llm/test_llm_provider.py::test_llm_message_rejects_invalid_role PASSED [ 55%]
+tests/unit/providers/llm/test_llm_provider.py::test_llm_tool_call PASSED [ 55%]
+tests/unit/providers/llm/test_llm_provider.py::test_llm_response_with_text PASSED [ 56%]
+tests/unit/providers/llm/test_llm_provider.py::test_llm_response_with_tool_call PASSED [ 56%]
+tests/unit/providers/llm/test_llm_provider.py::test_llm_provider_contract PASSED [ 56%]
+tests/unit/providers/llm/test_llm_provider.py::test_llm_provider_error_is_provider_error PASSED [ 56%]
+tests/unit/providers/llm/test_llm_provider.py::test_llm_provider_is_abstract PASSED [ 56%]
+tests/unit/providers/llm/test_mock_provider.py::test_mock_provider_returns_responses_in_order PASSED [ 56%]
+tests/unit/providers/llm/test_mock_provider.py::test_mock_provider_records_calls PASSED [ 56%]
+tests/unit/providers/llm/test_mock_provider.py::test_mock_provider_supports_tool_calls PASSED [ 57%]
+tests/unit/providers/llm/test_mock_provider.py::test_mock_provider_raises_when_responses_are_exhausted PASSED [ 57%]
+tests/unit/providers/llm/test_mock_provider.py::test_mock_provider_requires_response_source PASSED [ 57%]
+tests/unit/providers/llm/test_mock_provider.py::test_mock_provider_rejects_both_response_sources PASSED [ 57%]
+tests/unit/providers/ocr/test_factory.py::test_get_ocr_provider_paddleocr_explicit PASSED [ 57%]
+tests/unit/providers/ocr/test_factory.py::test_get_ocr_provider_default PASSED [ 57%]
+tests/unit/providers/ocr/test_factory.py::test_get_ocr_provider_case_insensitive PASSED [ 58%]
+tests/unit/providers/ocr/test_factory.py::test_get_ocr_provider_unknown_raises_configuration_error PASSED [ 58%]
+tests/unit/providers/ocr/test_factory.py::test_get_ocr_provider_custom_settings PASSED [ 58%]
+tests/unit/providers/ocr/test_image.py::test_validate_image_empty_bytes PASSED [ 58%]
+tests/unit/providers/ocr/test_image.py::test_validate_image_corrupt_bytes PASSED [ 58%]
+tests/unit/providers/ocr/test_image.py::test_validate_image_exceeds_max_bytes PASSED [ 58%]
+tests/unit/providers/ocr/test_image.py::test_validate_image_exceeds_max_pixels PASSED [ 58%]
+tests/unit/providers/ocr/test_image.py::test_validate_image_unsupported_format PASSED [ 59%]
+tests/unit/providers/ocr/test_image.py::test_validate_image_valid_png PASSED [ 59%]
+tests/unit/providers/ocr/test_image.py::test_validate_image_valid_jpeg PASSED [ 59%]
+tests/unit/providers/ocr/test_image.py::test_validate_image_valid_webp PASSED [ 59%]
+tests/unit/providers/ocr/test_ocr_provider.py::test_ocr_text_block PASSED [ 59%]
+tests/unit/providers/ocr/test_ocr_provider.py::test_ocr_text_block_with_bbox PASSED [ 59%]
+tests/unit/providers/ocr/test_ocr_provider.py::test_ocr_result PASSED    [ 60%]
+tests/unit/providers/ocr/test_ocr_provider.py::test_ocr_result_rejects_empty_text PASSED [ 60%]
+tests/unit/providers/ocr/test_ocr_provider.py::test_ocr_confidence_must_be_between_zero_and_one PASSED [ 60%]
+tests/unit/providers/ocr/test_ocr_provider.py::test_ocr_provider_contract PASSED [ 60%]
+tests/unit/providers/ocr/test_ocr_provider.py::test_ocr_error_hierarchy PASSED [ 60%]
+tests/unit/providers/ocr/test_ocr_provider.py::test_ocr_provider_error PASSED [ 60%]
+tests/unit/providers/ocr/test_ocr_provider.py::test_ocr_provider_is_abstract PASSED [ 60%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_lazy_init_does_not_load_pipeline PASSED [ 61%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_resolve_paddle_device_cpu PASSED [ 61%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_resolve_paddle_device_invalid PASSED [ 61%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_parse_paddle_result_attr_shape PASSED [ 61%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_parse_paddle_result_dict_shape PASSED [ 61%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_parse_paddle_result_legacy_shape PASSED [ 61%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_blocks_to_text_collapses_blank_lines PASSED [ 62%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_extract_valid_image_with_mock_pipeline PASSED [ 62%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_extract_invalid_image_raises_input_error PASSED [ 62%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_extract_no_text_found_raises_extraction_error PASSED [ 62%]
+tests/unit/providers/ocr/test_paddleocr_provider.py::test_extract_inference_failure_raises_extraction_error PASSED [ 62%]
+tests/unit/providers/ocr/test_provider_compatibility.py::test_paddleocr_provider_conforms_to_ocr_provider_contract PASSED [ 62%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_missing_access_key_raises_configuration_error PASSED [ 63%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_enroll_completes_and_returns_profile PASSED [ 63%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_enroll_incomplete_returns_no_profile PASSED [ 63%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_enroll_eagle_error_is_wrapped_and_profiler_still_released PASSED [ 63%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_verify_above_threshold_is_verified PASSED [ 63%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_verify_below_threshold_is_not_verified PASSED [ 63%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_verify_respects_explicit_threshold_override PASSED [ 63%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_verify_empty_profile_raises_input_error PASSED [ 64%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_verify_corrupted_profile_raises_input_error PASSED [ 64%]
+tests/unit/providers/speaker/test_eagle_provider.py::test_verify_no_voiced_frames_raises_verification_error PASSED [ 64%]
+tests/unit/providers/speaker/test_factory.py::test_factory_returns_eagle_provider PASSED [ 64%]
+tests/unit/providers/speaker/test_factory.py::test_factory_accepts_explicit_provider_override PASSED [ 64%]
+tests/unit/providers/speaker/test_factory.py::test_factory_unknown_provider_raises_configuration_error PASSED [ 64%]
+tests/unit/providers/speaker/test_factory.py::test_factory_missing_access_key_raises_configuration_error PASSED [ 65%]
+tests/unit/providers/speaker/test_speaker_contract.py::test_enrollment_result_incomplete_has_no_profile PASSED [ 65%]
+tests/unit/providers/speaker/test_speaker_contract.py::test_enrollment_result_complete_carries_profile PASSED [ 65%]
+tests/unit/providers/speaker/test_speaker_contract.py::test_enrollment_result_validates_percent_range PASSED [ 65%]
+tests/unit/providers/speaker/test_speaker_contract.py::test_verification_result_fields PASSED [ 65%]
+tests/unit/providers/speaker/test_speaker_contract.py::test_verification_result_validates_score_and_threshold_range PASSED [ 65%]
+tests/unit/providers/speaker/test_speaker_contract.py::test_error_hierarchy PASSED [ 65%]
+tests/unit/providers/test_tts_provider.py::test_tts_result PASSED        [ 66%]
+tests/unit/providers/test_tts_provider.py::test_tts_content_type_is_required PASSED [ 66%]
+tests/unit/providers/test_tts_provider.py::test_tts_duration_cannot_be_negative PASSED [ 66%]
+tests/unit/providers/test_tts_provider.py::test_tts_provider_contract PASSED [ 66%]
+tests/unit/providers/test_tts_provider.py::test_tts_provider_error PASSED [ 66%]
+tests/unit/providers/test_tts_provider.py::test_tts_provider_is_abstract PASSED [ 66%]
+tests/unit/providers/tts/test_edge_provider.py::test_edge_provider_empty_text PASSED [ 67%]
+tests/unit/providers/tts/test_edge_provider.py::test_edge_provider_synthesize_success PASSED [ 67%]
+tests/unit/providers/tts/test_edge_provider.py::test_edge_provider_error_handling PASSED [ 67%]
+tests/unit/providers/tts/test_naijalingo_provider.py::test_naijalingo_missing_api_key PASSED [ 67%]
+tests/unit/providers/tts/test_naijalingo_provider.py::test_naijalingo_empty_text PASSED [ 67%]
+tests/unit/providers/tts/test_naijalingo_provider.py::test_naijalingo_missing_voice PASSED [ 67%]
+tests/unit/providers/tts/test_naijalingo_provider.py::test_naijalingo_synthesize_success PASSED [ 68%]
+tests/unit/providers/tts/test_naijalingo_provider.py::test_naijalingo_sdk_error_wrapping PASSED [ 68%]
+tests/unit/providers/tts/test_naijalingo_provider.py::test_naijalingo_streaming_success PASSED [ 68%]
+tests/unit/providers/tts/test_tts_factory.py::test_factory_get_edge_provider PASSED [ 68%]
+tests/unit/providers/tts/test_tts_factory.py::test_factory_get_naijalingo_provider PASSED [ 68%]
+tests/unit/providers/tts/test_tts_factory.py::test_factory_get_9jalingo_alias PASSED [ 68%]
+tests/unit/providers/tts/test_tts_factory.py::test_factory_unsupported_provider PASSED [ 68%]
+tests/unit/providers/tts/test_voice_resolver.py::test_resolve_voice_english_female PASSED [ 69%]
+tests/unit/providers/tts/test_voice_resolver.py::test_resolve_voice_english_male PASSED [ 69%]
+tests/unit/providers/tts/test_voice_resolver.py::test_resolve_voice_hausa PASSED [ 69%]
+tests/unit/providers/tts/test_voice_resolver.py::test_resolve_voice_igbo PASSED [ 69%]
+tests/unit/providers/tts/test_voice_resolver.py::test_resolve_voice_yoruba PASSED [ 69%]
+tests/unit/providers/tts/test_voice_resolver.py::test_resolve_voice_pidgin PASSED [ 69%]
+tests/unit/providers/tts/test_voice_resolver.py::test_resolve_voice_unsupported_language PASSED [ 70%]
+tests/unit/providers/tts/test_voice_resolver.py::test_resolve_voice_unsupported_gender PASSED [ 70%]
+tests/unit/security/test_mega1_security.py::test_security_llm_cannot_call_execute_transfer PASSED [ 70%]
+tests/unit/security/test_mega1_security.py::test_security_llm_cannot_spoof_user_id_in_profile_update PASSED [ 70%]
+tests/unit/security/test_mega1_security.py::test_security_prompt_injection_in_ocr_ignored PASSED [ 70%]
+tests/unit/security/test_mega2_security.py::test_identity_context_override_in_tool_executor PASSED [ 70%]
+tests/unit/security/test_mega2_security.py::test_cross_user_resource_access_prevented PASSED [ 70%]
+tests/unit/security/test_mega2_security.py::test_ocr_prompt_injection_defense PASSED [ 71%]
+tests/unit/security/test_mega2_security.py::test_unverified_speaker_blocks_voice_pipeline PASSED [ 71%]
+tests/unit/services/test_budget_service.py::test_generate_budget_without_transaction_context PASSED [ 71%]
+tests/unit/services/test_budget_service.py::test_generate_budget_with_goals_integration PASSED [ 71%]
+tests/unit/services/test_budget_service.py::test_update_budget_preserves_original_period_and_creates_v2 PASSED [ 71%]
+tests/unit/services/test_budget_service.py::test_cross_user_budget_isolation PASSED [ 71%]
+tests/unit/services/test_financial_profile_service.py::test_get_profile_success PASSED [ 72%]
+tests/unit/services/test_financial_profile_service.py::test_update_profile_success PASSED [ 72%]
+tests/unit/services/test_financial_profile_service.py::test_update_profile_ignores_disallowed_or_empty_updates PASSED [ 72%]
+tests/unit/services/test_financial_profile_service.py::test_get_profile_empty_user_id_error PASSED [ 72%]
+tests/unit/services/test_goal_service.py::test_create_goal_success PASSED [ 72%]
+tests/unit/services/test_goal_service.py::test_get_goals_user_isolation PASSED [ 72%]
+tests/unit/services/test_goal_service.py::test_update_goal_progress_and_remaining PASSED [ 73%]
+tests/unit/services/test_goal_service.py::test_cross_user_goal_access_prevented PASSED [ 73%]
+tests/unit/services/test_transaction_intelligence_service.py::test_transaction_intelligence_direction_and_classification_are_separate PASSED [ 73%]
+tests/unit/services/test_transaction_intelligence_service.py::test_transaction_intelligence_excludes_failed_and_pending_transactions PASSED [ 73%]
+tests/unit/services/test_transaction_intelligence_service.py::test_inbound_transfer_is_not_classified_as_income PASSED [ 73%]
+tests/unit/services/test_transaction_intelligence_service.py::test_recurring_income_is_not_total_income PASSED [ 73%]
+tests/unit/services/test_transaction_intelligence_service.py::test_transaction_intelligence_rejects_cross_user_access PASSED [ 73%]
+tests/unit/services/test_transaction_intelligence_service.py::test_recurring_expense_change_and_added_removed_detection PASSED [ 74%]
+tests/unit/services/test_transaction_intelligence_service.py::test_malformed_transaction_is_recorded_and_skipped PASSED [ 74%]
+tests/unit/services/test_transaction_intelligence_service.py::test_prompt_injection_and_llm_sanitization PASSED [ 74%]
+tests/unit/services/test_transaction_intelligence_service.py::test_context_user_id_mismatch_rejected PASSED [ 74%]
+tests/unit/services/test_transaction_intelligence_service.py::test_provider_failure_raises_service_error PASSED [ 74%]
+tests/unit/services/test_transaction_intelligence_service.py::test_insufficient_history_flag_set PASSED [ 74%]
+tests/unit/services/test_transaction_intelligence_service.py::test_historical_averages_and_period_comparisons PASSED [ 75%]
+tests/unit/services/test_transaction_intelligence_service.py::test_income_variability_and_label PASSED [ 75%]
+tests/unit/services/test_transaction_intelligence_service.py::test_budget_review_signals_rich_numeric_fields PASSED [ 75%]
+tests/unit/services/test_transaction_intelligence_service.py::test_non_employer_inbound_is_not_employer_counterparty PASSED [ 75%]
+tests/unit/services/test_transaction_intelligence_service.py::test_debited_direction_and_signed_amount_handling PASSED [ 75%]
+tests/unit/services/test_transaction_intelligence_service.py::test_bounded_lookback_and_invalid_date_order PASSED [ 75%]
+tests/unit/services/test_transaction_intelligence_service.py::test_numerical_correctness_and_category_percentages PASSED [ 75%]
+tests/unit/services/test_transaction_intelligence_service.py::test_explicit_semantic_invariants_regression PASSED [ 76%]
+tests/unit/services/test_tts_service.py::test_tts_service_english_female_routing PASSED [ 76%]
+tests/unit/services/test_tts_service.py::test_tts_service_igbo_female_routing PASSED [ 76%]
+tests/unit/services/test_tts_service.py::test_tts_service_override_provider PASSED [ 76%]
+tests/unit/services/test_voice_enrollment_service.py::test_voice_enrollment_service_complete PASSED [ 76%]
+tests/unit/services/test_voice_enrollment_service.py::test_voice_enrollment_service_incomplete PASSED [ 76%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[send 10k to Mum-10000] PASSED [ 77%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[transfer 10 thousand naira to Dad-10000] PASSED [ 77%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[send 10 grand to Mum-10000] PASSED [ 77%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[pay 10 boi for me-10000] PASSED [ 77%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[send 5k to Mum-5000] PASSED [ 77%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[transfer 500 hundred naira-50000] PASSED [ 77%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[send 2 million naira to Mum-2000000] PASSED [ 78%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[puku iri-10000] PASSED [ 78%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[puku ise-5000] PASSED [ 78%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[dubu goma-10000] PASSED [ 78%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[dubu biyu-2000] PASSED [ 78%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[egberun mewa-10000] PASSED [ 78%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[egberun meji-2000] PASSED [ 78%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[send 5000 naira-5000] PASSED [ 79%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[transfer \u20a615000-15000] PASSED [ 79%]
+tests/unit/test_amount_parser.py::test_parse_amount_valid[send N20000-20000] PASSED [ 79%]
+tests/unit/test_amount_parser.py::test_parse_amount_ambiguous_bare_number PASSED [ 79%]
+tests/unit/test_amount_parser.py::test_parse_amount_account_number_filtered PASSED [ 79%]
+tests/unit/test_amount_parser.py::test_parse_amount_multiple_amounts PASSED [ 79%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[yes] PASSED [ 80%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[yes send it] PASSED [ 80%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[confirm] PASSED [ 80%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[confirmed] PASSED [ 80%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[proceed] PASSED [ 80%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[go ahead] PASSED [ 80%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[ok] PASSED [ 80%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[yes send am] PASSED [ 81%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[b\u1eb9\u1eb9ni] PASSED [ 81%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[b\u1eb9\u0301\u1eb9\u0300ni t\u1eb9\u0301s\xedw\xe1j\xfa] PASSED [ 81%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[eh ci gaba] PASSED [ 81%]
+tests/unit/test_confirmation.py::test_is_confirmation_multilingual[ee gaa n'ihu] PASSED [ 81%]
+tests/unit/test_confirmation.py::test_is_cancellation_multilingual[no] PASSED [ 81%]
+tests/unit/test_confirmation.py::test_is_cancellation_multilingual[cancel] PASSED [ 82%]
+tests/unit/test_confirmation.py::test_is_cancellation_multilingual[stop] PASSED [ 82%]
+tests/unit/test_confirmation.py::test_is_cancellation_multilingual[don't send it] PASSED [ 82%]
+tests/unit/test_confirmation.py::test_is_cancellation_multilingual[no send am] PASSED [ 82%]
+tests/unit/test_confirmation.py::test_is_cancellation_multilingual[rara fagilee re] PASSED [ 82%]
+tests/unit/test_confirmation.py::test_is_cancellation_multilingual[a'a soke shi] PASSED [ 82%]
+tests/unit/test_confirmation.py::test_is_cancellation_multilingual[mba kagbuo ya] PASSED [ 82%]
+tests/unit/test_confirmation.py::test_handle_pending_confirmation_confirm PASSED [ 83%]
+tests/unit/test_confirmation.py::test_handle_pending_confirmation_cancel PASSED [ 83%]
+tests/unit/test_confirmation.py::test_handle_pending_confirmation_expired PASSED [ 83%]
+tests/unit/test_context.py::test_context_creation PASSED                 [ 83%]
+tests/unit/test_context.py::test_context_creation_with_locale PASSED     [ 83%]
+tests/unit/test_context.py::test_request_ids_are_unique PASSED           [ 83%]
+tests/unit/test_context.py::test_metadata_is_preserved PASSED            [ 84%]
+tests/unit/test_context.py::test_empty_user_id_is_rejected PASSED        [ 84%]
+tests/unit/test_context.py::test_empty_session_id_is_rejected PASSED     [ 84%]
+tests/unit/test_context.py::test_empty_operation_is_rejected PASSED      [ 84%]
+tests/unit/test_context.py::test_context_is_immutable PASSED             [ 84%]
+tests/unit/test_context.py::test_log_dict_excludes_metadata PASSED       [ 84%]
+tests/unit/test_multilingual_regression.py::test_canonical_locale_normalization PASSED [ 85%]
+tests/unit/test_multilingual_regression.py::test_effective_response_language_resolution PASSED [ 85%]
+tests/unit/test_multilingual_regression.py::test_tts_voice_id_mapping_for_all_canonical_languages PASSED [ 85%]
+tests/unit/test_response.py::test_success_response PASSED                [ 85%]
+tests/unit/test_response.py::test_confirmation_required_response PASSED  [ 85%]
+tests/unit/test_response.py::test_input_required_response PASSED         [ 85%]
+tests/unit/test_response.py::test_clarification_required_response PASSED [ 85%]
+tests/unit/test_response.py::test_error_response PASSED                  [ 86%]
+tests/unit/test_response.py::test_rejects_extra_fields PASSED            [ 86%]
+tests/unit/test_response.py::test_request_id_is_required PASSED          [ 86%]
+tests/unit/test_response.py::test_speech_payload_min_length PASSED       [ 86%]
+tests/unit/test_response.py::test_response_serialization PASSED          [ 86%]
+tests/unit/test_state_machine.py::test_initial_state_is_idle PASSED      [ 86%]
+tests/unit/test_state_machine.py::test_idle_can_transition_to_processing PASSED [ 87%]
+tests/unit/test_state_machine.py::test_processing_can_transition_to_awaiting_input PASSED [ 87%]
+tests/unit/test_state_machine.py::test_processing_can_transition_to_awaiting_confirmation PASSED [ 87%]
+tests/unit/test_state_machine.py::test_processing_can_transition_to_success PASSED [ 87%]
+tests/unit/test_state_machine.py::test_processing_can_transition_to_error PASSED [ 87%]
+tests/unit/test_state_machine.py::test_processing_can_transition_to_cancelled PASSED [ 87%]
+tests/unit/test_state_machine.py::test_awaiting_input_can_return_to_processing PASSED [ 87%]
+tests/unit/test_state_machine.py::test_awaiting_input_can_be_cancelled PASSED [ 88%]
+tests/unit/test_state_machine.py::test_awaiting_input_can_expire PASSED  [ 88%]
+tests/unit/test_state_machine.py::test_confirmation_can_transition_to_executing PASSED [ 88%]
+tests/unit/test_state_machine.py::test_confirmation_can_be_cancelled PASSED [ 88%]
+tests/unit/test_state_machine.py::test_confirmation_can_expire PASSED    [ 88%]
+tests/unit/test_state_machine.py::test_executing_can_transition_to_success PASSED [ 88%]
+tests/unit/test_state_machine.py::test_executing_can_transition_to_error PASSED [ 89%]
+tests/unit/test_state_machine.py::test_error_can_return_to_idle PASSED   [ 89%]
+tests/unit/test_state_machine.py::test_error_can_restart_processing PASSED [ 89%]
+tests/unit/test_state_machine.py::test_cancelled_can_return_to_idle PASSED [ 89%]
+tests/unit/test_state_machine.py::test_expired_can_return_to_idle PASSED [ 89%]
+tests/unit/test_state_machine.py::test_expired_can_restart_processing PASSED [ 89%]
+tests/unit/test_state_machine.py::test_invalid_transition_raises_error PASSED [ 90%]
+tests/unit/test_state_machine.py::test_cannot_skip_confirmation_for_financial_flow PASSED [ 90%]
+tests/unit/test_state_machine.py::test_cannot_execute_from_awaiting_input PASSED [ 90%]
+tests/unit/test_state_machine.py::test_success_is_terminal PASSED        [ 90%]
+tests/unit/test_state_machine.py::test_reset_from_error PASSED           [ 90%]
+tests/unit/test_state_machine.py::test_reset_from_cancelled PASSED       [ 90%]
+tests/unit/test_state_machine.py::test_reset_from_expired PASSED         [ 90%]
+tests/unit/test_state_machine.py::test_reset_does_not_bypass_success_terminal_state PASSED [ 91%]
+tests/unit/test_state_machine.py::test_all_states_have_transition_definitions PASSED [ 91%]
+tests/unit/test_state_machine.py::test_invalid_transition_does_not_mutate_state PASSED [ 91%]
+tests/unit/test_state_machine.py::test_complete_transfer_lifecycle PASSED [ 91%]
+tests/unit/test_state_machine.py::test_confirmation_expiration_lifecycle PASSED [ 91%]
+tests/unit/test_step21_multimodal_and_languages.py::test_canonical_supported_languages PASSED [ 91%]
+tests/unit/test_step21_multimodal_and_languages.py::test_request_context_locale_defaults_to_en_and_normalizes PASSED [ 92%]
+tests/unit/test_step21_multimodal_and_languages.py::test_naijavox_language_token_mapping PASSED [ 92%]
+tests/unit/test_step21_multimodal_and_languages.py::test_ocr_provider_capabilities_metadata PASSED [ 92%]
+tests/unit/test_step21_multimodal_and_languages.py::test_tts_voice_resolution_and_decoupling PASSED [ 92%]
+tests/unit/test_transfer_guard.py::test_transfer_context_update_from_user_input PASSED [ 92%]
+tests/unit/test_transfer_guard.py::test_transfer_context_missing_beneficiary_clarification PASSED [ 92%]
+tests/unit/test_transfer_guard.py::test_transfer_context_ambiguous_amount_clarification PASSED [ 92%]
+tests/unit/test_transfer_guard.py::test_transfer_guard_overrides_llm_arguments PASSED [ 93%]
+tests/unit/test_transfer_guard.py::test_transfer_guard_blocks_prepare_when_incomplete PASSED [ 93%]
+tests/unit/tools/test_base.py::test_tool_base_is_abstract PASSED         [ 93%]
+tests/unit/tools/test_base.py::test_tool_definition PASSED               [ 93%]
+tests/unit/tools/test_base.py::test_tool_execution_contract PASSED       [ 93%]
+tests/unit/tools/test_beneficiary.py::test_search_beneficiary_by_nickname PASSED [ 93%]
+tests/unit/tools/test_beneficiary.py::test_beneficiary_search_respects_authenticated_user PASSED [ 94%]
+tests/unit/tools/test_beneficiary.py::test_search_beneficiary_by_account_name PASSED [ 94%]
+tests/unit/tools/test_budget_tools.py::test_budget_tool_classifications PASSED [ 94%]
+tests/unit/tools/test_budget_tools.py::test_budget_tools_flow_via_executor PASSED [ 94%]
+tests/unit/tools/test_executor.py::test_executor_runs_valid_tool PASSED  [ 94%]
+tests/unit/tools/test_executor.py::test_executor_rejects_invalid_arguments PASSED [ 94%]
+tests/unit/tools/test_executor.py::test_executor_rejects_missing_arguments PASSED [ 95%]
+tests/unit/tools/test_executor.py::test_executor_rejects_terminal_state PASSED [ 95%]
+tests/unit/tools/test_executor.py::test_executor_does_not_allow_user_id_from_arguments PASSED [ 95%]
+tests/unit/tools/test_executor.py::test_executor_rejects_invalid_tool_result PASSED [ 95%]
+tests/unit/tools/test_executor.py::test_executor_normalizes_unexpected_tool_failure PASSED [ 95%]
+tests/unit/tools/test_executor.py::test_executor_rejects_invalid_tool_output PASSED [ 95%]
+tests/unit/tools/test_executor.py::test_executor_rejects_success_without_data PASSED [ 95%]
+tests/unit/tools/test_financial_profile_tools.py::test_get_financial_profile_tool_classification PASSED [ 96%]
+tests/unit/tools/test_financial_profile_tools.py::test_update_financial_profile_tool_classification PASSED [ 96%]
+tests/unit/tools/test_financial_profile_tools.py::test_get_financial_profile_tool_execution PASSED [ 96%]
+tests/unit/tools/test_financial_profile_tools.py::test_update_financial_profile_tool_execution PASSED [ 96%]
+tests/unit/tools/test_financial_profile_tools.py::test_financial_profile_tools_via_executor PASSED [ 96%]
+tests/unit/tools/test_goal_tools.py::test_goal_tool_classifications PASSED [ 96%]
+tests/unit/tools/test_goal_tools.py::test_create_and_get_goal_flow PASSED [ 97%]
+tests/unit/tools/test_goal_tools.py::test_update_goal_tool_remaining_calculation PASSED [ 97%]
+tests/unit/tools/test_goal_tools.py::test_goal_tools_via_executor PASSED [ 97%]
+tests/unit/tools/test_policy.py::test_policy_allows_authenticated_read_tool PASSED [ 97%]
+tests/unit/tools/test_policy.py::test_policy_rejects_empty_user_identity PASSED [ 97%]
+tests/unit/tools/test_policy.py::test_policy_rejects_terminal_states[success] PASSED [ 97%]
+tests/unit/tools/test_policy.py::test_policy_rejects_terminal_states[cancelled] PASSED [ 97%]
+tests/unit/tools/test_policy.py::test_policy_rejects_terminal_states[expired] PASSED [ 98%]
+tests/unit/tools/test_policy.py::test_policy_rejects_system_tools PASSED [ 98%]
+tests/unit/tools/test_registry.py::test_registry_starts_empty PASSED     [ 98%]
+tests/unit/tools/test_registry.py::test_register_tool PASSED             [ 98%]
+tests/unit/tools/test_registry.py::test_registry_rejects_duplicate_tool PASSED [ 98%]
+tests/unit/tools/test_registry.py::test_registry_rejects_unknown_tool PASSED [ 98%]
+tests/unit/tools/test_registry.py::test_registry_definitions PASSED      [ 99%]
+tests/unit/tools/test_transaction_intelligence_tools.py::test_get_transaction_insights_tool_classification PASSED [ 99%]
+tests/unit/tools/test_transaction_intelligence_tools.py::test_get_transaction_insights_tool_execution PASSED [ 99%]
+tests/unit/tools/test_transaction_intelligence_tools.py::test_get_transaction_insights_tool_via_executor PASSED [ 99%]
+tests/unit/tools/test_transaction_intelligence_tools.py::test_get_transaction_insights_tool_rejects_user_id_argument PASSED [ 99%]
+tests/unit/tools/test_transaction_intelligence_tools.py::test_get_transaction_insights_tool_sanitizes_errors PASSED [ 99%]
+tests/unit/tools/test_transaction_intelligence_tools.py::test_get_transaction_insights_tool_prompt_injection_safety PASSED [100%]
 
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\budget.py:84:37
-   |
-82 | async def get_budget_history(
-83 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-84 |     budget_service: BudgetService = Depends(get_budget_service),
-   |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-85 | ) -> list[Budget]:
-86 |     """
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\goals.py:35:33
-   |
-33 |     status_filter: GoalStatus | None = None,
-34 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-35 |     goal_service: GoalService = Depends(get_goal_service),
-   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^
-36 | ) -> list[FinancialGoal]:
-37 |     """
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\goals.py:62:33
-   |
-60 |     body: CreateGoalRequest,
-61 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-62 |     goal_service: GoalService = Depends(get_goal_service),
-   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^
-63 | ) -> FinancialGoal:
-64 |     """
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\goals.py:92:33
-   |
-90 |     body: UpdateGoalRequest,
-91 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-92 |     goal_service: GoalService = Depends(get_goal_service),
-   |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^
-93 | ) -> FinancialGoal:
-94 |     """
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\interact.py:35:44
-   |
-33 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
-34 |     x_operation: str | None = Header(default=Operations.TEXT, alias="X-Operation"),
-35 |     runner: ConversationalWorkflowRunner = Depends(get_workflow_runner),
-   |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-36 | ) -> QuantaResponse:
-37 |     """
-   |
-
-B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\interact.py:75:32
-   |
-73 | async def interact_multipart(
-74 |     text: str | None = Form(default=None),
-75 |     image: UploadFile | None = File(default=None),
-   |                                ^^^^^^^^^^^^^^^^^^
-76 |     audio: UploadFile | None = File(default=None),
-77 |     voice_profile: UploadFile | None = File(default=None),
-   |
-
-B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\interact.py:76:32
-   |
-74 |     text: str | None = Form(default=None),
-75 |     image: UploadFile | None = File(default=None),
-76 |     audio: UploadFile | None = File(default=None),
-   |                                ^^^^^^^^^^^^^^^^^^
-77 |     voice_profile: UploadFile | None = File(default=None),
-78 |     verification_threshold: float | None = Form(default=None),
-   |
-
-B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\interact.py:77:40
-   |
-75 |     image: UploadFile | None = File(default=None),
-76 |     audio: UploadFile | None = File(default=None),
-77 |     voice_profile: UploadFile | None = File(default=None),
-   |                                        ^^^^^^^^^^^^^^^^^^
-78 |     verification_threshold: float | None = Form(default=None),
-79 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\interact.py:83:44
-   |
-81 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
-82 |     x_operation: str | None = Header(default=Operations.MULTIMODAL, alias="X-Operation"),
-83 |     runner: ConversationalWorkflowRunner = Depends(get_workflow_runner),
-   |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-84 | ) -> QuantaResponse:
-85 |     """
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\profile.py:27:48
-   |
-25 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-26 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
-27 |     profile_service: FinancialProfileService = Depends(get_financial_profile_service),
-   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-28 | ) -> FinancialProfile:
-29 |     """
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\profile.py:52:48
-   |
-50 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-51 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
-52 |     profile_service: FinancialProfileService = Depends(get_financial_profile_service),
-   |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-53 | ) -> FinancialProfile:
-54 |     """
-   |
-
-B008 Do not perform function call `Query` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\transactions.py:21:24
-   |
-19 | @router.get("/intelligence", response_model=TransactionIntelligenceResult)
-20 | async def get_transaction_intelligence(
-21 |     start_date: date = Query(...),
-   |                        ^^^^^^^^^^
-22 |     end_date: date = Query(...),
-23 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-   |
-
-B008 Do not perform function call `Query` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\transactions.py:22:22
-   |
-20 | async def get_transaction_intelligence(
-21 |     start_date: date = Query(...),
-22 |     end_date: date = Query(...),
-   |                      ^^^^^^^^^^
-23 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-24 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\transactions.py:26:50
-   |
-24 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
-25 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
-26 |     ti_service: TransactionIntelligenceService = Depends(get_transaction_intelligence_service),
-   |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-27 | ) -> TransactionIntelligenceResult:
-28 |     """
-   |
-
-B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\voice.py:21:25
-   |
-19 | @router.post("/interact", response_model=VoicePipelineResult)
-20 | async def voice_interact(
-21 |     audio: UploadFile = File(...),
-   |                         ^^^^^^^^^
-22 |     voice_profile: UploadFile | None = File(default=None),
-23 |     verification_threshold: float | None = Form(default=None),
-   |
-
-B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\voice.py:22:40
-   |
-20 | async def voice_interact(
-21 |     audio: UploadFile = File(...),
-22 |     voice_profile: UploadFile | None = File(default=None),
-   |                                        ^^^^^^^^^^^^^^^^^^
-23 |     verification_threshold: float | None = Form(default=None),
-24 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\voice.py:27:44
-   |
-25 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
-26 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
-27 |     runner: ConversationalWorkflowRunner = Depends(get_workflow_runner),
-   |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-28 | ) -> VoicePipelineResult:
-29 |     """
-   |
-
-B008 Do not perform function call `File` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\voice.py:71:25
-   |
-69 | @router.post("/enroll", response_model=VoiceEnrollmentResponse)
-70 | async def voice_enroll(
-71 |     audio: UploadFile = File(...),
-   |                         ^^^^^^^^^
-72 |     x_user_id: str | None = Header(default=None, alias="X-User-ID"),
-73 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
-   |
-
-B008 Do not perform function call `Depends` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
-  --> app\api\v1\endpoints\voice.py:75:50
-   |
-73 |     x_session_id: str | None = Header(default=None, alias="X-Session-ID"),
-74 |     x_locale: str | None = Header(default=None, alias="X-Locale"),
-75 |     enrollment_service: VoiceEnrollmentService = Depends(get_voice_enrollment_service),
-   |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-76 | ) -> VoiceEnrollmentResponse:
-77 |     """
-   |
-
-BLE001 Do not catch blind exception: `Exception`
-   --> app\dependencies\services.py:102:12
-    |
-100 |             orchestrator=orchestrator,
-101 |         )
-102 |     except Exception:
-    |            ^^^^^^^^^
-103 |         return None
-    |
-
-BLE001 Do not catch blind exception: `Exception`
-   --> app\dependencies\services.py:112:12
-    |
-110 |     try:
-111 |         ocr_provider = get_ocr_provider()
-112 |     except Exception:
-    |            ^^^^^^^^^
-113 |         ocr_provider = None
-114 |     return MultimodalProcessor(
-    |
-
-RUF012 Mutable default value for class attribute
-  --> app\domain\conversational\requirements.py:30:57
-   |
-28 |       """
-29 |
-30 |       PROFILE_QUESTIONS: dict[str, QuestionRequirement] = {
-   |  _________________________________________________________^
-31 | |         "monthly_income": QuestionRequirement(
-32 | |             field_name="monthly_income",
-33 | |             question_text="What is your approximate monthly income?",
-34 | |             why_required="Required to establish your total monthly budget capacity.",
-35 | |             input_type="monetary",
-36 | |             is_optional=False,
-37 | |         ),
-38 | |         "income_frequency": QuestionRequirement(
-39 | |             field_name="income_frequency",
-40 | |             question_text="How frequently do you receive income? (monthly, biweekly, weekly, irregular)",
-41 | |             why_required="Required to align your spending schedule with your cash flow.",
-42 | |             input_type="select",
-43 | |             allowed_options=["monthly", "biweekly", "weekly", "irregular"],
-44 | |             is_optional=False,
-45 | |         ),
-46 | |         "employment_type": QuestionRequirement(
-47 | |             field_name="employment_type",
-48 | |             question_text="Is your income salaried, freelance, self-employed, or another type?",
-49 | |             why_required="Helps assess income stability when creating your budget plan.",
-50 | |             input_type="select",
-51 | |             allowed_options=["salaried", "self_employed", "freelance", "unemployed", "other"],
-52 | |             is_optional=False,
-53 | |         ),
-54 | |         "fixed_expenses": QuestionRequirement(
-55 | |             field_name="fixed_expenses",
-56 | |             question_text="What are your fixed monthly expenses (such as rent, utilities, or recurring bills)?",
-57 | |             why_required="Required to ensure essential obligations are covered before discretionary spending.",
-58 | |             input_type="monetary",
-59 | |             is_optional=False,
-60 | |         ),
-61 | |         "variable_expenses": QuestionRequirement(
-62 | |             field_name="variable_expenses",
-63 | |             question_text="Approximately how much do you spend on variable expenses (food, transport, entertainment) monthly?",
-64 | |             why_required="Helps set realistic category limits for day-to-day spending.",
-65 | |             input_type="monetary",
-66 | |             is_optional=False,
-67 | |         ),
-68 | |         "savings_target": QuestionRequirement(
-69 | |             field_name="savings_target",
-70 | |             question_text="What is your monthly savings target?",
-71 | |             why_required="Ensures a portion of income is allocated toward your savings goals.",
-72 | |             input_type="monetary",
-73 | |             is_optional=False,
-74 | |         ),
-75 | |     }
-   | |_____^
-76 |
-77 |       @classmethod
-   |
-help: Consider initializing in `__init__` or annotating with `typing.ClassVar`
-
-F841 Local variable `system_prompt` is assigned to but never used
-  --> app\orchestration\workflow_runner.py:84:9
-   |
-83 |         # 2. Build dynamic system prompt incorporating session state & safety guidelines
-84 |         system_prompt = build_quanta_system_prompt(
-   |         ^^^^^^^^^^^^^
-85 |             context=context,
-86 |             active_workflow=session.active_workflow,
-   |
-help: Remove assignment to unused variable `system_prompt`
-
-S110 `try`-`except`-`pass` detected, consider logging the exception
-   --> app\services\budget_service.py:142:25
-    |
-140 |                                   parsed_pcts[cat.lower()] = d_val
-141 |                                   pct_sum += d_val
-142 | /                         except Exception:
-143 | |                             pass
-    | |________________________________^
-144 |                       if pct_sum > 0:
-145 |                           cat_percentages = {c: (v / pct_sum) for c, v in parsed_pcts.items()}
-    |
-
-BLE001 Do not catch blind exception: `Exception`
-   --> app\services\budget_service.py:142:32
-    |
-140 |                                 parsed_pcts[cat.lower()] = d_val
-141 |                                 pct_sum += d_val
-142 |                         except Exception:
-    |                                ^^^^^^^^^
-143 |                             pass
-144 |                     if pct_sum > 0:
-    |
-
-RUF059 Unpacked variable `client` is never used
-   --> tests\integration\test_mega1_scenarios.py:233:13
-    |
-231 | @pytest.mark.asyncio
-232 | async def test_scenario_7_text_transfer(scenario_setup):
-233 |     runner, client = scenario_setup
-    |             ^^^^^^
-234 |     ctx = RequestContext.create(user_id="user_scen", session_id="sess_scen7", operation="TEXT")
-    |
-help: Prefix it with an underscore or any other dummy variable pattern
-
-RUF059 Unpacked variable `client` is never used
-   --> tests\integration\test_mega1_scenarios.py:248:13
-    |
-246 | @pytest.mark.asyncio
-247 | async def test_scenario_10_image_plus_voice_transfer(scenario_setup):
-248 |     runner, client = scenario_setup
-    |             ^^^^^^
-249 |     ctx = RequestContext.create(
-250 |         user_id="user_scen", session_id="sess_scen10", operation="MULTIMODAL"
-    |
-help: Prefix it with an underscore or any other dummy variable pattern
-
-RUF059 Unpacked variable `client` is never used
-   --> tests\integration\test_mega1_scenarios.py:266:13
-    |
-264 | @pytest.mark.asyncio
-265 | async def test_scenario_12_conversation_continuation(scenario_setup):
-266 |     runner, client = scenario_setup
-    |             ^^^^^^
-267 |     session_id = "sess_scen12"
-268 |     ctx = RequestContext.create(user_id="user_scen", session_id=session_id, operation="TEXT")
-    |
-help: Prefix it with an underscore or any other dummy variable pattern
-
-Found 30 errors.
-No fixes available (4 hidden fixes can be enabled with the `--unsafe-fixes` option).
+======================= 638 passed, 3 skipped in 23.21s =======================

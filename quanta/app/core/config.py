@@ -48,6 +48,8 @@ class Settings(BaseSettings):
 
     UIPAY_BASE_URL: str = "http://localhost:8001"
     UIPAY_SERVICE_TOKEN: str | None = None
+    UIPAY_CLIENT_TYPE: str = "mock"
+    UIPAY_TIMEOUT_SECONDS: float = 10.0
 
     LLM_PROVIDER: str = "mock"
 
@@ -68,8 +70,8 @@ class Settings(BaseSettings):
 
     # Transaction intelligence constants for bounded historical analysis.
     TRANSACTION_MAX_LOOKBACK_DAYS: int = 365
-    TRANSACTION_SIGNIFICANT_CHANGE_PERCENT: float = 0.20
-    TRANSACTION_MINIMUM_ABSOLUTE_CHANGE: float = 10000.00
+    TRANSACTION_SIGNIFICANT_CHANGE_PERCENT: float = 0.25
+    TRANSACTION_MINIMUM_ABSOLUTE_CHANGE: float = 50000.00
     TRANSACTION_MINIMUM_OBSERVATION_PERIODS: int = 2
 
     # Maximum pixel count (width × height) to guard against decompression bombs.

@@ -182,7 +182,7 @@ class Orchestrator:
                 response_language=resp_lang,
             )
         except Exception as exc:
-            raise OrchestrationError("Unexpected orchestration failure.") from exc
+            raise OrchestrationError(f"Unexpected orchestration failure: {exc}") from exc
 
         return response
 
@@ -327,6 +327,7 @@ class Orchestrator:
                     "error_code": result.error_code,
                     "error_message": result.error_message,
                 },
+                default=str,
                 separators=(",", ":"),
             ),
             tool_call_id=tool_call_id,

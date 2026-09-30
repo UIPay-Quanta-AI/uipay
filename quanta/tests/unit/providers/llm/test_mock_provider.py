@@ -106,7 +106,7 @@ async def test_mock_provider_raises_when_responses_are_exhausted():
 def test_mock_provider_requires_response_source():
     with pytest.raises(
         ValueError,
-        match="Either responses or responder must be provided",
+        match="Either responses, responder, or default_text must be provided",
     ):
         MockLLMProvider()
 
