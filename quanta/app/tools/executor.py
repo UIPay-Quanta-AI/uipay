@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import time
 from typing import Any
 
 from pydantic import ValidationError
 
 from app.core.context import RequestContext
+from app.core.observability import log_security_decision, log_tool_execution
 from app.schemas.states import QuantaState
 from app.tools.base import (
     ToolArgumentError,
@@ -42,23 +44,39 @@ class ToolExecutor:
     ) -> ToolResult:
         tool = self._registry.get(tool_name)
 
-        self._policy.check(
-            tool=tool,
-            context=context,
-            state=state,
-        )
+        try:
+            self._policy.check(
+                tool=tool,
+                context=context,
+                state=state,
+            )
+            log_security_decision(
+                "tool_policy", context, allowed=True, reason=f"Policy passed for {tool_name}"
+            )
+        except Exception as exc:
+            log_security_decision("tool_policy", context, allowed=False, reason=str(exc))
+            raise
 
         validated_arguments = self._validate_arguments(
             tool=tool,
             arguments=arguments,
         )
 
+        start_time = time.perf_counter()
         try:
             result = await tool.execute(
                 context=context,
                 arguments=validated_arguments,
             )
         except Exception as exc:
+            latency_ms = (time.perf_counter() - start_time) * 1000.0
+            log_tool_execution(
+                tool_name,
+                context,
+                success=False,
+                latency_ms=latency_ms,
+                error=str(exc),
+            )
             if isinstance(exc, ToolExecutionError):
                 raise
 
@@ -67,6 +85,15 @@ class ToolExecutor:
         validated_result = self._validate_result(
             tool=tool,
             result=result,
+        )
+
+        latency_ms = (time.perf_counter() - start_time) * 1000.0
+        log_tool_execution(
+            tool_name,
+            context,
+            success=validated_result.success,
+            latency_ms=latency_ms,
+            error=validated_result.error_message,
         )
 
         return self._sanitize_result(validated_result)

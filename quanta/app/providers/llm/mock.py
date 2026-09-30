@@ -26,11 +26,23 @@ class MockLLMProvider(LLMProvider):
             LLMResponse,
         ]
         | None = None,
+        default_text: str | None = None,
     ) -> None:
-        if responses is None and responder is None:
-            raise ValueError("Either responses or responder must be provided.")
+        # default_text creates an infinite responder for simple e2e tests
+        if default_text is not None:
+            if responses is not None or responder is not None:
+                raise ValueError("Provide only one of: responses, responder, or default_text.")
 
-        if responses is not None and responder is not None:
+            def _default_responder(msgs, sys, tools):
+                return LLMResponse(
+                    content=default_text,
+                    finish_reason="end_turn",
+                )
+
+            responder = _default_responder
+        elif responses is None and responder is None:
+            raise ValueError("Either responses, responder, or default_text must be provided.")
+        elif responses is not None and responder is not None:
             raise ValueError("Provide either responses or responder, not both.")
 
         self._responses = list(responses or [])

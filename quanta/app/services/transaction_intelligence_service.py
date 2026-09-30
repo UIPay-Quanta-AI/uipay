@@ -41,10 +41,10 @@ class TransactionIntelligenceService:
 
     MAX_LOOKBACK_DAYS = getattr(settings, "TRANSACTION_MAX_LOOKBACK_DAYS", 365)
     SIGNIFICANT_CHANGE_PERCENT = Decimal(
-        str(getattr(settings, "TRANSACTION_SIGNIFICANT_CHANGE_PERCENT", "0.20"))
+        str(getattr(settings, "TRANSACTION_SIGNIFICANT_CHANGE_PERCENT", "0.25"))
     )
     MINIMUM_ABSOLUTE_CHANGE = Decimal(
-        str(getattr(settings, "TRANSACTION_MINIMUM_ABSOLUTE_CHANGE", "10000.00"))
+        str(getattr(settings, "TRANSACTION_MINIMUM_ABSOLUTE_CHANGE", "50000.00"))
     )
     MINIMUM_OBSERVATION_PERIODS = getattr(settings, "TRANSACTION_MINIMUM_OBSERVATION_PERIODS", 2)
 

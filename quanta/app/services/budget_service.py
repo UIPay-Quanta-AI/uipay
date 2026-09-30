@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import defaultdict
 from datetime import UTC, date, datetime
 from decimal import Decimal
 from typing import Any, ClassVar
@@ -77,11 +78,6 @@ class BudgetService:
         profile = await self._profile_service.get_profile(user_id=user_id)
         expected_income = income_override if income_override is not None else profile.monthly_income
 
-        if expected_income <= Decimal("0.00"):
-            raise BudgetServiceError(
-                "Expected income must be greater than zero to generate a budget."
-            )
-
         # 2. Fetch Active Goals (planning input)
         active_goals = await self._goal_service.get_goals(user_id=user_id, status=GoalStatus.ACTIVE)
 
@@ -89,6 +85,24 @@ class BudgetService:
         raw_tx_context = await self._client.get_transaction_budget_context(user_id=user_id)
         tx_context = TransactionBudgetContext.model_validate(raw_tx_context)
         _has_tx_history = tx_context.data_available
+
+        # If profile income is not set, attempt to derive expected income from historical observed income
+        if expected_income <= Decimal("0.00") and _has_tx_history and tx_context.trends:
+            obs_inc = tx_context.trends.get("observed_income") or tx_context.trends.get(
+                "recurring_income"
+            )
+            if obs_inc is not None:
+                try:
+                    d_obs = Decimal(str(obs_inc))
+                    if d_obs > Decimal("0.00"):
+                        expected_income = d_obs
+                except Exception:  # noqa: BLE001, S110
+                    pass
+
+        if expected_income <= Decimal("0.00"):
+            raise BudgetServiceError(
+                "Expected income must be greater than zero to generate a budget."
+            )
 
         # 4. Calculate Goal Allocations
         goal_allocations: list[GoalAllocation] = []
@@ -126,10 +140,29 @@ class BudgetService:
         else:
             # Use transaction history trends if available, otherwise default ratios
             cat_percentages = dict(self.DEFAULT_CATEGORY_PERCENTAGES)
-            if _has_tx_history and tx_context.trends:
-                hist_pcts = (
-                    tx_context.trends.get("category_percentages") or tx_context.category_trends
-                )
+            if _has_tx_history:
+                hist_pcts = None
+                if tx_context.trends:
+                    hist_pcts = (
+                        tx_context.trends.get("category_percentages") or tx_context.category_trends
+                    )
+                if not hist_pcts and tx_context.historical_periods:
+                    # Deriving category spending ratios across historical periods
+                    cat_totals: dict[str, Decimal] = defaultdict(Decimal)
+                    total_exp = Decimal("0.00")
+                    for p in tx_context.historical_periods:
+                        sp = p.get("spending_by_category") or {}
+                        for c_name, val in sp.items():
+                            try:
+                                d_v = Decimal(str(val))
+                                if d_v > 0:
+                                    cat_totals[c_name.lower()] += d_v
+                                    total_exp += d_v
+                            except Exception:  # noqa: BLE001, S110
+                                pass
+                    if total_exp > Decimal("0.00"):
+                        hist_pcts = {c: (v / total_exp) for c, v in cat_totals.items()}
+
                 if isinstance(hist_pcts, dict) and hist_pcts:
                     parsed_pcts: dict[str, Decimal] = {}
                     pct_sum = Decimal("0.00")
@@ -145,12 +178,25 @@ class BudgetService:
                         cat_percentages = {c: (v / pct_sum) for c, v in parsed_pcts.items()}
 
             allocated_sum = Decimal("0.00")
+            notable_map = {}
+            if _has_tx_history and tx_context.notable_changes:
+                for note in tx_context.notable_changes:
+                    for cat_k in cat_percentages:
+                        if cat_k in note.lower():
+                            notable_map[cat_k] = note
+
             for cat, pct in cat_percentages.items():
                 cat_amount = (remaining_income_for_expenses * pct).quantize(Decimal("0.01"))
+                cat_note = notable_map.get(cat) or (
+                    "Based on historical transaction spending trends."
+                    if _has_tx_history
+                    else "Based on standard default allocation ratio."
+                )
                 allocations.append(
                     BudgetAllocation(
                         category=cat,
                         allocated_amount=cat_amount,
+                        notes=cat_note,
                     )
                 )
                 allocated_sum += cat_amount
@@ -162,12 +208,17 @@ class BudgetService:
                     BudgetAllocation(
                         category="miscellaneous",
                         allocated_amount=misc_amount,
+                        notes="Unallocated disposable income buffer.",
                     )
                 )
 
+        sources = ["financial_profile"]
+        if _has_tx_history:
+            sources.append("transaction_history")
+
         income_plan = IncomePlan(
             expected_income=expected_income,
-            income_sources=["monthly_income"],
+            income_sources=sources,
         )
 
         budget_id = f"budget-{uuid4().hex[:8]}"

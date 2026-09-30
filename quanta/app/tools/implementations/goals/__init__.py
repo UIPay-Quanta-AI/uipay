@@ -1,3 +1,8 @@
+from app.tools.implementations.goals.complete_goal import (
+    CompleteGoalInput,
+    CompleteGoalOutput,
+    CompleteGoalTool,
+)
 from app.tools.implementations.goals.create_goal import (
     CreateGoalInput,
     CreateGoalOutput,
@@ -20,6 +25,9 @@ from app.tools.implementations.goals.update_goal import (
 )
 
 __all__ = [
+    "CompleteGoalInput",
+    "CompleteGoalOutput",
+    "CompleteGoalTool",
     "CreateGoalInput",
     "CreateGoalOutput",
     "CreateGoalTool",

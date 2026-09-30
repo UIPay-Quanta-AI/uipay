@@ -10,6 +10,8 @@ from fastapi import Depends
 
 from app.clients.ui_pay.base import UIPayClient
 from app.clients.ui_pay.mock import MockUIPayClient
+from app.clients.ui_pay.real import RealUIPayClient
+from app.core.config import settings
 from app.dependencies.tools import build_tool_registry
 from app.orchestration.multimodal import MultimodalProcessor
 from app.orchestration.orchestrator import Orchestrator
@@ -27,15 +29,22 @@ from app.services.voice_enrollment import VoiceEnrollmentService
 from app.tools.executor import ToolExecutor
 from app.tools.policy import ToolPolicy
 
-# Singleton cache for mock client in development/demo mode
-_mock_client_instance: MockUIPayClient | None = None
+# Cache for client instances
+_client_instance: UIPayClient | None = None
 
 
 def get_ui_pay_client() -> UIPayClient:
-    global _mock_client_instance
-    if _mock_client_instance is None:
-        _mock_client_instance = MockUIPayClient()
-    return _mock_client_instance
+    global _client_instance
+    if _client_instance is None:
+        if settings.UIPAY_CLIENT_TYPE == "real":
+            _client_instance = RealUIPayClient(
+                base_url=settings.UIPAY_BASE_URL,
+                service_token=settings.UIPAY_SERVICE_TOKEN,
+                timeout=settings.UIPAY_TIMEOUT_SECONDS,
+            )
+        else:
+            _client_instance = MockUIPayClient()
+    return _client_instance
 
 
 def get_financial_profile_service(

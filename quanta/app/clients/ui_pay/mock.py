@@ -67,6 +67,13 @@ class MockUIPayClient(UIPayClient):
             }
         return dict(self._profiles[user_id])
 
+    async def get_or_initialize_financial_profile(
+        self,
+        *,
+        user_id: str,
+    ) -> dict[str, Any]:
+        return await self.get_financial_profile(user_id=user_id)
+
     async def update_financial_profile(
         self,
         *,

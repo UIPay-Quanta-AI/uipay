@@ -17,6 +17,7 @@ from app.tools.implementations.financial_profile import (
     UpdateFinancialProfileTool,
 )
 from app.tools.implementations.goals import (
+    CompleteGoalTool,
     CreateGoalTool,
     GetGoalsTool,
     GetGoalTool,
@@ -76,6 +77,11 @@ def build_tool_registry(
     registry.register(
         UpdateGoalTool(
             service=goal_service,
+        )
+    )
+    registry.register(
+        CompleteGoalTool(
+            goal_service=goal_service,
         )
     )
     registry.register(

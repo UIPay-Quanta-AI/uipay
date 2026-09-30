@@ -172,3 +172,23 @@ class GoalService:
             raise GoalServiceError(
                 f"Failed to update goal '{goal_identifier}' for user '{user_id}': {exc}"
             ) from exc
+
+    async def complete_goal(
+        self,
+        *,
+        user_id: str,
+        goal_identifier: str,
+    ) -> FinancialGoal:
+        """
+        Explicitly mark a financial goal as completed.
+        Goal completion requires explicit user intent.
+        """
+        goal = await self.get_goal(user_id=user_id, goal_identifier=goal_identifier)
+        return await self.update_goal(
+            user_id=user_id,
+            goal_identifier=goal.id,
+            updates={
+                "status": GoalStatus.COMPLETED,
+                "current_amount": goal.target_amount,
+            },
+        )

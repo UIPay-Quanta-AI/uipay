@@ -9,6 +9,30 @@ class UIPayClientError(Exception):
     """Base exception for UI Pay client failures."""
 
 
+class UIPayConnectionError(UIPayClientError):
+    """Network connection failure communicating with UI Pay backend."""
+
+
+class UIPayTimeoutError(UIPayClientError):
+    """Request timeout communicating with UI Pay backend."""
+
+
+class UIPayAuthError(UIPayClientError):
+    """Authentication or authorization failure with UI Pay backend."""
+
+
+class UIPayNotFoundError(UIPayClientError):
+    """Requested UI Pay resource was not found (404)."""
+
+
+class UIPayValidationError(UIPayClientError):
+    """Validation or request payload failure from UI Pay backend (400/422)."""
+
+
+class UIPayServerError(UIPayClientError):
+    """Upstream server failure from UI Pay backend (5xx)."""
+
+
 class UIPayClient(ABC):
     """
     Abstract interface to the UI Pay backend.
@@ -31,6 +55,18 @@ class UIPayClient(ABC):
         *,
         user_id: str,
     ) -> dict[str, Any]:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_or_initialize_financial_profile(
+        self,
+        *,
+        user_id: str,
+    ) -> dict[str, Any]:
+        """
+        Retrieve the user's singleton financial profile, initializing defaults
+        via backend upsert if none exists.
+        """
         raise NotImplementedError
 
     @abstractmethod
