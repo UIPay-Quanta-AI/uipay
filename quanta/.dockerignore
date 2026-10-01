@@ -1,0 +1,31 @@
+# The Dockerfile only COPYs pyproject.toml, README.md, and app/ - everything
+# else here just bloats the build context Railway has to upload before it
+# even starts building, so exclude it regardless of what gets COPYed.
+.venv/
+venv/
+env/
+.git/
+.env
+.env.*
+!.env.example
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyrefly/
+
+tests/
+docs/
+scripts/
+output_audio/
+
+*.log
+logs/
+tmp/
+temp/
+
+.vscode/
+.idea/
+.DS_Store
