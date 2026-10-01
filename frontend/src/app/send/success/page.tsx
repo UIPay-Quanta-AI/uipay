@@ -1,9 +1,11 @@
 'use client';
 
-import { Check, Printer, Share2 } from 'lucide-react';
+import { Check, Download, Share2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GlowBackground } from '@/components/GlowBackground';
+import { ReceiptCard } from '@/components/ReceiptCard';
+import api from '@/services/api';
 import { useSendStore } from '@/store/send';
 
 function formatNaira(amount: number) {
@@ -13,17 +15,21 @@ function formatNaira(amount: number) {
   })}`;
 }
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleString('en-NG', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  });
-}
+const METHOD_LABELS: Record<string, string> = {
+  wallet: 'Wallet Transfer',
+  nfc: 'NFC Payment',
+  qr: 'QR Payment',
+};
 
 export default function SendSuccessPage() {
   const router = useRouter();
   const lastTransaction = useSendStore((state) => state.lastTransaction);
+  const source = useSendStore((state) => state.source);
   const clear = useSendStore((state) => state.clear);
+
+  const [senderName, setSenderName] = useState<string | null>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const receiptRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!lastTransaction) {
@@ -31,150 +37,155 @@ export default function SendSuccessPage() {
     }
   }, [lastTransaction, router]);
 
+  // the signed-in user's own name isn't reliably in the auth store - it's
+  // only populated there right after signup, not after an ordinary signin -
+  // so this is the one place that actually always has it
+  useEffect(() => {
+    api
+      .get('/profile/me')
+      .then((res) => {
+        const { firstName, lastName } = res.data.data;
+        if (firstName && lastName) setSenderName(`${firstName} ${lastName}`);
+      })
+      .catch(() => {
+        // receipt still works without a sender name, just omits that row
+      });
+  }, []);
+
   if (!lastTransaction) return null;
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: 'Payment receipt',
-          text: `Paid ${formatNaira(lastTransaction.amount)} to ${lastTransaction.name}. Ref: ${lastTransaction.reference}`,
-        })
-        .catch(() => {
-          // user cancelled the share sheet - nothing to do
+  // Renders the receipt (already in the DOM, off-screen) to a canvas and
+  // returns it as a PNG blob - the one shared piece of logic behind both
+  // Download and Share, so the exported image is always exactly what's
+  // captured here, not a second hand-maintained representation.
+  const captureReceipt = async (): Promise<Blob | null> => {
+    if (!receiptRef.current) return null;
+    const html2canvas = (await import('html2canvas')).default;
+    const canvas = await html2canvas(receiptRef.current, {
+      backgroundColor: null,
+      scale: 2,
+    });
+    return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), 'image/png'));
+  };
+
+  const handleDownload = async () => {
+    setIsCapturing(true);
+    try {
+      const blob = await captureReceipt();
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `uipay-receipt-${lastTransaction.reference}.png`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsCapturing(false);
+    }
+  };
+
+  const handleShare = async () => {
+    setIsCapturing(true);
+    try {
+      const blob = await captureReceipt();
+      if (blob) {
+        const file = new File([blob], `uipay-receipt-${lastTransaction.reference}.png`, {
+          type: 'image/png',
         });
+        if (navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'Payment Receipt' }).catch(() => {
+            // user cancelled the share sheet - nothing to do
+          });
+          return;
+        }
+      }
+      // Files not supported on this browser (most desktop browsers) - fall
+      // back to the plain text share rather than failing silently.
+      if (navigator.share) {
+        await navigator
+          .share({
+            title: 'Payment receipt',
+            text: `Paid ${formatNaira(lastTransaction.amount)} to ${lastTransaction.name}. Ref: ${lastTransaction.reference}`,
+          })
+          .catch(() => {});
+      }
+    } finally {
+      setIsCapturing(false);
     }
   };
 
   return (
-    <>
-      {/* Screen view - the usual animated success screen. Hidden when
-          printing so the print output is the clean receipt below instead
-          of a dark, decorative screen layout. */}
-      <GlowBackground className="flex flex-col items-center px-6 py-16 print:hidden">
-        <div className="relative flex h-32 w-32 items-center justify-center">
-          <span className="animate-pulse-ring absolute h-32 w-32 rounded-full bg-[var(--color-primary)]" />
-          <span
-            className="animate-pulse-ring absolute h-32 w-32 rounded-full bg-[var(--color-primary)]"
-            style={{ animationDelay: '0.5s' }}
-          />
-          <span className="animate-pop-in relative flex h-28 w-28 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_0_40px_rgba(var(--color-primary-rgb),0.5)]">
-            <Check className="h-14 w-14 text-[var(--color-dark)]" strokeWidth={3} />
-          </span>
-        </div>
-
-        <h1 className="animate-rise-in mt-8 text-2xl font-bold text-[var(--color-light)]">
-          Payment Successful
-        </h1>
-
-        <p
-          className="animate-rise-in mt-4 text-4xl font-extrabold text-[var(--color-light)]"
-          style={{ animationDelay: '0.1s' }}
-        >
-          {formatNaira(lastTransaction.amount)}
-        </p>
-
-        <div
-          className="animate-rise-in mt-8 flex w-full flex-col items-center gap-1 rounded-2xl bg-[#0d1929] px-6 py-5"
-          style={{ animationDelay: '0.2s' }}
-        >
-          <span className="text-sm text-white/50">Paid To</span>
-          <span className="text-lg font-semibold text-[var(--color-light)]">
-            {lastTransaction.name}
-          </span>
-          <span className="mt-2 text-xs text-white/30">
-            REF: {lastTransaction.reference}
-          </span>
-          <span className="mt-1 text-xs text-white/30">
-            {formatDate(lastTransaction.date)}
-          </span>
-        </div>
-
-        <div
-          className="animate-rise-in mt-6 flex items-center gap-6"
-          style={{ animationDelay: '0.3s' }}
-        >
-          <button
-            type="button"
-            onClick={handleShare}
-            className="flex items-center gap-2 text-[var(--color-primary)]"
-          >
-            <Share2 className="h-5 w-5" />
-            Share
-          </button>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="flex items-center gap-2 text-[var(--color-primary)]"
-          >
-            <Printer className="h-5 w-5" />
-            Print Receipt
-          </button>
-        </div>
-
-        <div className="mt-auto flex w-full flex-col gap-3">
-          <button
-            type="button"
-            onClick={() => {
-              clear();
-              router.push('/send');
-            }}
-            className="rounded-full bg-[#0d1929] py-4 font-semibold text-[var(--color-primary)] transition-transform active:scale-95"
-          >
-            Send Again
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              clear();
-              router.push('/dashboard');
-            }}
-            className="rounded-full bg-[var(--color-primary)] py-4 font-semibold text-[var(--color-dark)] transition-transform active:scale-95"
-          >
-            Done
-          </button>
-        </div>
-      </GlowBackground>
-
-      {/* Print view - plain black-on-white receipt. Hidden on screen,
-          only rendered into the page when window.print() is called. */}
-      <div className="hidden print:block print:p-10 print:text-black">
-        <div className="print:mx-auto print:max-w-sm print:border print:border-black/20 print:p-6">
-          <h1 className="print:text-center print:text-lg print:font-bold">
-            UIPay Receipt
-          </h1>
-          <p className="print:mt-1 print:text-center print:text-xs print:text-black/60">
-            {formatDate(lastTransaction.date)}
-          </p>
-
-          <div className="print:my-4 print:border-t print:border-dashed print:border-black/30" />
-
-          <div className="print:flex print:justify-between print:text-sm">
-            <span>Status</span>
-            <span className="print:font-semibold">Successful</span>
-          </div>
-          <div className="print:mt-2 print:flex print:justify-between print:text-sm">
-            <span>Amount</span>
-            <span className="print:font-semibold">
-              {formatNaira(lastTransaction.amount)}
-            </span>
-          </div>
-          <div className="print:mt-2 print:flex print:justify-between print:text-sm">
-            <span>Paid To</span>
-            <span className="print:font-semibold">{lastTransaction.name}</span>
-          </div>
-          <div className="print:mt-2 print:flex print:justify-between print:text-sm">
-            <span>Reference</span>
-            <span className="print:font-semibold">{lastTransaction.reference}</span>
-          </div>
-
-          <div className="print:my-4 print:border-t print:border-dashed print:border-black/30" />
-
-          <p className="print:text-center print:text-xs print:text-black/50">
-            Thank you for using UIPay.
-          </p>
-        </div>
+    <GlowBackground className="flex flex-col items-center px-6 py-10">
+      <div className="relative flex h-24 w-24 items-center justify-center">
+        <span className="animate-pulse-ring absolute h-24 w-24 rounded-full bg-[var(--color-primary)]" />
+        <span className="animate-pop-in relative flex h-20 w-20 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[0_0_40px_rgba(var(--color-primary-rgb),0.5)]">
+          <Check className="h-10 w-10 text-[var(--color-dark)]" strokeWidth={3} />
+        </span>
       </div>
-    </>
+
+      <h1 className="animate-rise-in mt-4 text-xl font-bold text-[var(--color-light)]">
+        Payment Successful
+      </h1>
+
+      <div className="animate-rise-in mt-6 w-full overflow-hidden rounded-3xl shadow-xl" style={{ animationDelay: '0.1s' }}>
+        <ReceiptCard
+          ref={receiptRef}
+          amount={lastTransaction.amount}
+          reference={lastTransaction.reference}
+          date={lastTransaction.date}
+          methodLabel={source ? (METHOD_LABELS[source.method] ?? 'Transfer') : 'Transfer'}
+          senderName={senderName}
+          beneficiaryName={lastTransaction.name}
+          beneficiaryDetail={source?.detail ?? null}
+        />
+      </div>
+
+      <div
+        className="animate-rise-in mt-6 flex items-center gap-6"
+        style={{ animationDelay: '0.2s' }}
+      >
+        <button
+          type="button"
+          onClick={handleShare}
+          disabled={isCapturing}
+          className="flex items-center gap-2 text-[var(--color-primary)] disabled:opacity-50"
+        >
+          <Share2 className="h-5 w-5" />
+          Share
+        </button>
+        <button
+          type="button"
+          onClick={handleDownload}
+          disabled={isCapturing}
+          className="flex items-center gap-2 text-[var(--color-primary)] disabled:opacity-50"
+        >
+          <Download className="h-5 w-5" />
+          Download
+        </button>
+      </div>
+
+      <div className="mt-auto flex w-full flex-col gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            clear();
+            router.push('/send');
+          }}
+          className="rounded-full bg-[#0d1929] py-4 font-semibold text-[var(--color-primary)] transition-transform active:scale-95"
+        >
+          Send Again
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            clear();
+            router.push('/dashboard');
+          }}
+          className="rounded-full bg-[var(--color-primary)] py-4 font-semibold text-[var(--color-dark)] transition-transform active:scale-95"
+        >
+          Done
+        </button>
+      </div>
+    </GlowBackground>
   );
 }

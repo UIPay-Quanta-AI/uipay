@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@paystack/inline-js": "^2.22.2",
     "axios": "^1.7.0",
+    "html2canvas": "^1.4.1",
     "jsqr": "^1.4.0",
     "lucide-react": "^0.400.0",
     "next": "^14.2.0",
