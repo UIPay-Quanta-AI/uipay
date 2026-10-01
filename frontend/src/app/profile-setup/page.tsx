@@ -15,8 +15,12 @@ const schema = z
   .object({
     firstName: z.string().min(1, 'First name is required'),
     lastName: z.string().min(1, 'Last name is required'),
-    dobDay: z.string().regex(/^([1-9]|[12]\d|3[01])$/, 'Invalid day'),
-    dobMonth: z.string().regex(/^([1-9]|1[0-2])$/, 'Invalid month'),
+    // 0?[1-9] accepts both "7" and "07" for the same day/month - previously
+    // only one form matched depending on the value (a bare [1-9] alternative
+    // requires exactly one character, so "07" failed it even though "7"
+    // passed, while two-digit values like "15" only ever worked unpadded)
+    dobDay: z.string().regex(/^(0?[1-9]|[12]\d|3[01])$/, 'Invalid day'),
+    dobMonth: z.string().regex(/^(0?[1-9]|1[0-2])$/, 'Invalid month'),
     dobYear: z.string().regex(/^(19|20)\d{2}$/, 'Invalid year'),
     email: z.string().email('Enter a valid email'),
     phoneNumber: z

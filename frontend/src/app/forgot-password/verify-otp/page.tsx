@@ -8,6 +8,9 @@ import { useForgotPasswordStore } from '@/store/forgotPassword';
 
 const OTP_LENGTH = 6;
 const OTP_SECONDS = 600;
+// How long before "resend" is allowed again - independent of how long the
+// code itself stays valid.
+const RESEND_COOLDOWN_SECONDS = 30;
 
 export default function ForgotPasswordVerifyOtpPage() {
   const router = useRouter();
@@ -16,6 +19,7 @@ export default function ForgotPasswordVerifyOtpPage() {
 
   const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(''));
   const [secondsLeft, setSecondsLeft] = useState(OTP_SECONDS);
+  const [resendCooldown, setResendCooldown] = useState(RESEND_COOLDOWN_SECONDS);
   const [error, setError] = useState<string | null>(null);
   const [isResending, setIsResending] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -33,6 +37,12 @@ export default function ForgotPasswordVerifyOtpPage() {
     const timer = setTimeout(() => setSecondsLeft((value) => value - 1), 1000);
     return () => clearTimeout(timer);
   }, [secondsLeft]);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setTimeout(() => setResendCooldown((value) => value - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendCooldown]);
 
   const minutes = Math.floor(secondsLeft / 60)
     .toString()
@@ -82,6 +92,7 @@ export default function ForgotPasswordVerifyOtpPage() {
     try {
       await api.post('/auth/forgot-password', { email });
       setSecondsLeft(OTP_SECONDS);
+      setResendCooldown(RESEND_COOLDOWN_SECONDS);
       setDigits(Array(OTP_LENGTH).fill(''));
       inputRefs.current[0]?.focus();
     } catch (err) {
@@ -136,10 +147,12 @@ export default function ForgotPasswordVerifyOtpPage() {
         <button
           type="button"
           onClick={handleResend}
-          disabled={isResending || secondsLeft > 0}
+          disabled={isResending || resendCooldown > 0}
           className="text-center text-sm text-[var(--color-light)] underline disabled:opacity-40"
         >
-          Didn&apos;t receive any code?
+          {resendCooldown > 0
+            ? `Resend code in ${resendCooldown}s`
+            : "Didn't receive any code?"}
         </button>
       </div>
     </AuthScreenLayout>

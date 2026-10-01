@@ -60,6 +60,7 @@ export default function EnterPinPage() {
             amount,
             name: source.name,
             reference: res.data.data.reference,
+            date: res.data.data.createdAt ?? new Date().toISOString(),
           });
           router.push('/send/success');
         })

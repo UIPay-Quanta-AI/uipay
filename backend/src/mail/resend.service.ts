@@ -24,11 +24,11 @@ export class ResendService {
       to,
       subject: 'Confirm your uipay account',
       html: `
-  <h2>Verify your email</h2> 
+  <h2>Verify your email</h2>
   <p>Thanks for signing up for Uipay.</p>
  <p>Your verification code is:</p>
 <h1>${otp}</h1>
-<p>This code expires in 5 minutes.</p>
+<p>This code expires in ${this.otpExpiryMinutes()} minutes.</p>
 <p>If you didn't request this, you can ignore this email.</p>
     `,
     });
@@ -55,7 +55,7 @@ export class ResendService {
   <p>We got a request to reset your uipay password.</p>
  <p>Your reset code is:</p>
 <h1>${otp}</h1>
-<p>This code expires in 5 minutes.</p>
+<p>This code expires in ${this.otpExpiryMinutes()} minutes.</p>
 <p>If you didn't request this, you can ignore this email, your password stays the same.</p>
     `,
     });
@@ -68,5 +68,13 @@ export class ResendService {
     }
 
     return data;
+  }
+
+  // Reads the same OTP_EXPIRY the backend actually enforces (see
+  // OtpService.generateOtp), rather than a hardcoded number, so this text
+  // can never drift out of sync with the real expiry again.
+  private otpExpiryMinutes(): number {
+    const seconds = this.configService.getOrThrow<number>('OTP_EXPIRY');
+    return Math.round(seconds / 60);
   }
 }

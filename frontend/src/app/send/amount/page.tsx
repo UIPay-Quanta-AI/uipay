@@ -18,6 +18,16 @@ function formatNaira(amount: number) {
   })}`;
 }
 
+// Comma-group the integer part as the user types (1000 -> 1,000) without
+// touching whatever decimal portion they're mid-typing - forcing that to
+// toLocaleString's fixed 2 decimals would fight them while they type it.
+function formatAmountInput(raw: string): string {
+  if (!raw) return raw;
+  const [intPart, decPart] = raw.split('.');
+  const formattedInt = intPart === '' ? intPart : Number(intPart).toLocaleString('en-NG');
+  return decPart !== undefined ? `${formattedInt}.${decPart}` : formattedInt;
+}
+
 export default function SendAmountPage() {
   const router = useRouter();
   const hasHydrated = useAuthHydration();
@@ -114,7 +124,7 @@ export default function SendAmountPage() {
             ₦
           </span>
           <input
-            value={amountInput}
+            value={formatAmountInput(amountInput)}
             onChange={(event) => {
               setError(null);
               setAmountInput(

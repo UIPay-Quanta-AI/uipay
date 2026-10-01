@@ -49,7 +49,7 @@ export default function VerifyIdPage() {
 
       <button
         type="button"
-        onClick={() => router.push('/signin')}
+        onClick={() => router.push('/dashboard')}
         className="mt-auto pb-6 text-center text-white/50 underline"
       >
         Skip

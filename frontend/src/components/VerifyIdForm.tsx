@@ -45,7 +45,7 @@ export function VerifyIdForm({ idType }: { idType: 'bvn' | 'nin' }) {
     setIsSubmitting(true);
     try {
       await api.post('/profile/verify-id', { idType, idNumber: value });
-      router.push('/signin');
+      router.push('/dashboard');
     } catch (err) {
       setError(getApiErrorMessage(err));
     } finally {

@@ -18,6 +18,7 @@ interface LastTransaction {
   amount: number;
   name: string;
   reference: string;
+  date: string;
 }
 
 interface SendState {
