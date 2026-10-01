@@ -7,6 +7,7 @@ const DEFAULT_LOCALHOST_ORIGINS = [
   'http://localhost:3001',
   'http://localhost:3002',
   'http://localhost:3003',
+  'https://app.uipay.app',
 ];
 
 // matches http://<private LAN IP>:3000-3003 - covers phone/LAN dev testing
