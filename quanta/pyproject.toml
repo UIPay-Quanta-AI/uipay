@@ -25,6 +25,7 @@ dependencies = [
     "edge-tts==7.2.8",
     "naijalingo==2.0.6",
     "pveagle>=1.0.0",
+    "python-multipart>=0.0.9",
 ]
 
 

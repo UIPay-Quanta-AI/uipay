@@ -47,6 +47,9 @@ model User {
   voiceProfile         VoiceProfile?
   supportMessages      SupportMessage[]
   walletFundings       WalletFunding[]
+  financialProfile     FinancialProfile?
+  goals                Goal[]
+  budgets              Budget[]
 
   @@map("users")
 }
@@ -217,4 +220,87 @@ model VoiceProfile {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("voice_profiles")
+}
+
+// Quanta's authoritative planning input for budget generation - one per
+// user. Created on first write from Quanta (get-or-initialize semantics,
+// see QuantaFinancialProfileService).
+model FinancialProfile {
+  id               String  @id @default(uuid())
+  userId           String  @unique @map("user_id")
+  monthlyIncome    Decimal @default(0) @db.Decimal(18, 2) @map("monthly_income")
+  // "monthly" | "biweekly" | "weekly" | "irregular"
+  incomeFrequency  String  @default("monthly") @map("income_frequency")
+  // "salaried" | "self_employed" | "freelance" | "unemployed" | "other"
+  employmentType   String  @default("salaried") @map("employment_type")
+  fixedExpenses    Decimal @default(0) @db.Decimal(18, 2) @map("fixed_expenses")
+  variableExpenses Decimal @default(0) @db.Decimal(18, 2) @map("variable_expenses")
+  savingsTarget    Decimal @default(0) @db.Decimal(18, 2) @map("savings_target")
+  currency         String  @default("NGN")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("financial_profiles")
+}
+
+// A savings target Quanta tracks for a user. Tracking/planning only - never
+// moves money itself (see docs/uipay-client-contract.md in quanta/).
+model Goal {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  name          String
+  targetAmount  Decimal   @db.Decimal(18, 2) @map("target_amount")
+  currentAmount Decimal   @default(0) @db.Decimal(18, 2) @map("current_amount")
+  targetDate    DateTime? @map("target_date") @db.Date
+  currency      String    @default("NGN")
+  // "active" | "completed" | "paused" | "cancelled"
+  status        String    @default("active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("goals")
+}
+
+// Versioned budget for a period. Updating a budget never mutates a row -
+// it creates a new row with version+1 for the SAME start/end date and
+// marks the previous one "superseded" (see quanta/docs/BUDGET.md).
+// Nested structures (income sources, category allocations, goal
+// allocations) are stored as JSON since Quanta owns their shape and they
+// are never queried by field - only round-tripped whole.
+model Budget {
+  id                     String   @id @default(uuid())
+  userId                 String   @map("user_id")
+  startDate              DateTime @map("start_date") @db.Date
+  endDate                DateTime @map("end_date") @db.Date
+  currency               String   @default("NGN")
+  version                Int      @default(1)
+  // "active" | "superseded" | "cancelled" | "expired"
+  status                 String   @default("active")
+  // { expected_income: string, income_sources: string[] }
+  incomePlan             Json     @map("income_plan")
+  // [{ category, allocated_amount, notes }]
+  allocations            Json
+  // [{ goal_id, goal_name, allocated_amount }]
+  goalAllocations        Json     @map("goal_allocations")
+  totalAllocatedExpenses Decimal  @db.Decimal(18, 2) @map("total_allocated_expenses")
+  totalAllocatedGoals    Decimal  @db.Decimal(18, 2) @map("total_allocated_goals")
+  totalUnallocatedIncome Decimal  @db.Decimal(18, 2) @map("total_unallocated_income")
+  previousVersionId      String?  @map("previous_version_id")
+  // "initial_generation" | "income_change" | "expense_change" | "goal_change" | "user_rebalance" | "financial_change" | "other"
+  updateReason           String   @default("initial_generation") @map("update_reason")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("budgets")
 }

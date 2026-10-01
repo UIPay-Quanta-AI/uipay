@@ -12,7 +12,7 @@ from app.providers.llm.base import (
     LLMProvider,
     LLMResponse,
 )
-from app.schemas.response import QuantaResponse
+from app.schemas.response import QuantaResponse, UIType
 from app.schemas.states import QuantaState
 from app.tools.base import (
     ToolError,
@@ -29,6 +29,14 @@ CONFIRMATION_SPEECH_BY_LANGUAGE: dict[str, str] = {
     "ig": "Biko nyochaa ma kwado nnyefe a.",
     "yo": "Jọ̀ọ́ yẹ̀ ẹ́ wò kọ́ o si fọwọ́ sí gbigbe owó yìí.",
     "ha": "Taimaka ka duba kuma ka tabbatar da tura kudin.",
+}
+
+BENEFICIARY_NOT_FOUND_SPEECH_BY_LANGUAGE: dict[str, str] = {
+    "en": "I couldn't find a saved beneficiary with that name.",
+    "pcm": "I no fit find any saved beneficiary wey match that name.",
+    "ig": "Achọtaghị m onye enyemaka echekwara nke aha ahụ.",
+    "yo": "Mi ò rí olùgbà tí a ti fi pamọ́ pẹ̀lú orúkọ yẹn.",
+    "ha": "Ban sami wanda aka ajiye da wannan suna ba.",
 }
 
 
@@ -293,6 +301,13 @@ class Orchestrator:
             ):
                 return True
 
+            if (
+                tool_call.name == "search_beneficiary"
+                and tool_result.success
+                and state_machine.current_state == QuantaState.AWAITING_INPUT
+            ):
+                return True
+
         return False
 
     async def _execute_tool_call(
@@ -317,6 +332,12 @@ class Orchestrator:
         tool_name: str,
         result: ToolResult,
     ) -> LLMMessage:
+        # Deliberately excludes the raw LLM-supplied tool-call arguments -
+        # those are untrusted (see test_orchestrator_does_not_accept_user_id_
+        # from_llm_arguments) and must never round-trip back into the
+        # conversation unvalidated. Anything downstream code needs from the
+        # call (e.g. search_beneficiary's query) must come from the tool's
+        # own validated `data`, which already passed through its output_model.
         return LLMMessage(
             role=LLMMessageRole.TOOL,
             content=json.dumps(
@@ -369,6 +390,34 @@ class Orchestrator:
                 response_language=resp_lang,
             )
 
+        if state_machine.current_state == QuantaState.AWAITING_INPUT:
+            tool_message = self._get_latest_tool_result(
+                conversation=conversation,
+                tool_name="search_beneficiary",
+            )
+
+            if tool_message is None or tool_message.content is None:
+                return QuantaResponse.error_response(
+                    request_id=context.request_id,
+                    code="MISSING_SEARCH_RESULT",
+                    message=("Beneficiary search completed without a usable result."),
+                    response_language=resp_lang,
+                )
+
+            payload = json.loads(tool_message.content)
+            name_heard = (payload.get("data") or {}).get("query", "")
+            speech_text = BENEFICIARY_NOT_FOUND_SPEECH_BY_LANGUAGE.get(
+                resp_lang, BENEFICIARY_NOT_FOUND_SPEECH_BY_LANGUAGE["en"]
+            )
+
+            return QuantaResponse.input_required(
+                request_id=context.request_id,
+                speech_text=speech_text,
+                ui_type=UIType.BENEFICIARY_SELECTION,
+                data={"name_heard": name_heard, "beneficiaries": []},
+                response_language=resp_lang,
+            )
+
         return QuantaResponse.error_response(
             request_id=context.request_id,
             code="UNSUPPORTED_DETERMINISTIC_STATE",
@@ -396,6 +445,18 @@ class Orchestrator:
             state_machine.transition(
                 QuantaState.AWAITING_CONFIRMATION,
             )
+
+        # search_beneficiary only ever feeds the transfer workflow today. An
+        # empty match list means there is no valid beneficiary_id to hand to
+        # prepare_transfer, so this is a dead end the LLM must not be left to
+        # improvise a response for (see transfer_prompts.py rule 6) - the app
+        # takes over deterministically instead, same as prepare_transfer does.
+        if tool_name == "search_beneficiary":
+            beneficiaries = (result.data or {}).get("beneficiaries")
+            if not beneficiaries:
+                state_machine.transition(
+                    QuantaState.AWAITING_INPUT,
+                )
 
     @staticmethod
     def _finalize_llm_response(

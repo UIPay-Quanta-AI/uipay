@@ -52,6 +52,7 @@ class GroqProvider(LLMProvider):
         self._model = settings.GROQ_MODEL
         self._max_tokens = settings.GROQ_MAX_TOKENS
         self._disable_parallel_tool_use = settings.GROQ_DISABLE_PARALLEL_TOOL_USE
+        self._temperature = settings.GROQ_TEMPERATURE
 
     async def generate(
         self,
@@ -70,6 +71,7 @@ class GroqProvider(LLMProvider):
                 "model": self._model,
                 "messages": request_messages,
                 "max_completion_tokens": self._max_tokens,
+                "temperature": self._temperature,
             }
 
             if tools:

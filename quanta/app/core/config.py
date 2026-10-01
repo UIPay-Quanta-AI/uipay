@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     CLAUDE_TIMEOUT_SECONDS: float = 60.0
     CLAUDE_MAX_RETRIES: int = 2
     CLAUDE_DISABLE_PARALLEL_TOOL_USE: bool = True
+    # Low by design: Quanta's tool-calling (prepare_transfer especially) needs
+    # to be deterministic, not creative. Applies to every Quanta LLM call -
+    # there's no per-workflow override, every turn shares one generate() path.
+    CLAUDE_TEMPERATURE: float = 0.2
 
     GROQ_API_KEY: str | None = None
     GROQ_MODEL: str = "openai/gpt-oss-120b"
@@ -25,6 +29,7 @@ class Settings(BaseSettings):
     GROQ_TIMEOUT_SECONDS: float = 60.0
     GROQ_MAX_RETRIES: int = 2
     GROQ_DISABLE_PARALLEL_TOOL_USE: bool = True
+    GROQ_TEMPERATURE: float = 0.2
 
     NAIJALINGO_API_KEY: str | None = None
 
@@ -46,7 +51,7 @@ class Settings(BaseSettings):
     # this. UI Pay remains the authoritative validator.
     DEFAULT_CURRENCY: str = "NGN"
 
-    UIPAY_BASE_URL: str = "http://localhost:8001"
+    UIPAY_BASE_URL: str = "http://localhost:3001"
     UIPAY_SERVICE_TOKEN: str | None = None
     UIPAY_CLIENT_TYPE: str = "mock"
     UIPAY_TIMEOUT_SECONDS: float = 10.0

@@ -27,6 +27,11 @@ class Beneficiary(BaseModel):
 
 
 class SearchBeneficiaryOutput(BaseModel):
+    # Echoes the tool's own validated input back out. Safe to round-trip to
+    # the LLM (unlike raw tool-call arguments) because it already passed
+    # through SearchBeneficiaryInput's validation, same as everything else
+    # this tool returns.
+    query: str
     beneficiaries: list[Beneficiary]
 
 
@@ -57,7 +62,8 @@ class SearchBeneficiaryTool(Tool[SearchBeneficiaryInput, SearchBeneficiaryOutput
         )
 
         output = SearchBeneficiaryOutput(
-            beneficiaries=[Beneficiary.model_validate(item) for item in beneficiaries]
+            query=arguments.query,
+            beneficiaries=[Beneficiary.model_validate(item) for item in beneficiaries],
         )
 
         return ToolResult(

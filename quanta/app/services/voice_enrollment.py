@@ -4,6 +4,7 @@ Voice Enrollment Service managing speaker voice profile creation via EagleProvid
 
 from __future__ import annotations
 
+import base64
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -30,6 +31,10 @@ class VoiceEnrollmentResponse(BaseModel):
     complete: bool
     percent_complete: float
     profile_available: bool
+    # Base64-encoded opaque profile bytes, present only when complete=True.
+    # The caller (Node proxy) must store this against the user and send it
+    # back on every future voice/interact call - Quanta does not persist it.
+    profile_base64: str | None = None
     message: str
     speech_text: str
     provider: str
@@ -79,12 +84,17 @@ class VoiceEnrollmentService:
             msg = f"Voice sample accepted ({pct}% complete). Additional audio is required to complete enrollment."
             speech = f"Voice sample accepted. Enrollment is {pct} percent complete. Please speak another phrase."
 
+        profile_base64 = (
+            base64.b64encode(res.profile).decode("ascii") if res.profile is not None else None
+        )
+
         return VoiceEnrollmentResponse(
             request_id=str(context.request_id),
             user_id=user_id,
             complete=res.complete,
             percent_complete=res.percent_complete,
             profile_available=res.profile is not None,
+            profile_base64=profile_base64,
             message=msg,
             speech_text=speech,
             provider=res.provider,
