@@ -1,0 +1,6 @@
+# Dockerfile uses backslash line-continuations - a CRLF after one breaks
+# Docker's parser. Force LF regardless of each contributor's local git
+# autocrlf setting, instead of relying on everyone having it configured
+# the same way.
+Dockerfile text eol=lf
+.dockerignore text eol=lf
