@@ -16,9 +16,9 @@ function formatDate(iso: string) {
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col gap-1 border-b border-black/5 pb-3">
-      <span className="text-xs text-black/40">{label}</span>
-      <span className="text-sm font-semibold text-black">{value}</span>
+    <div className="flex flex-col gap-1 border-b border-white/10 pb-3">
+      <span className="text-xs text-white/40">{label}</span>
+      <span className="text-sm font-semibold text-[var(--color-light)]">{value}</span>
     </div>
   );
 }
@@ -45,7 +45,7 @@ export const ReceiptCard = forwardRef<HTMLDivElement, ReceiptData>(
     ref,
   ) {
     return (
-      <div ref={ref} className="w-full max-w-sm bg-[var(--color-primary)] pb-3">
+      <div ref={ref} className="w-full max-w-sm bg-[var(--color-dark)] pb-3">
         <div className="bg-[var(--color-primary)] px-6 pb-10 pt-7">
           <div className="flex items-center justify-between">
             <span className="text-xl font-extrabold tracking-wide text-white">
@@ -60,11 +60,11 @@ export const ReceiptCard = forwardRef<HTMLDivElement, ReceiptData>(
           </div>
         </div>
 
-        <div className="-mt-6 rounded-t-3xl bg-white px-6 pb-6 pt-6">
-          <span className="inline-block rounded-md bg-red-50 px-2 py-1 text-xs font-bold tracking-wide text-red-500">
+        <div className="-mt-6 rounded-t-3xl bg-[#0d1929] px-6 pb-6 pt-6">
+          <span className="inline-block rounded-md bg-red-500/15 px-2 py-1 text-xs font-bold tracking-wide text-red-400">
             DEBIT
           </span>
-          <p className="mt-2 text-4xl font-extrabold text-black">
+          <p className="mt-2 text-4xl font-extrabold text-[var(--color-light)]">
             {formatNaira(amount)}
           </p>
 
@@ -84,7 +84,7 @@ export const ReceiptCard = forwardRef<HTMLDivElement, ReceiptData>(
             <Row label="Transaction Reference" value={reference} />
           </div>
 
-          <p className="mt-6 text-center text-xs text-black/30">
+          <p className="mt-6 text-center text-xs text-white/30">
             Thank you for using UIPay
           </p>
         </div>
@@ -93,7 +93,7 @@ export const ReceiptCard = forwardRef<HTMLDivElement, ReceiptData>(
           {Array.from({ length: 16 }).map((_, index) => (
             <span
               key={index}
-              className="-mt-2.5 h-5 w-5 rounded-full bg-[var(--color-primary)]"
+              className="-mt-2.5 h-5 w-5 rounded-full bg-[var(--color-dark)]"
             />
           ))}
         </div>
