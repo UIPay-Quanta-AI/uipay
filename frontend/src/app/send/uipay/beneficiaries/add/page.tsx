@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { BackButton } from '@/components/BackButton';
 import { GlowBackground } from '@/components/GlowBackground';
 import { TextInput } from '@/components/TextInput';
@@ -12,7 +12,18 @@ import { useAuthHydration, useAuthStore } from '@/store/auth';
 // integration yet), so this is the only bank on offer
 const BANK_NAME = 'UIPay';
 
+// useSearchParams() opts the page out of static rendering unless it's
+// wrapped in Suspense - without this, `next build` fails outright trying
+// to prerender this page (confirmed on a real Vercel build).
 export default function AddBeneficiaryPage() {
+  return (
+    <Suspense fallback={null}>
+      <AddBeneficiaryContent />
+    </Suspense>
+  );
+}
+
+function AddBeneficiaryContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const hasHydrated = useAuthHydration();

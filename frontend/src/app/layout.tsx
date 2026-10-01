@@ -5,6 +5,11 @@ import './globals.css';
 const nunitoSans = Nunito_Sans({
   subsets: ['latin'],
   variable: '--font-nunito-sans',
+  // Next.js can't find precomputed fallback-font metrics for this font in
+  // its own database, so it logs "Failed to find font override values" on
+  // every build. Harmless (confirmed non-blocking on a real build) but
+  // noisy - this just turns off the metric lookup that's failing.
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
