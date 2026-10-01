@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BackButton } from '@/components/BackButton';
 import { GlowBackground } from '@/components/GlowBackground';
@@ -14,12 +14,15 @@ const BANK_NAME = 'UIPay';
 
 export default function AddBeneficiaryPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
 
   const [accountNumber, setAccountNumber] = useState('');
   const [accountName, setAccountName] = useState<string | null>(null);
-  const [nickname, setNickname] = useState('');
+  // Quanta sometimes gets here by voice, when it heard a name it has no
+  // saved beneficiary for - prefilling saves retyping what was already said.
+  const [nickname, setNickname] = useState(searchParams.get('nickname') ?? '');
   const [resolveError, setResolveError] = useState<string | null>(null);
   const [isResolving, setIsResolving] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);

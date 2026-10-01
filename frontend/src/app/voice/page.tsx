@@ -1,21 +1,49 @@
 'use client';
 
-import { Mic, Settings } from 'lucide-react';
+import { Mic, Settings, Square } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAudioRecorder } from '@/hooks/useAudioRecorder';
+import { getVoicePreference } from '@/lib/voicePreference';
+import { getApiErrorMessage } from '@/services/api';
+import {
+  quantaVoiceInteract,
+  resolveTransferBeneficiary,
+  type BeneficiaryNotFoundData,
+  type ResolvedTransferRecipient,
+  type TransferPreparationData,
+  type VoicePipelineResult,
+} from '@/services/quanta';
 import { useAuthHydration, useAuthStore } from '@/store/auth';
+import { useSendStore } from '@/store/send';
 
-const LISTEN_DURATION_MS = 2800;
+const OUTCOME_MESSAGE: Record<string, string> = {
+  verification_unavailable:
+    "I couldn't verify your voice - enroll it in Settings first so I can recognize you.",
+  verification_failed:
+    "That didn't sound like your enrolled voice, so I can't act on it - use manual entry instead.",
+  transcription_failed: "I didn't catch that - try again, a little closer to the mic.",
+};
+
+function formatNaira(amount: number) {
+  return `₦${amount.toLocaleString('en-NG', { minimumFractionDigits: 2 })}`;
+}
 
 export default function VoicePage() {
   const router = useRouter();
   const hasHydrated = useAuthHydration();
   const accessToken = useAuthStore((state) => state.accessToken);
 
-  const [isListening, setIsListening] = useState(false);
-  const [notice, setNotice] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { status: recorderStatus, errorMessage: recorderError, start, stop } = useAudioRecorder();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [callError, setCallError] = useState<string | null>(null);
+  const [result, setResult] = useState<VoicePipelineResult | null>(null);
+  const [pendingTransfer, setPendingTransfer] = useState<ResolvedTransferRecipient | null>(null);
+  const [resolvingTransfer, setResolvingTransfer] = useState(false);
+  const setSource = useSendStore((state) => state.setSource);
+  const setAmount = useSendStore((state) => state.setAmount);
 
   useEffect(() => {
     if (hasHydrated && !accessToken) {
@@ -23,23 +51,104 @@ export default function VoicePage() {
     }
   }, [hasHydrated, accessToken, router]);
 
-  useEffect(() => () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-  }, []);
+  // The actual processing is one long blocking call with no server-sent
+  // progress - this is real elapsed time, not a fake staged animation, so
+  // it stays honest about how long it's actually taking instead of
+  // guessing at a stage that may not match reality.
+  useEffect(() => {
+    if (!isProcessing) {
+      setElapsedSeconds(0);
+      return;
+    }
+    const timer = setInterval(() => setElapsedSeconds((s) => s + 1), 1000);
+    return () => clearInterval(timer);
+  }, [isProcessing]);
 
-  const handleTap = () => {
-    if (isListening) return;
+  const transferData =
+    result?.outcome === 'success' &&
+    result.response?.ui.type === 'transfer_confirmation' &&
+    result.response.data?.beneficiary_id
+      ? (result.response.data as unknown as TransferPreparationData)
+      : null;
 
-    setNotice(false);
-    setIsListening(true);
-    // there's no voice backend wired up yet, so this is an honest mock, not
-    // a fake recognition result - it just times out and points at the real
-    // fallback instead of pretending to have heard something
-    timerRef.current = setTimeout(() => {
-      setIsListening(false);
-      setNotice(true);
-    }, LISTEN_DURATION_MS);
+  const beneficiaryNotFoundData =
+    result?.outcome === 'success' &&
+    result.response?.status === 'input_required' &&
+    result.response.ui.type === 'beneficiary_selection'
+      ? (result.response.data as unknown as BeneficiaryNotFoundData)
+      : null;
+
+  useEffect(() => {
+    if (!transferData) {
+      setPendingTransfer(null);
+      return;
+    }
+
+    let cancelled = false;
+    setResolvingTransfer(true);
+    resolveTransferBeneficiary(transferData.beneficiary_id)
+      .then((recipient) => {
+        if (!cancelled) setPendingTransfer(recipient);
+      })
+      .catch((err) => {
+        if (!cancelled) setCallError(getApiErrorMessage(err));
+      })
+      .finally(() => {
+        if (!cancelled) setResolvingTransfer(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transferData?.beneficiary_id]);
+
+  const handleReviewTransfer = () => {
+    if (!pendingTransfer || !transferData) return;
+    setSource({
+      method: 'wallet',
+      recipientId: pendingTransfer.recipientId,
+      name: pendingTransfer.name,
+      detail: pendingTransfer.accountNumber,
+    });
+    setAmount(transferData.amount);
+    router.push('/send/confirm');
   };
+
+  const handleTap = async () => {
+    if (recorderStatus === 'recording') {
+      const blob = await stop();
+      if (!blob) return;
+
+      setIsProcessing(true);
+      setCallError(null);
+      setResult(null);
+      try {
+        const preference = getVoicePreference();
+        const response = await quantaVoiceInteract(blob, preference.language);
+        setResult(response);
+      } catch (err) {
+        setCallError(getApiErrorMessage(err));
+      } finally {
+        setIsProcessing(false);
+      }
+      return;
+    }
+
+    setResult(null);
+    setCallError(null);
+    await start();
+  };
+
+  const isListening = recorderStatus === 'recording';
+  const isBusy = recorderStatus === 'requesting' || isProcessing;
+
+  const replyText =
+    result?.outcome === 'success'
+      ? result.response?.speech?.text
+      : result
+        ? OUTCOME_MESSAGE[result.outcome]
+        : null;
 
   if (!hasHydrated || !accessToken) return null;
 
@@ -58,41 +167,93 @@ export default function VoicePage() {
         </Link>
       </div>
 
-      <div className="relative z-10 flex h-full w-full flex-col items-center">
+      <div className="relative z-10 flex h-full w-full flex-col items-center overflow-y-auto">
         <button
           type="button"
           onClick={handleTap}
-          className="mt-32 flex h-64 w-64 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.12)] transition-transform active:scale-95"
+          disabled={isBusy}
+          className="mt-24 flex h-64 w-64 items-center justify-center rounded-full bg-[rgba(var(--color-primary-rgb),0.12)] transition-transform active:scale-95 disabled:opacity-60"
         >
           {isListening ? (
-            <div className="flex items-center gap-2">
-              {[0, 0.15, 0.3, 0.15, 0].map((delay, index) => (
-                <span
-                  key={index}
-                  className="animate-voice-bar h-16 w-3 rounded-full bg-[var(--color-primary)]"
-                  style={{ animationDelay: `${delay}s` }}
-                />
-              ))}
-            </div>
+            <Square className="h-20 w-20 text-[var(--color-primary)]" />
           ) : (
             <Mic className="h-24 w-24 text-[var(--color-primary)]" />
           )}
         </button>
 
         <p className="animate-rise-in mt-10 text-xl text-[var(--color-light)]">
-          Tap To Speak
-        </p>
-        <p
-          className="animate-rise-in mt-2 text-white/50"
-          style={{ animationDelay: '0.05s' }}
-        >
-          Say &ldquo;Hey Quanta&rdquo;
+          {isListening
+            ? 'Listening - tap to stop'
+            : isProcessing
+              ? `Thinking... (${elapsedSeconds}s)`
+              : 'Tap To Speak'}
         </p>
 
-        {notice && (
-          <p className="animate-rise-in mt-6 max-w-xs text-center text-sm text-white/40">
-            Voice payments aren&apos;t connected yet - use manual entry below
-            for now.
+        {isProcessing && elapsedSeconds >= 8 && (
+          <p className="animate-rise-in mt-2 max-w-xs text-center text-sm text-white/40">
+            Still working - verifying your voice, transcribing, and asking
+            Quanta can take a while, especially right after a restart.
+          </p>
+        )}
+
+        {result?.transcript && (
+          <p className="animate-rise-in mt-4 max-w-xs text-center text-white/60">
+            &ldquo;{result.transcript.text}&rdquo;
+          </p>
+        )}
+
+        {replyText && (
+          <p className="animate-rise-in mt-4 max-w-xs text-center text-[var(--color-light)]">
+            {replyText}
+          </p>
+        )}
+
+        {transferData && (
+          <div className="animate-rise-in mt-4 w-full max-w-xs rounded-2xl bg-[#0d1929] p-5 text-[var(--color-light)]">
+            <div className="flex justify-between">
+              <span className="text-white/50">Amount</span>
+              <span className="font-semibold">{formatNaira(transferData.amount)}</span>
+            </div>
+            <div className="mt-2 flex justify-between">
+              <span className="text-white/50">To</span>
+              <span className="font-semibold">
+                {resolvingTransfer ? 'Looking up...' : (pendingTransfer?.name ?? 'Unknown')}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleReviewTransfer}
+              disabled={!pendingTransfer}
+              className="mt-4 w-full rounded-full bg-[var(--color-primary)] py-3 font-semibold text-[var(--color-dark)] transition-transform active:scale-95 disabled:opacity-50"
+            >
+              Review & Confirm
+            </button>
+          </div>
+        )}
+
+        {beneficiaryNotFoundData && (
+          <div className="animate-rise-in mt-4 w-full max-w-xs rounded-2xl bg-[#0d1929] p-5 text-center text-[var(--color-light)]">
+            <p className="text-sm text-white/60">
+              We couldn&apos;t find a saved contact named &ldquo;
+              {beneficiaryNotFoundData.name_heard}&rdquo;.
+            </p>
+            <button
+              type="button"
+              onClick={() =>
+                router.push(
+                  `/send/uipay/beneficiaries/add?nickname=${encodeURIComponent(beneficiaryNotFoundData.name_heard)}`,
+                )
+              }
+              className="mt-4 w-full rounded-full bg-[var(--color-primary)] py-3 font-semibold text-[var(--color-dark)] transition-transform active:scale-95"
+            >
+              Add As Beneficiary
+            </button>
+          </div>
+        )}
+
+        {(recorderError || callError) && (
+          <p className="animate-rise-in mt-6 max-w-xs text-center text-sm text-red-400">
+            {recorderError ?? callError}
           </p>
         )}
 

@@ -18,6 +18,8 @@ import { QrModule } from './qr/qr.module';
 import { AdminModule } from './admin/admin.module';
 import { ProfileModule } from './profile/profile.module';
 import { SupportModule } from './support/support.module';
+import { QuantaIntegrationModule } from './quanta-integration/quanta-integration.module';
+import { QuantaProxyModule } from './quanta-proxy/quanta-proxy.module';
 
 @Module({
   imports: [
@@ -53,6 +55,8 @@ import { SupportModule } from './support/support.module';
     AdminModule,
     ProfileModule,
     SupportModule,
+    QuantaIntegrationModule,
+    QuantaProxyModule,
   ],
   providers: [AuthService, RedisService],
 })

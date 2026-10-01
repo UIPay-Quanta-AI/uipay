@@ -46,6 +46,7 @@ class ClaudeProvider(LLMProvider):
 
         self._model = settings.CLAUDE_MODEL
         self._max_tokens = settings.CLAUDE_MAX_TOKENS
+        self._temperature = settings.CLAUDE_TEMPERATURE
 
     async def generate(
         self,
@@ -58,6 +59,7 @@ class ClaudeProvider(LLMProvider):
             request_kwargs: dict[str, Any] = {
                 "model": self._model,
                 "max_tokens": self._max_tokens,
+                "temperature": self._temperature,
                 "messages": self._build_messages(messages),
             }
 
