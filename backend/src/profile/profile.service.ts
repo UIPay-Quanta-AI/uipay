@@ -11,6 +11,7 @@ import {
   DeleteAccountDto,
   SetPinDto,
   UpdateNotificationPreferencesDto,
+  UpdateProfileDto,
   VerifyIdDto,
   VerifyPinDto,
 } from './profile.dto';
@@ -40,6 +41,22 @@ export class ProfileService {
 
     const { transactionPinHash, ...rest } = user;
     return { ...rest, hasTransactionPin: transactionPinHash !== null };
+  }
+
+  // Email and date of birth are deliberately not editable here - email is
+  // the account's identity/login, and dob is tied to the verified-ID flow
+  // (profile-setup/verify-id). Only the fields actually sent are touched,
+  // so a partial edit never blanks the others.
+  async updateProfile(userId: string, dto: UpdateProfileDto) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: dto,
+      select: {
+        firstName: true,
+        lastName: true,
+        phoneNumber: true,
+      },
+    });
   }
 
   async setPin(userId: string, dto: SetPinDto) {

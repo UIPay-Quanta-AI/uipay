@@ -18,6 +18,7 @@ import {
   DeleteAccountDto,
   SetPinDto,
   UpdateNotificationPreferencesDto,
+  UpdateProfileDto,
   VerifyIdDto,
   VerifyPinDto,
 } from './profile.dto';
@@ -33,6 +34,16 @@ export class ProfileController {
     const profile = await this.service.getMe(user.sub);
 
     return successResponse('Profile retrieved successfully', profile);
+  }
+
+  @Patch('me')
+  async updateProfile(
+    @CurrentUser() user: JwtPayload,
+    @Body() body: UpdateProfileDto,
+  ) {
+    const profile = await this.service.updateProfile(user.sub, body);
+
+    return successResponse('Profile updated successfully', profile);
   }
 
   @Post('pin')

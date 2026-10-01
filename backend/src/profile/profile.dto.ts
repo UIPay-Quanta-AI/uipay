@@ -7,6 +7,25 @@ import {
   Matches,
 } from 'class-validator';
 
+export class UpdateProfileDto {
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  lastName?: string;
+
+  // same format already stored at signup (+234 prefix) - see SignupUserDto
+  @IsOptional()
+  @Matches(/^(?:\+234|234|0)[789][01]\d{8}$/, {
+    message: 'Please enter a valid Nigerian phone number',
+  })
+  phoneNumber?: string;
+}
+
 export class SetPinDto {
   @Matches(/^\d{4}$/, { message: 'PIN must be exactly 4 digits' })
   pin!: string;

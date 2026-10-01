@@ -25,6 +25,13 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneDigits, setPhoneDigits] = useState('');
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
   useEffect(() => {
     if (hasHydrated && !accessToken) {
       router.replace('/signin');
@@ -44,6 +51,38 @@ export default function ProfilePage() {
 
   const [year, month, day] = profile?.dob.split('-') ?? ['', '', ''];
   const phoneWithoutCountryCode = profile?.phoneNumber.replace(/^\+234/, '');
+
+  const startEditing = () => {
+    if (!profile) return;
+    setFirstName(profile.firstName);
+    setLastName(profile.lastName);
+    setPhoneDigits(phoneWithoutCountryCode ?? '');
+    setSaveError(null);
+    setIsEditing(true);
+  };
+
+  const handleSave = async () => {
+    if (!firstName.trim() || !lastName.trim()) {
+      setSaveError('First and last name cannot be empty');
+      return;
+    }
+
+    setSaveError(null);
+    setIsSaving(true);
+    try {
+      const response = await api.patch('/profile/me', {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        phoneNumber: `+234${phoneDigits}`,
+      });
+      setProfile((prev) => (prev ? { ...prev, ...response.data.data } : prev));
+      setIsEditing(false);
+    } catch (err) {
+      setSaveError(getApiErrorMessage(err));
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <AuthScreenLayout>
@@ -66,8 +105,18 @@ export default function ProfilePage() {
       {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
 
       <div className="mt-8 flex flex-col gap-4">
-        <TextInput label="First name" value={profile?.firstName ?? ''} readOnly />
-        <TextInput label="Last name" value={profile?.lastName ?? ''} readOnly />
+        <TextInput
+          label="First name"
+          value={isEditing ? firstName : (profile?.firstName ?? '')}
+          onChange={(event) => setFirstName(event.target.value)}
+          readOnly={!isEditing}
+        />
+        <TextInput
+          label="Last name"
+          value={isEditing ? lastName : (profile?.lastName ?? '')}
+          onChange={(event) => setLastName(event.target.value)}
+          readOnly={!isEditing}
+        />
 
         <div className="flex flex-col gap-2">
           <label className="text-sm text-[var(--color-light)]">
@@ -98,24 +147,57 @@ export default function ProfilePage() {
           <label className="text-sm text-[var(--color-light)]">
             Phone number
           </label>
-          <div className="flex items-center gap-3 rounded-xl border border-white/20 px-4 py-3">
+          <div className="flex items-center gap-3 rounded-xl border border-white/20 px-4 py-3 focus-within:border-[var(--color-primary)]">
             <span className="text-[var(--color-light)]">+234</span>
             <span className="h-5 w-px bg-white/20" />
-            <span className="text-[var(--color-light)]">
-              {phoneWithoutCountryCode}
-            </span>
+            {isEditing ? (
+              <input
+                value={phoneDigits}
+                onChange={(event) =>
+                  setPhoneDigits(event.target.value.replace(/\D/g, '').slice(0, 10))
+                }
+                inputMode="numeric"
+                className="w-full bg-transparent text-[var(--color-light)] focus:outline-none"
+              />
+            ) : (
+              <span className="text-[var(--color-light)]">
+                {phoneWithoutCountryCode}
+              </span>
+            )}
           </div>
         </div>
       </div>
 
-      <button
-        type="button"
-        disabled
-        title="Coming soon"
-        className="mt-auto mb-6 rounded-full border border-[var(--color-primary)]/50 py-4 font-semibold text-[var(--color-primary)]/50"
-      >
-        Edit Profile
-      </button>
+      {saveError && <p className="mt-4 text-sm text-red-400">{saveError}</p>}
+
+      {isEditing ? (
+        <div className="mt-auto mb-6 flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving}
+            className="rounded-full bg-[var(--color-primary)] py-4 font-semibold text-[var(--color-dark)] transition-transform active:scale-95 disabled:opacity-60"
+          >
+            {isSaving ? 'Saving...' : 'Save Changes'}
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            disabled={isSaving}
+            className="rounded-full border border-white/20 py-4 font-semibold text-[var(--color-light)]"
+          >
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={startEditing}
+          className="mt-auto mb-6 rounded-full border border-[var(--color-primary)] py-4 font-semibold text-[var(--color-primary)] transition-transform active:scale-95"
+        >
+          Edit Profile
+        </button>
+      )}
     </AuthScreenLayout>
   );
 }
